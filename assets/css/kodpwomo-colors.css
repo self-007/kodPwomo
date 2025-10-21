@@ -1,0 +1,293 @@
+/*
+ * ======================================
+ * 🎨 KODPWOMO - PALETTE "CAMPUS DELIVERY"
+ * ======================================
+ * Palette de couleurs optimisée pour la livraison campus-to-campus
+ * Plateforme: kodPwomo - Livraison Étudiante
+ * Date: Septembre 2025
+ */
+
+/* =====================================
+   🎯 VARIABLES CSS - COULEURS PRINCIPALES
+   ===================================== */
+:root {
+  /* === PALETTE PRINCIPALE === */
+  --primary: #FF6B6B;           /* Rouge coral - Actions principales */
+  --secondary: #4ECDC4;         /* Turquoise - Éléments secondaires */
+  --accent: #45B7D1;            /* Bleu ciel - Informations */
+  --success: #96CEB4;           /* Vert menthe - Succès/Validations */
+  --warning: #FFEAA7;           /* Jaune doux - Alertes/Notifications */
+  
+  /* === NUANCES ET VARIATIONS === */
+  --primary-light: #FF8E8E;     /* Primary clair */
+  --primary-dark: #E55555;      /* Primary foncé */
+  --secondary-light: #6FD9D0;   /* Secondary clair */
+  --secondary-dark: #3BB8B0;    /* Secondary foncé */
+  
+  /* === COULEURS NEUTRES === */
+  --white: #FFFFFF;
+  --light-gray: #F8F9FA;
+  --medium-gray: #6C757D;
+  --dark-gray: #343A40;
+  --black: #000000;
+  
+  /* === COULEURS FONCTIONNELLES === */
+  --error: #E74C3C;            /* Rouge erreur */
+  --info: var(--accent);       /* Bleu information */
+  --disabled: #BDC3C7;         /* Gris désactivé */
+  
+  /* === TRANSPARENCES === */
+  --primary-alpha-10: rgba(255, 107, 107, 0.1);
+  --primary-alpha-20: rgba(255, 107, 107, 0.2);
+  --secondary-alpha-10: rgba(78, 205, 196, 0.1);
+  --secondary-alpha-20: rgba(78, 205, 196, 0.2);
+}
+
+/* =====================================
+   🌈 GRADIENTS PRÉDÉFINIS
+   ===================================== */
+:root {
+  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  --gradient-warm: linear-gradient(135deg, #FF6B6B 0%, #FFEAA7 100%);
+  --gradient-cool: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
+  --gradient-success: linear-gradient(135deg, #96CEB4 0%, #4ECDC4 100%);
+  --gradient-overlay: linear-gradient(135deg, rgba(255, 107, 107, 0.9) 0%, rgba(78, 205, 196, 0.9) 100%);
+}
+
+/* =====================================
+   🎨 CLASSES UTILITAIRES - COULEURS DE TEXTE
+   ===================================== */
+.text-primary { color: var(--primary) !important; }
+.text-secondary { color: var(--secondary) !important; }
+.text-accent { color: var(--accent) !important; }
+.text-success { color: var(--success) !important; }
+.text-warning { color: var(--warning) !important; }
+.text-error { color: var(--error) !important; }
+.text-white { color: var(--white) !important; }
+.text-dark { color: var(--dark-gray) !important; }
+.text-muted { color: var(--medium-gray) !important; }
+
+/* =====================================
+   🎨 CLASSES UTILITAIRES - ARRIÈRE-PLANS
+   ===================================== */
+.bg-primary { background-color: var(--primary) !important; }
+.bg-secondary { background-color: var(--secondary) !important; }
+.bg-accent { background-color: var(--accent) !important; }
+.bg-success { background-color: var(--success) !important; }
+.bg-warning { background-color: var(--warning) !important; }
+.bg-error { background-color: var(--error) !important; }
+.bg-white { background-color: var(--white) !important; }
+.bg-light { background-color: var(--light-gray) !important; }
+
+/* Arrière-plans avec transparence */
+.bg-primary-light { background-color: var(--primary-alpha-10) !important; }
+.bg-secondary-light { background-color: var(--secondary-alpha-10) !important; }
+
+/* Gradients */
+.bg-gradient-primary { background: var(--gradient-primary) !important; }
+.bg-gradient-warm { background: var(--gradient-warm) !important; }
+.bg-gradient-cool { background: var(--gradient-cool) !important; }
+.bg-gradient-success { background: var(--gradient-success) !important; }
+
+/* =====================================
+   🔘 BOUTONS KODPWOMO
+   ===================================== */
+.btn-kodpwomo {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+  color: var(--white);
+  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+}
+
+.btn-secondary:hover {
+  background: var(--secondary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+}
+
+.btn-success {
+  background: var(--success);
+  color: var(--white);
+}
+
+.btn-success:hover {
+  background: #7FC29B;
+  transform: translateY(-2px);
+}
+
+.btn-outline-primary {
+  background: transparent;
+  color: var(--primary);
+  border: 2px solid var(--primary);
+}
+
+.btn-outline-primary:hover {
+  background: var(--primary);
+  color: var(--white);
+}
+
+/* =====================================
+   📦 COMPOSANTS SPÉCIAUX KODPWOMO
+   ===================================== */
+
+/* Card Restaurant */
+.restaurant-card {
+  background: var(--white);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  border-left: 4px solid var(--primary);
+  transition: all 0.3s ease;
+}
+
+.restaurant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+/* Status Agent */
+.agent-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.agent-available { 
+  background: var(--success); 
+  color: var(--white); 
+}
+
+.agent-busy { 
+  background: var(--warning); 
+  color: var(--dark-gray); 
+}
+
+.agent-offline { 
+  background: var(--disabled); 
+  color: var(--white); 
+}
+
+/* Notification Badge */
+.notification-badge {
+  background: var(--primary);
+  color: var(--white);
+  border-radius: 50%;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  top: -8px;
+  right: -8px;
+}
+
+/* Progress Bar */
+.progress-kodpwomo {
+  background: var(--light-gray);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 8px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: var(--gradient-primary);
+  transition: width 0.3s ease;
+}
+
+/* =====================================
+   📱 RESPONSIVE UTILITIES
+   ===================================== */
+@media (max-width: 768px) {
+  .btn-kodpwomo {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .restaurant-card {
+    border-left: 3px solid var(--primary);
+  }
+}
+
+/* =====================================
+   🎯 CLASSES SPÉCIFIQUES WORKFLOW
+   ===================================== */
+
+/* Zone Restaurant */
+.restaurant-zone {
+  border-left: 4px solid #FF7F50;
+  background: rgba(255, 127, 80, 0.05);
+}
+
+/* Zone Commande */
+.order-zone {
+  border-left: 4px solid var(--primary);
+  background: var(--primary-alpha-10);
+}
+
+/* Zone Agent */
+.agent-zone {
+  border-left: 4px solid var(--accent);
+  background: rgba(69, 183, 209, 0.05);
+}
+
+/* Zone Succès */
+.success-zone {
+  border-left: 4px solid var(--success);
+  background: rgba(150, 206, 180, 0.05);
+}
+
+/* =====================================
+   🔧 DEBUG - REMOVE IN PRODUCTION
+   ===================================== */
+.debug-primary { background: var(--primary) !important; color: white; }
+.debug-secondary { background: var(--secondary) !important; color: white; }
+.debug-accent { background: var(--accent) !important; color: white; }
+.debug-success { background: var(--success) !important; color: white; }
+.debug-warning { background: var(--warning) !important; color: black; }
+
+/* 
+ * ======================================
+ * 🚀 USAGE EXAMPLES
+ * ======================================
+ * 
+ * HTML Examples:
+ * 
+ * <!-- Bouton Commander -->
+ * <button class="btn-kodpwomo btn-primary">🛒 Commander Maintenant</button>
+ * 
+ * <!-- Card Restaurant -->
+ * <div class="restaurant-card restaurant-zone">
+ *   <h3 class="text-primary">Restaurant Universitaire</h3>
+ * </div>
+ * 
+ * <!-- Status Agent -->
+ * <span class="agent-status agent-available">Disponible</span>
+ * 
+ * <!-- Zone Workflow -->
+ * <section class="order-zone">Passez votre commande</section>
+ * 
+ */

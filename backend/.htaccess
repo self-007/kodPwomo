@@ -1,0 +1,12 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /kodpwomo/backend/
+
+    # Si le fichier ou dossier existe, ne pas réécrire
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # Sinon, tout rediriger vers index.php
+    RewriteRule ^ index.php [L,QSA]
+</IfModule>

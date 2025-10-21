@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧪 KodPwomo API Tester</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .test-section {
+            margin-bottom: 40px;
+            border: 2px solid #e1e8ed;
+            border-radius: 15px;
+            padding: 25px;
+            background: #f8f9fa;
+        }
+        
+        .test-section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+        
+        .test-group {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .test-group h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        .test-item {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border: 1px solid #e1e8ed;
+        }
+        
+        .method {
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            color: white;
+            min-width: 60px;
+            text-align: center;
+            font-size: 0.8rem;
+        }
+        
+        .method.GET { background: #28a745; }
+        .method.POST { background: #007bff; }
+        .method.PUT { background: #ffc107; color: #333; }
+        .method.DELETE { background: #dc3545; }
+        
+        .endpoint {
+            flex: 1;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #495057;
+        }
+        
+        .test-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .test-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .response-area {
+            margin-top: 30px;
+            padding: 20px;
+            background: #2d3748;
+            color: #e2e8f0;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .loading {
+            color: #ffc107;
+        }
+        
+        .success {
+            color: #28a745;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+        
+        .clear-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        
+        .base-url {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .base-url label {
+            font-weight: bold;
+            color: #1976d2;
+        }
+        
+        .base-url input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-top: 5px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .json-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            resize: vertical;
+        }
+
+        .form-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+        }
+
+        .form-section label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #856404;
+        }
+        
+        .note {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 KodPwomo API Tester</h1>
+        
+        <div class="base-url">
+            <label for="baseUrl">🌐 Base URL:</label>
+            <input type="text" id="baseUrl" value="http://localhost/kodpwomo/backend">
+        </div>
+        
+        <button class="clear-btn" onclick="clearResponse()">🗑️ Effacer les réponses</button>
+        
+        <!-- ENDPOINTS PUBLICS -->
+        <div class="test-section">
+            <h2>📦 Endpoints Publics</h2>
+            
+            <div class="test-group">
+                <h3>Products</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/products</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/products')">Test</button>
+                </div>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/products/1</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/products/1')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Users</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/users</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/users')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Orders</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/orders</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/orders')">Test</button>
+                </div>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/orders/available</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/orders/available')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Universities</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/universities</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/universities')">Test</button>
+                </div>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/universities/1</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/universities/1')">Test</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ENDPOINTS ADMIN -->
+        <div class="test-section">
+            <h2>🎯 Endpoints Admin (University Level)</h2>
+            
+            <div class="test-group">
+                <h3>Dashboard Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/dashboard/adm/1</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/dashboard/adm/1')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Users Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/users/adm</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/users/adm')">Test</button>
+                </div>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/users/adm/page/1/john</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/users/adm/page/1/john')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Products Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/products/adm/1</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/products/adm/1')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Orders Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/orders/adm/1</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/orders/adm/1')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Analytics Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/analytics/adm/1</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/analytics/adm/1')">Test</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUPER ADMIN -->
+        <div class="test-section">
+            <h2>🌟 Super Admin Endpoints</h2>
+            
+            <div class="test-group">
+                <h3>Dashboard Super Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/dashboard/super</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/dashboard/super')">Test</button>
+                </div>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/dashboard/super/2024-10</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/dashboard/super/2024-10')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Analytics Super Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/analytics/super</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/analytics/super')">Test</button>
+                </div>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/analytics/super/2024-10-20</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/analytics/super/2024-10-20')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Universities Super Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/university/super</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/university/super')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Categories Super Admin</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/category/super</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/category/super')">Test</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- POST ENDPOINTS -->
+        <div class="test-section">
+            <h2>🔧 Endpoints POST (Création)</h2>
+            
+            <div class="test-group">
+                <h3>Créer Utilisateur</h3>
+                <div class="test-item">
+                    <span class="method POST">POST</span>
+                    <span class="endpoint">/users</span>
+                    <button class="test-btn" onclick="testPOST('/users', 'createUser')">Test</button>
+                </div>
+                <div class="form-section" id="createUser" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"name": "John Doe", "email": "john@example.com", "phone": "+243123456789", "id_university": 1, "role": "client"}'></textarea>
+                    <button class="test-btn" onclick="executePOST('/users', 'createUser')" style="margin-top: 10px;">Exécuter</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Créer Commande</h3>
+                <div class="test-item">
+                    <span class="method POST">POST</span>
+                    <span class="endpoint">/orders</span>
+                    <button class="test-btn" onclick="testPOST('/orders', 'createOrder')">Test</button>
+                </div>
+                <div class="form-section" id="createOrder" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"id_user": "USR123", "id_product": 1, "qnt": 2, "adresse_id": 1, "note": "Test order"}'></textarea>
+                    <button class="test-btn" onclick="executePOST('/orders', 'createOrder')" style="margin-top: 10px;">Exécuter</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Vérifier OTP</h3>
+                <div class="test-item">
+                    <span class="method POST">POST</span>
+                    <span class="endpoint">/verify-otp</span>
+                    <button class="test-btn" onclick="testPOST('/verify-otp', 'verifyOtp')">Test</button>
+                </div>
+                <div class="form-section" id="verifyOtp" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"email": "john@example.com", "otp": "123456"}'></textarea>
+                    <button class="test-btn" onclick="executePOST('/verify-otp', 'verifyOtp')" style="margin-top: 10px;">Exécuter</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Créer Université (Super Admin)</h3>
+                <div class="test-item">
+                    <span class="method POST">POST</span>
+                    <span class="endpoint">/university/super</span>
+                    <button class="test-btn" onclick="testPOST('/university/super', 'createUniversity')">Test</button>
+                </div>
+                <div class="form-section" id="createUniversity" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"name": "Université de Kinshasa", "location": "Kinshasa, RDC"}'></textarea>
+                    <button class="test-btn" onclick="executePOST('/university/super', 'createUniversity')" style="margin-top: 10px;">Exécuter</button>
+                    <div class="note">⚠️ Note: Backend attend aussi un fichier image via $_FILES['image']</div>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Créer Catégorie (Super Admin)</h3>
+                <div class="test-item">
+                    <span class="method POST">POST</span>
+                    <span class="endpoint">/category/super</span>
+                    <button class="test-btn" onclick="testPOST('/category/super', 'createCategory')">Test</button>
+                </div>
+                <div class="form-section" id="createCategory" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"name": "Électronique"}'></textarea>
+                    <button class="test-btn" onclick="executePOST('/category/super', 'createCategory')" style="margin-top: 10px;">Exécuter</button>
+                    <div class="note">⚠️ Note: Backend attend aussi un fichier image via $_FILES['image']</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PUT ENDPOINTS -->
+        <div class="test-section">
+            <h2>🔄 Endpoints PUT (Mise à jour)</h2>
+            
+            <div class="test-group">
+                <h3>Modifier Université (Super Admin)</h3>
+                <div class="test-item">
+                    <span class="method PUT">PUT</span>
+                    <span class="endpoint">/university/super</span>
+                    <button class="test-btn" onclick="testPOST('/university/super', 'updateUniversity')">Test</button>
+                </div>
+                <div class="form-section" id="updateUniversity" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"id": 1, "name": "Université de Kinshasa - Modifiée", "location": "Kinshasa Centre, RDC"}'></textarea>
+                    <button class="test-btn" onclick="executePUT('/university/super', 'updateUniversity')" style="margin-top: 10px;">Exécuter</button>
+                    <div class="note">⚠️ Note: Image optionnelle via $_FILES['image']</div>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Modifier Catégorie (Super Admin)</h3>
+                <div class="test-item">
+                    <span class="method PUT">PUT</span>
+                    <span class="endpoint">/category/super</span>
+                    <button class="test-btn" onclick="testPOST('/category/super', 'updateCategorySuper')">Test</button>
+                </div>
+                <div class="form-section" id="updateCategorySuper" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"id": 1, "name": "Électronique & Technologie"}'></textarea>
+                    <button class="test-btn" onclick="executePUT('/category/super', 'updateCategorySuper')" style="margin-top: 10px;">Exécuter</button>
+                    <div class="note">⚠️ Note: Image optionnelle via $_FILES['image']</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- DELETE ENDPOINTS -->
+        <div class="test-section">
+            <h2>🗑️ Endpoints DELETE (Suppression)</h2>
+            
+            <div class="test-group">
+                <h3>Supprimer Catégorie (Super Admin)</h3>
+                <div class="test-item">
+                    <span class="method DELETE">DELETE</span>
+                    <span class="endpoint">/category/super</span>
+                    <button class="test-btn" onclick="testPOST('/category/super', 'deleteCategorySuper')">Test</button>
+                </div>
+                <div class="form-section" id="deleteCategorySuper" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"id": 1}'></textarea>
+                    <button class="test-btn" onclick="executeDELETE('/category/super', 'deleteCategorySuper')" style="margin-top: 10px;">Exécuter</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Supprimer Université (Super Admin)</h3>
+                <div class="test-item">
+                    <span class="method DELETE">DELETE</span>
+                    <span class="endpoint">/university/super</span>
+                    <button class="test-btn" onclick="testPOST('/university/super', 'deleteUniversitySuper')">Test</button>
+                </div>
+                <div class="form-section" id="deleteUniversitySuper" style="display:none;">
+                    <label>JSON Body:</label>
+                    <textarea class="json-input" placeholder='{"id": 1}'></textarea>
+                    <button class="test-btn" onclick="executeDELETE('/university/super', 'deleteUniversitySuper')" style="margin-top: 10px;">Exécuter</button>
+                    <div class="note">⚠️ Note: Endpoint pas encore dans routes.php</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AGENTS -->
+        <div class="test-section">
+            <h2>🚚 Endpoints Agents</h2>
+            
+            <div class="test-group">
+                <h3>Agent Availability</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/agents/availability/AGT123</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/agents/availability/AGT123')">Test</button>
+                </div>
+            </div>
+            
+            <div class="test-group">
+                <h3>Agent Stats</h3>
+                <div class="test-item">
+                    <span class="method GET">GET</span>
+                    <span class="endpoint">/deliveries/agent/AGT123</span>
+                    <button class="test-btn" onclick="testAPI('GET', '/deliveries/agent/AGT123')">Test</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="response-area" id="responseArea">
+            <div class="loading">🚀 Prêt à tester votre API KodPwomo!</div>
+        </div>
+    </div>
+
+    <script>
+        async function testAPI(method, endpoint) {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const responseArea = document.getElementById('responseArea');
+            
+            responseArea.innerHTML = `<div class="loading">⏳ Testing ${method} ${endpoint}...</div>`;
+            
+            try {
+                const response = await fetch(baseUrl + endpoint, {
+                    method: method,
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const data = await response.text();
+                let jsonData;
+                
+                try {
+                    jsonData = JSON.parse(data);
+                } catch (e) {
+                    jsonData = data;
+                }
+                
+                const timestamp = new Date().toLocaleTimeString();
+                const statusClass = response.ok ? 'success' : 'error';
+                
+                responseArea.innerHTML += `
+                    <div class="${statusClass}">
+                        <strong>[${timestamp}] ${method} ${endpoint}</strong><br>
+                        Status: ${response.status} ${response.statusText}<br>
+                        Response: <br>
+                        <pre>${JSON.stringify(jsonData, null, 2)}</pre>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+                
+            } catch (error) {
+                const timestamp = new Date().toLocaleTimeString();
+                responseArea.innerHTML += `
+                    <div class="error">
+                        <strong>[${timestamp}] ${method} ${endpoint}</strong><br>
+                        Error: ${error.message}<br>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+            }
+            
+            responseArea.scrollTop = responseArea.scrollHeight;
+        }
+        
+        function testPOST(endpoint, formId) {
+            const formSection = document.getElementById(formId);
+            formSection.style.display = formSection.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        async function executePOST(endpoint, formId) {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const responseArea = document.getElementById('responseArea');
+            const formSection = document.getElementById(formId);
+            const jsonInput = formSection.querySelector('.json-input');
+            
+            let body;
+            try {
+                body = JSON.parse(jsonInput.value || jsonInput.placeholder);
+            } catch (e) {
+                responseArea.innerHTML += `
+                    <div class="error">
+                        <strong>JSON Parse Error:</strong> ${e.message}<br>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+                return;
+            }
+            
+            responseArea.innerHTML += `<div class="loading">⏳ Testing POST ${endpoint}...</div>`;
+            
+            try {
+                const response = await fetch(baseUrl + endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.text();
+                let jsonData;
+                
+                try {
+                    jsonData = JSON.parse(data);
+                } catch (e) {
+                    jsonData = data;
+                }
+                
+                const timestamp = new Date().toLocaleTimeString();
+                const statusClass = response.ok ? 'success' : 'error';
+                
+                responseArea.innerHTML += `
+                    <div class="${statusClass}">
+                        <strong>[${timestamp}] POST ${endpoint}</strong><br>
+                        Body: <pre>${JSON.stringify(body, null, 2)}</pre><br>
+                        Status: ${response.status} ${response.statusText}<br>
+                        Response: <br>
+                        <pre>${JSON.stringify(jsonData, null, 2)}</pre>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+                
+            } catch (error) {
+                const timestamp = new Date().toLocaleTimeString();
+                responseArea.innerHTML += `
+                    <div class="error">
+                        <strong>[${timestamp}] POST ${endpoint}</strong><br>
+                        Error: ${error.message}<br>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+            }
+            
+            responseArea.scrollTop = responseArea.scrollHeight;
+        }
+        
+        async function executePUT(endpoint, formId) {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const responseArea = document.getElementById('responseArea');
+            const formSection = document.getElementById(formId);
+            const jsonInput = formSection.querySelector('.json-input');
+            
+            let body;
+            try {
+                body = JSON.parse(jsonInput.value || jsonInput.placeholder);
+            } catch (e) {
+                responseArea.innerHTML += `
+                    <div class="error">
+                        <strong>JSON Parse Error:</strong> ${e.message}<br>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+                return;
+            }
+            
+            responseArea.innerHTML += `<div class="loading">⏳ Testing PUT ${endpoint}...</div>`;
+            
+            try {
+                const response = await fetch(baseUrl + endpoint, {
+                    method: 'PUT',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.text();
+                let jsonData;
+                
+                try {
+                    jsonData = JSON.parse(data);
+                } catch (e) {
+                    jsonData = data;
+                }
+                
+                const timestamp = new Date().toLocaleTimeString();
+                const statusClass = response.ok ? 'success' : 'error';
+                
+                responseArea.innerHTML += `
+                    <div class="${statusClass}">
+                        <strong>[${timestamp}] PUT ${endpoint}</strong><br>
+                        Body: <pre>${JSON.stringify(body, null, 2)}</pre><br>
+                        Status: ${response.status} ${response.statusText}<br>
+                        Response: <br>
+                        <pre>${JSON.stringify(jsonData, null, 2)}</pre>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+                
+            } catch (error) {
+                const timestamp = new Date().toLocaleTimeString();
+                responseArea.innerHTML += `
+                    <div class="error">
+                        <strong>[${timestamp}] PUT ${endpoint}</strong><br>
+                        Error: ${error.message}<br>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+            }
+            
+            responseArea.scrollTop = responseArea.scrollHeight;
+        }
+        
+        async function executeDELETE(endpoint, formId) {
+            const baseUrl = document.getElementById('baseUrl').value;
+            const responseArea = document.getElementById('responseArea');
+            const formSection = document.getElementById(formId);
+            const jsonInput = formSection.querySelector('.json-input');
+            
+            let body;
+            try {
+                body = JSON.parse(jsonInput.value || jsonInput.placeholder);
+            } catch (e) {
+                responseArea.innerHTML += `
+                    <div class="error">
+                        <strong>JSON Parse Error:</strong> ${e.message}<br>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+                return;
+            }
+            
+            responseArea.innerHTML += `<div class="loading">⏳ Testing DELETE ${endpoint}...</div>`;
+            
+            try {
+                const response = await fetch(baseUrl + endpoint, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+                
+                const data = await response.text();
+                let jsonData;
+                
+                try {
+                    jsonData = JSON.parse(data);
+                } catch (e) {
+                    jsonData = data;
+                }
+                
+                const timestamp = new Date().toLocaleTimeString();
+                const statusClass = response.ok ? 'success' : 'error';
+                
+                responseArea.innerHTML += `
+                    <div class="${statusClass}">
+                        <strong>[${timestamp}] DELETE ${endpoint}</strong><br>
+                        Body: <pre>${JSON.stringify(body, null, 2)}</pre><br>
+                        Status: ${response.status} ${response.statusText}<br>
+                        Response: <br>
+                        <pre>${JSON.stringify(jsonData, null, 2)}</pre>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+                
+            } catch (error) {
+                const timestamp = new Date().toLocaleTimeString();
+                responseArea.innerHTML += `
+                    <div class="error">
+                        <strong>[${timestamp}] DELETE ${endpoint}</strong><br>
+                        Error: ${error.message}<br>
+                        <hr style="margin: 15px 0; border-color: #4a5568;">
+                    </div>
+                `;
+            }
+            
+            responseArea.scrollTop = responseArea.scrollHeight;
+        }
+        
+        function clearResponse() {
+            document.getElementById('responseArea').innerHTML = '<div class="loading">🚀 Réponses effacées! Prêt pour de nouveaux tests.</div>';
+        }
+    </script>
+</body>
+</html>

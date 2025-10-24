@@ -111,8 +111,3 @@ function allUniversities(){
     response(['universities' => $university], 200);
 }
 
-//all categories
-function allCategories(){
-    $category = getAllCategories();
-    response(['categories' => $category], 200);
-}

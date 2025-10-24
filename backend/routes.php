@@ -34,16 +34,17 @@ $routes =  [
         '/analytics/super' => ['Adm/main_adm.php', 'analyticsDataSuper'], //get analytics for super admin with optional search (dates allowed)
         '/university/super' => ['Adm/main_adm.php', 'allUniversities'], // get universities from super admin
         '/category/super' => ['Adm/main_adm.php', 'allCategories'], // get all categories from super admin
+        '/category/adm' => ['Adm/adm.php', 'allCategories'], // get all categories from admin-manager
     ],
     'POST' => [
-        '/products' => ['adm/adm.php', 'createProduct'], //create product
+        '/new/product/adm' => ['adm/adm.php', 'createProduct'], //create product
         '/categories' => ['adm/adm.php', 'createCategory'], //create category
         '/users' => ['controllers/users.php', 'createUser'],   //create user
         '/verify-otp' => ['controllers/verify-otp.php', 'verifyOtp'], //verify OTP
         '/resend-otp' => ['controllers/resend-otp.php', 'resendOtp'], //resend OTP
         '/orders' => ['services/orders.php', 'createOrder'], //create order
         '/notifications' => ['services/notifications.php', 'createNotification'], //create  
-        '/places' => ['adm/adm.php', 'createPlace'], //create place
+        '/places/adm' => ['adm/adm.php', 'createPlace'], //create place
         '/university/super' => ['Adm/main_adm.php', 'createUniversity'], //create university from super admin
         '/category/super' => ['adm/main_adm.php', 'createCategory'], //create category from super admin
 
@@ -51,13 +52,13 @@ $routes =  [
     ],
     'PUT' => [
         '/agents/availability' => ['agents/agents.php', 'setAgentAvailability'], //update agent availability
-        '/products' => ['adm/adm.php', 'updateProduct'], //update product , for admin
-        '/categories' => ['adm/adm.php', 'updateCategory'], //update category , for admin
+        '/product/adm' => ['adm/adm.php', 'updateProduct'], //update product , for admin
+        '/categories/adm' => ['adm/adm.php', 'updateCategory'], //update category , for admin
         '/products/availability' => ['adm/adm.php', 'setProductAvailability'], //set product available or unavailable, for admin
-        '/categories' => ['adm/adm.php', 'updateCategory'], //set category available or unavailable, for admin
+        '/categories/adm' => ['adm/adm.php', 'updateCategory'], //set category available or unavailable, for admin
         '/notifications/status' => ['adm/adm.php', 'markNotificationAsRead'], //mark notification as read, for admin
-        '/places' => ['adm/adm.php', 'updatePlace'], //update place , for admin
-        '/users' => ['controllers/users.php', 'updateUser'],   //update user, for admin
+        '/places/adm' => ['adm/adm.php', 'updatePlace'], //update place , for admin
+        '/users/adm' => ['controllers/users.php', 'updateUser'],   //update user, for admin
         '/user/role' => ['adm/adm.php', 'setUserRole'], //set user role, for admin
         '/users/status' => ['adm/adm.php', 'updateUserStatus'], //set user status, for admin
         '/users/verify' => ['adm/adm.php', 'setUserVerifiedStatus'], //verify user account, for admin
@@ -66,7 +67,7 @@ $routes =  [
     ],
     'DELETE' => [
         '/category/super' => ['adm/main_adm', 'deleteCategory'], // delete category from super admin
-        
+        '/product/adm' => ['Adm/adm.php', ]
     ],
 ]; 
 $method = $_SERVER['REQUEST_METHOD'];

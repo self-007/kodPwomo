@@ -26,7 +26,7 @@
         .users-table-container{
             overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;margin-top:16px;
         }
-        .users-table table{width:100%;border-collapse:collapse;min-width:800px}
+    .users-table table{width:100%;border-collapse:collapse;min-width:900px}
         .users-table thead{background:linear-gradient(135deg, var(--brand-secondary, #4ECDC4), var(--brand-accent, #45B7D1))}
         .users-table th{
             padding:16px 12px;text-align:left;color:#ffffff;font-weight:700;
@@ -49,6 +49,11 @@
             white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
             box-sizing:border-box;
         }
+        .btn-role{
+            background:linear-gradient(135deg, var(--secondary-100, #ccfbf1), var(--secondary-50, #f0fdfa));
+            color:var(--brand-secondary, #4ECDC4);border:2px solid rgba(78,205,196,0.35);
+        }
+        .btn-role:hover{transform:scale(1.05);background:var(--brand-secondary, #4ECDC4);color:#fff}
         .btn-active{
             background:linear-gradient(135deg, var(--success-100, #dcfce7), var(--success-50, #f0fdf4));
             color:var(--brand-success, #96CEB4);border:2px solid var(--brand-success, #96CEB4);
@@ -134,11 +139,12 @@
                         <th>Inscrit</th>
                         <th>Commandes</th>
                         <th>Total dépensé</th>
+                        <th>Rôle</th>
                         <th class="status-col">Statut</th>
                         <th class="btn-col"></th>
                     </tr>
                 </thead>
-                <tbody id="usersBody"><tr><td colspan="8" class="muted">Chargement...</td></tr></tbody>
+                <tbody id="usersBody"><tr><td colspan="9" class="muted">Chargement...</td></tr></tbody>
             </table>
         </div>
     </div>
@@ -166,12 +172,13 @@
             const body = document.getElementById('usersBody'); body.innerHTML = '';
             const q = (document.getElementById('usersSearch').value||'').trim().toLowerCase();
             const show = q ? list.filter(u => (u.name||'').toLowerCase().includes(q) || (u.email||'').toLowerCase().includes(q) || (u.id_unique||'').toLowerCase().includes(q)) : list;
-            if(!show.length) { body.innerHTML = `<tr><td colspan="8" class="muted">Aucun utilisateur</td></tr>`; return }
+            if(!show.length) { body.innerHTML = `<tr><td colspan="9" class="muted">Aucun utilisateur</td></tr>`; return }
             for(const u of show){
                 const tr = document.createElement('tr');
                 const status = (u.status||'').toLowerCase();
                 const btnClass = status==='active' ? 'btn-active' : 'btn-inactive';
                 const statusLabel = status || 'inactive';
+                const roleLabel = (u.role || '').toLowerCase() || 'client';
                 tr.innerHTML = `
                     <td>${escape(u.id_unique)}</td>
                     <td>${escape(u.name)}</td>
@@ -179,14 +186,23 @@
                     <td class="small muted">${fmtDate(u.date)}</td>
                     <td>${fmtNum(u.total_orders||0)}</td>
                     <td>${u.total_spent? fmtNum(u.total_spent)+' FC' : '-'}</td>
+                    <td>${escape(roleLabel)}</td>
                     <td><span class="badge-status ${btnClass}">${escape(statusLabel)}</span></td>
-                    <td><button class="btn-sm" data-id="${escape(u.id_unique)}" data-status="${escape(statusLabel)}">Basculer</button></td>
+                    <td>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+                            <button class="btn-sm" data-id="${escape(u.id_unique)}" data-status="${escape(statusLabel)}">Basculer</button>
+                            <button class="btn-sm btn-role" data-role="agent" data-id="${escape(u.id_unique)}">Nommer agent</button>
+                        </div>
+                    </td>
                 `;
                 body.appendChild(tr);
             }
 
             // attach handlers for toggle
             body.querySelectorAll('button[data-id]').forEach(b=>{
+                if(b.classList.contains('btn-role')){
+                    return;
+                }
                 b.addEventListener('click', async ()=>{
                     const id = b.getAttribute('data-id');
                     const cur = b.getAttribute('data-status') || 'inactive';
@@ -195,13 +211,30 @@
                     try{
                         const putUrl = `/kodpwomo/backend/users/status`;
                         const res = await fetch(putUrl, { method: 'PUT', headers: {'Content-Type':'application/json','Accept':'application/json'}, body: JSON.stringify({ id: id, status: next }) });
-                        const txt = await res.text(); const json = txt? JSON.parse(txt) : {};
-                        // optimistic UI: update row
+                        await res.text();
                         await fetchUsers();
                     }catch(e){ alert('Erreur mise à jour: '+(e.message||e)); }
                     finally{ b.disabled = false }
                 })
             })
+
+            body.querySelectorAll('button.btn-role').forEach(btn=>{
+                btn.addEventListener('click', async ()=>{
+                    const id = btn.getAttribute('data-id');
+                    const role = btn.getAttribute('data-role') || 'agent';
+                    btn.textContent = '…'; btn.disabled = true;
+                    try{
+                        const res = await fetch(`/kodpwomo/backend/user/role`, {
+                            method: 'PUT',
+                            headers: {'Content-Type':'application/json','Accept':'application/json'},
+                            body: JSON.stringify({ id: id, role: role })
+                        });
+                        await res.text();
+                        await fetchUsers();
+                    }catch(e){ alert('Erreur attribution rôle: '+(e.message||e)); }
+                    finally{ btn.disabled = false; btn.textContent = 'Nommer agent'; }
+                });
+            });
         }
 
         document.getElementById('usersReload').addEventListener('click', fetchUsers);

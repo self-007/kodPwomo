@@ -49,30 +49,30 @@ function returnProductByIdUniversity($id) {
 // update product // need a correction
 function updateProduct() {
     global $datas;
-    if(!isset($datas['id']) || !isset($datas['name']) || !isset($datas['description']) || !isset($datas['price']) || !isset($datas['categoryId'])){
+    if(!isset($datas['id']) || !isset($datas['name']) || !isset($datas['description']) || !isset($datas['price']) || !isset($datas['category_id'])){
         response(['error' => 'Missing data'], 400);
     }
     // verify int value or superior to 0
-    if (intval($datas['id']) <= 0 || intval($datas['categoryId']) <= 0) {
+    if (intval($datas['id']) <= 0 || intval($datas['category_id']) <= 0) {
         response(['error' => 'Invalid product ID or category ID'], 400);
     }
     // Validate input
-    if (empty($datas['name']) || empty($datas['description']) || empty($datas['price']) || empty($datas['categoryId'])) {
+    if (empty($datas['name']) || empty($datas['description']) || empty($datas['price']) || empty($datas['category_id'])) {
         response(['error' => 'Name, description, price, and category ID are required'], 400);
     }
     $sql = "";
     //for image
     if(isset($_FILES['image']) && $_FILES['image']['error'] === 0){
         $imagePath = handleProductImageUpload($_FILES['image']);
-        $sql = "UPDATE products SET name = :name, description = :description, price = :price, category_id = :category_id, image_path = :image_path WHERE id = :id";
+        $sql = "UPDATE products SET name = :name, description = :description, prices = :price, category_id = :category_id, picture = :image_path WHERE id = :id";
     } 
     $id = intval($datas['id']);
     $name = sanitizeInput($datas['name']);
     $description = sanitizeInput($datas['description']);
     $price = floatval($datas['price']);
-    $categoryId = intval($datas['categoryId']);
+    $categoryId = intval($datas['category_id']);
     global $connection;
-    $stmt = "UPDATE products SET name = :name, description = :description, price = :price, category_id = :category_id WHERE id = :id";
+    $stmt = "UPDATE products SET name = :name, description = :description, prices = :price, id_category = :category_id WHERE id = :id";
     if(!empty($sql)){
         $stmt = $connection->prepare($sql);
     } else {
@@ -120,37 +120,52 @@ function setProductAvailability() {
 // create product  // need a correction
 function createProduct() {
     global $datas;
-    if(!isset($datas['name']) || !isset($datas['description']) || !isset($datas['price']) || !isset($datas['universityId']) || !isset($datas['categoryId'])){
-        response(['error' => 'Missing data'], 400);
+    if(!isset($datas['name']) || !isset($datas['description']) || !isset($datas['price']) || !isset($datas['university_id']) || !isset($datas['category_id']) || !isset($datas['is_available'])){
+         response(['error' => 'Missing data: ' . json_encode($datas)], 400);
     }
     // Validate input
-    if (empty($datas['name']) || empty($datas['description']) || empty($datas['price']) || empty($datas['universityId']) || empty($datas['categoryId'])) {
+    if (empty($datas['name']) || empty($datas['description']) || empty($datas['price']) || empty($datas['university_id']) || empty($datas['category_id']) || empty($datas['is_available'])) {
         response(['error' => 'Name, description, price, university ID, and category ID are required'], 400);
     }
     //for image 
     if(!isset($_FILES['image']) && $_FILES['image']['error'] !== 0){
         response(['error' => 'Image is required'], 400);
     } 
-    $categoryId = intval($datas['categoryId']);
+    $categoryId = intval($datas['category_id']);
     if($categoryId <= 0){
         response(['error' => 'Invalid category ID'], 400);
     }
+    $isAvailable = $datas['is_available'] == 1 ? 1 : 0;
     $imagePath = handleProductImageUpload($_FILES['image']);
     $name = sanitizeInput($datas['name']);
     $description = sanitizeInput($datas['description']);
     $price = floatval($datas['price']);
-    $universityId = intval($datas['universityId']);
+    $universityId = intval($datas['university_id']);
     global $connection;
-    $stmt = $connection->prepare("INSERT INTO products (name, description, price, university_id, image_path, id_category) VALUES (:name, :description, :price, :university_id, :image_path, :id_category)");
+    $stmt = $connection->prepare("INSERT INTO products (name, description, prices, id_university, picture, id_category, is_available) VALUES (:name, :description, :price, :university_id, :image_path, :id_category, :is_available)");
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':price', $price);
     $stmt->bindParam(':university_id', $universityId);
     $stmt->bindParam(':image_path', $imagePath);
     $stmt->bindParam(':id_category', $categoryId);
+    $stmt->bindParam(':is_available', $isAvailable);
     if ($stmt->execute()) {
         response(['success' => 'Product created successfully'], 201);
     } else {
         response(['error' => 'Failed to create product'], 500);
     }
+}
+
+//delete product
+function deleteProduct(){
+    global $datas;
+    if(!isset($datas['id'])){
+        response(['error' => 'missing datas'], 400);
+    }
+    $id = intval($datas['id']);
+    $stmt = 'DELETE FROM products WHERE id = :id ';
+    $stmt = $connection->prepare($stmt);
+    $stmt->execute(['id' => $id]);
+
 }

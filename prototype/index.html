@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KodPwomo • Prototype Landing & Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3B82F6;
+            --primary-dark: #1E3A8A;
+            --secondary: #22C55E;
+            --accent: #F97316;
+            --neutral: #F4F4F5;
+            --hero-gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            --surface: #FFFFFF;
+            --surface-soft: var(--neutral);
+            --surface-dark: #0D1726;
+            --text: #0F172A;
+            --text-muted: #64748B;
+            --radius-lg: 28px;
+            --radius-md: 18px;
+            --radius-sm: 12px;
+            --shadow-lg: 0 40px 80px rgba(16, 32, 58, 0.18);
+            --shadow-md: 0 16px 40px rgba(16, 32, 58, 0.12);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Inter", sans-serif;
+            color: var(--text);
+            background: var(--surface-soft);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: "Poppins", sans-serif;
+            margin: 0;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            backdrop-filter: blur(16px);
+            background: rgba(255, 255, 255, 0.92);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.08);
+        }
+
+        .topbar {
+            max-width: 1220px;
+            margin: 0 auto;
+            padding: 18px 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-mark {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: var(--hero-gradient);
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 22px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover { color: var(--primary); }
+
+        .ghost-btn {
+            border: 1px solid rgba(249, 115, 22, 0.45);
+            background: transparent;
+            border-radius: var(--radius-sm);
+            padding: 10px 18px;
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .cta-btn {
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 12px 24px;
+            font-weight: 700;
+            background: var(--accent);
+            color: #fff;
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(249, 115, 22, 0.22);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 96px 32px 120px;
+            background: var(--hero-gradient);
+            color: #fff;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            top: -140px;
+            right: -120px;
+            width: 380px;
+            height: 380px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-layout {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 56px;
+            align-items: center;
+        }
+
+        .hero-heading span.badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #fff;
+            background: rgba(249, 115, 22, 0.25);
+            border: 1px solid rgba(249, 115, 22, 0.35);
+            border-radius: 999px;
+            padding: 8px 14px;
+            margin-bottom: 22px;
+        }
+
+        .hero-heading h1 {
+            font-size: clamp(2.6rem, 4vw, 3.6rem);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-heading p {
+            font-size: 1.08rem;
+            line-height: 1.6;
+            margin-bottom: 32px;
+            color: rgba(255, 255, 255, 0.88);
+        }
+
+        .hero-actions { display: flex; flex-wrap: wrap; gap: 16px; }
+    .hero-actions .cta-btn { background: var(--accent); color: #fff; }
+    .hero-actions .ghost-btn { color: #fff; border: 1px solid rgba(255, 255, 255, 0.35); }
+
+        .hero-visual {
+            position: relative;
+            background: rgba(255, 255, 255, 0.16);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: 0 24px 60px rgba(13, 23, 38, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .hero-visual img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            object-fit: cover;
+            aspect-ratio: 1;
+        }
+
+        .hero-stats { margin-top: 20px; display: grid; gap: 12px; }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .kpi-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 24px;
+            margin: -60px auto 80px;
+            max-width: 960px;
+        }
+
+        .kpi-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            text-align: center;
+            box-shadow: var(--shadow-md);
+            border-top: 4px solid var(--primary);
+        }
+
+        .kpi-card:nth-child(2) { border-top-color: var(--secondary); }
+        .kpi-card:nth-child(3) { border-top-color: var(--accent); }
+        .kpi-card:nth-child(4) { border-top-color: var(--primary-dark); }
+
+        .kpi-card strong { font-size: 1.8rem; display:block; margin-bottom:6px; color: var(--primary); }
+        .kpi-card:nth-child(2) strong { color: var(--secondary); }
+        .kpi-card:nth-child(3) strong { color: var(--accent); }
+        .kpi-card:nth-child(4) strong { color: var(--primary-dark); }
+        .kpi-card span { color: var(--text-muted); font-size: 0.9rem; }
+
+        section { max-width: 1200px; margin: 0 auto 96px; padding: 0 32px; }
+        .section-header { display: grid; gap: 12px; margin-bottom: 32px; }
+        .section-header p { color: var(--text-muted); max-width: 48ch; }
+
+        .feature-grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+        .feature-card {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            display: grid;
+            gap: 12px;
+        }
+        .feature-card span.icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: rgba(59, 130, 246, 0.15);
+            display: grid;
+            place-items: center;
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+    .feature-card:nth-child(2) span.icon { background: rgba(34, 197, 94, 0.18); color: var(--secondary); }
+    .feature-card:nth-child(3) span.icon { background: rgba(249, 115, 22, 0.18); color: var(--accent); }
+    .feature-card:nth-child(4) span.icon { background: rgba(30, 58, 138, 0.16); color: var(--primary-dark); }
+        .feature-card p { margin: 0; color: var(--text-muted); font-size: 0.92rem; }
+
+        .timeline { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+        .timeline-step {
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            padding: 20px;
+            box-shadow: var(--shadow-md);
+            position: relative;
+        }
+        .timeline-step h3 { color: var(--primary); }
+        .timeline-step::before {
+            content: attr(data-step);
+            position: absolute;
+            top: -18px;
+            left: 20px;
+            background: var(--surface);
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-weight: 600;
+            color: var(--accent);
+            box-shadow: 0 8px 20px rgba(249, 115, 22, 0.22);
+        }
+
+        .testimonials-section { position: relative; }
+        .testimonials-shell {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(34, 197, 94, 0.14));
+            border: 1px solid rgba(59, 130, 246, 0.14);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            box-shadow: var(--shadow-md);
+        }
+        .testimonials { display: grid; gap: 24px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+        .testimonial {
+            position: relative;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(244, 244, 245, 0.88) 100%);
+            border-radius: var(--radius-md);
+            border: 1px solid rgba(59, 130, 246, 0.16);
+            padding: 28px;
+            box-shadow: var(--shadow-md);
+            display: grid;
+            gap: 16px;
+        }
+        .testimonial::before {
+            content: "";
+            position: absolute;
+            top: -18px;
+            left: 24px;
+            width: 54px;
+            height: 4px;
+            border-radius: 999px;
+            background: var(--primary);
+        }
+        .testimonial:nth-child(2)::before { background: var(--secondary); }
+        .testimonial:nth-child(3)::before { background: var(--accent); }
+        .testimonial::after {
+            content: "“";
+            position: absolute;
+            top: 18px;
+            right: 24px;
+            font-size: 3.2rem;
+            line-height: 1;
+            color: rgba(59, 130, 246, 0.18);
+            font-family: "Poppins", sans-serif;
+        }
+        .testimonial p { margin: 0; color: var(--text); }
+        .testimonial footer { display: flex; flex-direction: column; gap: 4px; color: var(--text-muted); }
+
+        .dashboard {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            box-shadow: var(--shadow-lg);
+        }
+        .dashboard header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .tabs { display: inline-flex; border-radius: 999px; background: rgba(59, 130, 246, 0.08); padding: 4px; gap: 6px; }
+    .tab { border: none; background: transparent; padding: 8px 16px; border-radius: 999px; font-weight: 600; color: var(--text-muted); }
+    .tab.active { background: var(--primary); color: #fff; }
+        .service-cards { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+        .service-card { border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-md); background: var(--surface); }
+        .service-card img { width: 100%; height: 140px; object-fit: cover; }
+        .service-card .body { padding: 18px; display: grid; gap: 8px; }
+        .service-card .meta { display: flex; gap: 12px; font-size: 0.85rem; color: var(--text-muted); }
+
+        footer.site-footer {
+            background: var(--surface-dark);
+            color: rgba(255, 255, 255, 0.78);
+            padding: 72px 32px;
+        }
+        .footer-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px; }
+        .footer-title { font-weight: 700; margin-bottom: 16px; }
+        .footer-links { display: grid; gap: 10px; font-size: 0.92rem; }
+        .footer-links a { color: rgba(255, 255, 255, 0.78); text-decoration: none; }
+        .footer-links a:hover { color: #fff; }
+
+        @media (max-width: 768px) {
+            .topbar { flex-wrap: wrap; justify-content: center; }
+            nav { justify-content: center; }
+            .hero { padding: 72px 24px 110px; }
+            .kpi-row { margin-top: -40px; }
+            section { margin-bottom: 72px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="topbar">
+            <div class="brand">
+                <span class="brand-mark">KP</span>
+                <strong>KodPwomo</strong>
+            </div>
+            <nav>
+                <a href="#hero">Accueil</a>
+                <a href="#services">Services</a>
+                <a href="#fonctionnement">Fonctionnement</a>
+                <a href="#dashboard">Tableau de bord</a>
+            </nav>
+            <div style="display:flex; gap:12px;">
+                <button class="ghost-btn">Connexion</button>
+                <button class="cta-btn">Commander</button>
+            </div>
+        </div>
+    </header>
+
+    <section id="hero" class="hero">
+        <div class="hero-layout">
+            <div class="hero-heading">
+                <span class="badge">📦 Service de livraison étudiant</span>
+                <h1>Toutes vos courses, livrées directement sur le campus.</h1>
+                <p>KodPwomo coordonne des agents formés pour récupérer vos commandes auprès des commerces partenaires et vous les remettre où vous étudiez, en toute sécurité.</p>
+                <div class="hero-actions">
+                    <button class="cta-btn">Commencer maintenant</button>
+                    <button class="ghost-btn">Découvrir le back-office</button>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <img src="https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=720&q=80" alt="Étudiant recevant une livraison">
+                <div class="hero-stats">
+                    <div class="stat-card"><span>Livraisons du jour</span><span>52</span></div>
+                    <div class="stat-card"><span>Satisfaction</span><span>4.8 ★</span></div>
+                    <div class="stat-card"><span>Délai moyen</span><span>23 min</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="kpi-row">
+        <article class="kpi-card">
+            <strong>1000+</strong>
+            <span>Étudiants servis</span>
+        </article>
+        <article class="kpi-card">
+            <strong>45</strong>
+            <span>Partenaires actifs</span>
+        </article>
+        <article class="kpi-card">
+            <strong>120</strong>
+            <span>Agents disponibles</span>
+        </article>
+        <article class="kpi-card">
+            <strong>98%</strong>
+            <span>Livraisons ponctuelles</span>
+        </article>
+    </div>
+
+    <section id="services">
+        <div class="section-header">
+            <h2>Pourquoi choisir KodPwomo ?</h2>
+            <p>Une approche sur mesure pour la vie étudiante : temps d'attente réduits, transparence sur les frais, et suivi temps réel.</p>
+        </div>
+        <div class="feature-grid">
+            <article class="feature-card">
+                <span class="icon">⚡</span>
+                <h3>Livraison rapide</h3>
+                <p>Agents géolocalisés, affectation automatique selon la proximité et la capacité.</p>
+            </article>
+            <article class="feature-card">
+                <span class="icon">🛡️</span>
+                <h3>Sécurité assurée</h3>
+                <p>Commerces vérifiés, identité des agents confirmée, notifications en direct.</p>
+            </article>
+            <article class="feature-card">
+                <span class="icon">🧾</span>
+                <h3>Suivi complet</h3>
+                <p>Timeline claire : commande, collecte, livraison. Accès à tout moment.</p>
+            </article>
+            <article class="feature-card">
+                <span class="icon">🎁</span>
+                <h3>Programme fidélité</h3>
+                <p>Points cumulés à chaque course, offres exclusives pour les étudiants.</p>
+            </article>
+        </div>
+    </section>
+
+    <section id="fonctionnement">
+        <div class="section-header">
+            <h2>Comment ça marche ?</h2>
+            <p>Trois étapes simples pour une livraison réussie, côté étudiant comme côté agent.</p>
+        </div>
+        <div class="timeline">
+            <article class="timeline-step" data-step="1">
+                <h3>Choisissez</h3>
+                <p>Sélectionnez votre campus, parcourez les commerces partenaires et composez votre commande.</p>
+            </article>
+            <article class="timeline-step" data-step="2">
+                <h3>Confirmez</h3>
+                <p>Indiquez l'heure souhaitée, ajoutez les instructions de livraison, payez en ligne ou à la réception.</p>
+            </article>
+            <article class="timeline-step" data-step="3">
+                <h3>Recevez</h3>
+                <p>Votre agent confirme chaque étape. Suivez son arrivée en temps réel et notez la prestation.</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="testimonials-section">
+        <div class="section-header">
+            <h2>Ils en parlent</h2>
+            <p>Des étudiants et responsables de campus satisfaits par la fluidité du service.</p>
+        </div>
+        <div class="testimonials-shell">
+            <div class="testimonials">
+                <article class="testimonial">
+                    <p>« Entre deux cours, je reçois mon déjeuner chaud sans quitter le campus. Le suivi temps réel est rassurant. »</p>
+                    <footer>
+                        <strong>Laura, Étudiante UÉH</strong>
+                        <span>120 commandes livrées</span>
+                    </footer>
+                </article>
+                <article class="testimonial">
+                    <p>« Nous pouvons assigner nos agents en quelques clics et garder un historique des performances. »</p>
+                    <footer>
+                        <strong>Frantz, Responsable logistique</strong>
+                        <span>KodPwomo partenaire depuis 2024</span>
+                    </footer>
+                </article>
+                <article class="testimonial">
+                    <p>« Les notifications push permettent de mieux planifier et éviter les retards. »</p>
+                    <footer>
+                        <strong>Sandra, Gestionnaire campus</strong>
+                        <span>Temps moyen réduit de 6 min</span>
+                    </footer>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section id="dashboard">
+        <div class="section-header">
+            <h2>Aperçu du tableau de bord étudiant</h2>
+            <p>Interface claire avec programme fidélité mis en avant, filtres simples et cartes de services.</p>
+        </div>
+        <div class="dashboard">
+            <header>
+                <div>
+                    <h3>Programme Fidélité</h3>
+                    <span style="color: var(--text-muted);">850 points • Niveau Gold</span>
+                </div>
+                <div class="tabs">
+                    <button class="tab active">Services disponibles</button>
+                    <button class="tab">Historique</button>
+                </div>
+            </header>
+            <div class="service-cards">
+                <article class="service-card">
+                    <img src="https://images.unsplash.com/photo-1533777168198-6f2dca9b0491?auto=format&fit=crop&w=600&q=80" alt="Restaurant">
+                    <div class="body">
+                        <strong>Le Bon Goût</strong>
+                        <div class="meta">
+                            <span>⭐ 4.7</span>
+                            <span>20-25 min</span>
+                            <span>500 HTG</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="service-card">
+                    <img src="https://images.unsplash.com/photo-1472851294608-062f824d29cc?auto=format&fit=crop&w=600&q=80" alt="Papeterie">
+                    <div class="body">
+                        <strong>Express Print</strong>
+                        <div class="meta">
+                            <span>⭐ 4.4</span>
+                            <span>15-20 min</span>
+                            <span>300 HTG</span>
+                        </div>
+                    </div>
+                </article>
+                <article class="service-card">
+                    <img src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80" alt="Pharmacie">
+                    <div class="body">
+                        <strong>Médicare Campus</strong>
+                        <div class="meta">
+                            <span>⭐ 4.5</span>
+                            <span>25-30 min</span>
+                            <span>400 HTG</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <div class="brand" style="color:#fff;">
+                    <span class="brand-mark">KP</span>
+                    <strong>KodPwomo</strong>
+                </div>
+                <p style="margin-top:16px; max-width:28ch;">Votre service de livraison sur campus, rapide, fiable et pensé pour les étudiants.</p>
+            </div>
+            <div>
+                <div class="footer-title">Services</div>
+                <div class="footer-links">
+                    <a href="#">Restaurants</a>
+                    <a href="#">Papeteries</a>
+                    <a href="#">Pharmacies</a>
+                    <a href="#">Épiceries</a>
+                </div>
+            </div>
+            <div>
+                <div class="footer-title">Entreprise</div>
+                <div class="footer-links">
+                    <a href="#">À propos</a>
+                    <a href="#">Devenir partenaire</a>
+                    <a href="#">Devenir agent</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+            <div>
+                <div class="footer-title">Légal</div>
+                <div class="footer-links">
+                    <a href="#">Conditions d'utilisation</a>
+                    <a href="#">Confidentialité</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

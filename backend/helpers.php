@@ -11,8 +11,11 @@ function response($data, $status = 200) {
 // Helper function to validate request data
 function validateRequest() {
     $data = json_decode(file_get_contents('php://input'), true);
-
+    if(isset($_POST) && !empty($_POST)){
+        $data = $_POST;
+    }
     return is_array($data) ? $data : [];
+
 }
 //filter input to prevent SQL injection
 function sanitizeInput($input) {
@@ -21,7 +24,7 @@ function sanitizeInput($input) {
 
 //image treatment for product. // need a correction
 function handleProductImageUpload($file) {
-    $file = sanitizeInput($file);
+    //$file = sanitizeInput($file);
     //verify if file error == 0
     if ($file['error'] !== 0) {
         response(['error' => 'image upload error'], 400);

@@ -222,7 +222,7 @@
     <script>
     (function(){
         const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-        const base = `/kodpwomo/backend/products/adm`;
+        const base = `../backend/products/adm`;
         let lastData = null;
 
         function escapeHtml(s){ return s===null||s===undefined? '': String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -314,7 +314,7 @@
                     const cur = b.getAttribute('data-avail')==='1'; const next = !cur;
                     const prevText = b.textContent; b.textContent = '…'; b.disabled = true;
                     try{
-                        const putUrl = `/kodpwomo/backend/products/availability`;
+                        const putUrl = `../backend/products/availability`;
                         const res = await fetch(putUrl, { method: 'PUT', headers: {'Content-Type':'application/json','Accept':'application/json'}, body: JSON.stringify({ id: id, is_available: next?1:0 }) });
                         const txt = await res.text(); const json = txt? JSON.parse(txt): {};
                         showSnack('Mise à jour effectuée');
@@ -447,7 +447,7 @@
 
         async function loadCategories(selectedCategoryId = null) {
             try {
-                const response = await fetch('/kodpwomo/backend/categories', {
+                const response = await fetch('../backend/category/adm', {
                     headers: { 'Accept': 'application/json' }
                 });
                 const data = await response.json();
@@ -466,9 +466,21 @@
                         }
                         select.appendChild(option);
                     });
+                } else if (data && Array.isArray(data)) {
+                    // Si la réponse est directement un array de catégories
+                    data.forEach(category => {
+                        const option = document.createElement('option');
+                        option.value = category.id;
+                        option.textContent = category.name;
+                        if (selectedCategoryId && category.id == selectedCategoryId) {
+                            option.selected = true;
+                        }
+                        select.appendChild(option);
+                    });
                 }
             } catch (error) {
-                showSnack('Erreur lors du chargement des catégories');
+                showSnack('Erreur lors du chargement des catégories: ' + error.message);
+                console.error('Erreur chargement catégories:', error);
             }
         }
 
@@ -526,41 +538,70 @@
                 submitBtn.textContent = 'En cours...';
                 submitBtn.disabled = true;
 
-                const formData = new FormData();
-                const form = document.getElementById('productForm');
-                
-                // Add form fields
-                formData.append('name', document.getElementById('productName').value.trim());
-                formData.append('category_id', document.getElementById('productCategory').value);
-                formData.append('price', document.getElementById('productPrice').value);
-                formData.append('is_available', document.getElementById('productAvailable').value);
-                formData.append('description', document.getElementById('productDescription').value.trim());
-                formData.append('university_id', univ);
+                const productDataToSend = {
+                    name: document.getElementById('productName').value.trim(),
+                    category_id: parseInt(document.getElementById('productCategory').value, 10),
+                    price: parseFloat(document.getElementById('productPrice').value),
+                    is_available: parseInt(document.getElementById('productAvailable').value, 10),
+                    description: document.getElementById('productDescription').value.trim(),
+                    university_id: parseInt(univ, 10)
+                };
 
                 if (isEdit) {
-                    formData.append('id', productData.id);
+                    productDataToSend.id = productData.id;
                 }
 
-                // Add image if selected
-                const imageFile = document.getElementById('productImage').files[0];
-                if (imageFile) {
-                    formData.append('image', imageFile);
-                }
-
-                const url = isEdit ? '/kodpwomo/backend/products' : '/kodpwomo/backend/products';
+                const url = isEdit ? '../backend/product/adm' : '../backend/new/product/adm';
                 const method = isEdit ? 'PUT' : 'POST';
-                
-                const response = await fetch(url, {
-                    method: method,
-                    body: formData
-                });
+                const imageFile = document.getElementById('productImage').files[0];
 
-                const result = await response.json();
-                
+                let response;
+                let result;
+
+                if (!isEdit) {
+                    if (!imageFile) {
+                        throw new Error('Une image est requise pour créer un produit');
+                    }
+
+                    const formData = new FormData();
+                    Object.entries(productDataToSend).forEach(([key, value]) => {
+                        formData.append(key, value);
+                    });
+                    // Inclure également la charge utile JSON pour audit/debug côté backend
+                    formData.append('payload', JSON.stringify(productDataToSend));
+                    formData.append('image', imageFile);
+
+                    response = await fetch(url, {
+                        method: method,
+                        body: formData
+                    });
+                    result = await response.json();
+                } else {
+                    response = await fetch(url, {
+                        method: method,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(productDataToSend)
+                    });
+                    result = await response.json();
+
+                    // Upload image uniquement si une nouvelle image est sélectionnée
+                    if (response.ok && result.success && imageFile) {
+                        const formData = new FormData();
+                        formData.append('product_id', productDataToSend.id);
+                        formData.append('image', imageFile);
+                        await fetch('../backend/products/upload-image', {
+                            method: 'POST',
+                            body: formData
+                        });
+                    }
+                }
+
                 if (response.ok && result.success) {
                     showSnack(isEdit ? 'Produit modifié avec succès' : 'Produit créé avec succès');
                     closeProductModal();
-                    fetchProducts(); // Refresh the list
+                    fetchProducts();
                 } else {
                     throw new Error(result.message || 'Erreur lors de la sauvegarde');
                 }

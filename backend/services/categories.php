@@ -91,3 +91,9 @@ function getAllCategories() {
     $stmt->execute();
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+//all categories
+function allCategories(){
+    $category = getAllCategories();
+    response(['categories' => $category], 200);
+}

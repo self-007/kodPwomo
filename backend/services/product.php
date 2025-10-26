@@ -47,37 +47,28 @@ function returnProductByIdUniversity($id) {
 }
 
 // update product // need a correction
-function updateProduct() {
+function updateProduct($id) {
     global $datas;
-    if(!isset($datas['id']) || !isset($datas['name']) || !isset($datas['description']) || !isset($datas['price']) || !isset($datas['category_id'])){
+    if(!isset($id) || !isset($datas['name']) || !isset($datas['description']) || !isset($datas['price']) || !isset($datas['category_id'])){
         response(['error' => 'Missing data'], 400);
     }
     // verify int value or superior to 0
-    if (intval($datas['id']) <= 0 || intval($datas['category_id']) <= 0) {
+    if (intval($id) <= 0 || intval($datas['category_id']) <= 0) {
         response(['error' => 'Invalid product ID or category ID'], 400);
     }
     // Validate input
     if (empty($datas['name']) || empty($datas['description']) || empty($datas['price']) || empty($datas['category_id'])) {
         response(['error' => 'Name, description, price, and category ID are required'], 400);
     }
-    $sql = "";
-    //for image
-    if(isset($_FILES['image']) && $_FILES['image']['error'] === 0){
-        $imagePath = handleProductImageUpload($_FILES['image']);
-        $sql = "UPDATE products SET name = :name, description = :description, prices = :price, category_id = :category_id, picture = :image_path WHERE id = :id";
-    } 
-    $id = intval($datas['id']);
+
+    $id = intval($id);
     $name = sanitizeInput($datas['name']);
     $description = sanitizeInput($datas['description']);
     $price = floatval($datas['price']);
     $categoryId = intval($datas['category_id']);
     global $connection;
     $stmt = "UPDATE products SET name = :name, description = :description, prices = :price, id_category = :category_id WHERE id = :id";
-    if(!empty($sql)){
-        $stmt = $connection->prepare($sql);
-    } else {
-        $stmt = $connection->prepare($stmt);
-    }
+    $stmt = $connection->prepare($stmt);
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':description', $description);
     $stmt->bindParam(':price', $price);
@@ -90,6 +81,25 @@ function updateProduct() {
         response(['success' => 'Product updated successfully'], 200);
     } else {
         response(['error' => 'Failed to update product'], 500);
+    }
+}
+//update product image
+function updateProductImage($id){
+    if(intval($id) <= 0 ){
+        response(['error' => 'Invalid id'], 400);
+    }
+    if(!isset($_FILES['image']) || $_FILES['image']['error'] !== 0){
+        response(['error' => 'Image is required'], 400);
+    }
+    $imagePath = handleProductImageUpload($_FILES['image']);
+    global $connection;
+    $stmt = $connection->prepare("UPDATE products SET picture = :image_path WHERE id = :id");
+    $stmt->bindParam(':image_path', $imagePath);
+    $stmt->bindParam(':id', $id);
+    if ($stmt->execute()) {
+        response(['success' => 'Product image updated successfully'], 200);
+    } else {
+        response(['error' => 'Failed to update product image'], 500);
     }
 }
 

@@ -1,13 +1,13 @@
 <?php
 // create place name by university id
-function createPlace() {
+function createPlace($idUniversity){
     global $datas;
     // verify int value or superior to 0
-    if (intval($datas['universityId']) <= 0 || empty($datas['placeName'])) {
+    if (intval($idUniversity) <= 0 || empty($datas['name'])) {
         response(['error' => 'Invalid university ID or place name'], 400);
     }
-    $placeName = sanitizeInput($datas['placeName']);
-    $universityId = intval($datas['universityId']);
+    $placeName = sanitizeInput($datas['name']);
+    $universityId = intval($idUniversity);
 
     $sql = '';
     if(!isset($_FILES['image']) || $_FILES['image']['error'] !== 0){
@@ -18,7 +18,7 @@ function createPlace() {
     if($sql !== ''){
         $stmt = $connection->prepare($sql);
     } else {
-        $stmt = $connection->prepare("INSERT INTO salle (university_id, salle_name, image_path) VALUES (:university_id, :place_name, :image_path)");
+        $stmt = $connection->prepare("INSERT INTO salle (id_university, salle_name, image) VALUES (:university_id, :place_name, :image_path)");
         $stmt->bindParam(':image_path', $imagePath);
     }
    
@@ -32,39 +32,48 @@ function createPlace() {
     }
 }
 
-//modify salle
-function modifyPlace(){
+// PUT: update place name only (JSON)
+function modifyPlace($id){
     global $datas;
-    // verify int value or superior to 0
-    if (intval($datas['universityId']) <= 0 || empty($datas['placeName']) || intval($datas['id'] <= 0)) {
-        response(['error' => 'Invalid university ID or place name'], 400);
+    if (empty($datas['name'])) {
+        response(['error' => 'Invalid place name', $datas], 400);
     }
-    $placeName = sanitizeInput($datas['placeName']);
-    $id = intval($datas['id']);
-    $universityId = intval($datas['universityId']);
-    $sql = '';
-    if(!isset($_FILES['image']) || $_FILES['image']['error'] !== 0){
-        $sql = "UPDATE salle SET university_id = :university_id, salle_name = :place_name WHERE id = :id";
+    if(intval($id) <= 0 ){
+        response(['error' => 'Invalid  id'], 400);
     }
-    $imagePath = handleProductImageUpload($_FILES['image']);
+    $placeName = sanitizeInput($datas['name']);
+    $id = intval($id);
     global $connection;
-    if($sql !== ''){
-        $stmt = $connection->prepare($sql);
-    } else {
-        $stmt = $connection->prepare("UPDATE salle SET university_id = :university_id, salle_name = :place_name, image_path = :image_path WHERE id = :id");
-        $stmt->bindParam(':image_path', $imagePath);
-    }
-   
-    $stmt->bindParam(':university_id', $universityId);
+    $stmt = $connection->prepare("UPDATE salle SET salle_name = :place_name WHERE id = :id");
     $stmt->bindParam(':place_name', $placeName);
-    
+    $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
         response(['success' => 'place modifiee avec success'], 200);
     } else {
         response(['error' => 'Failed to modify place'], 500);
     }
 }
-//
+
+// POST: update place image only (FormData)
+function updatePlaceImage($id){
+    if(intval($id) <= 0 ){
+        response(['error' => 'Invalid id'], 400);
+    }
+    if(!isset($_FILES['image']) || $_FILES['image']['error'] !== 0){
+        response(['error' => 'Image is required'], 400);
+    }
+    $imagePath = handleProductImageUpload($_FILES['image']);
+    global $connection;
+    $stmt = $connection->prepare("UPDATE salle SET image = :image_path WHERE id = :id");
+    $stmt->bindParam(':image_path', $imagePath);
+    $stmt->bindParam(':id', $id);
+    if ($stmt->execute()) {
+        response(['success' => 'Image modifiée avec succès'], 200);
+    } else {
+        response(['error' => 'Failed to update image'], 500);
+    }
+}
+
 //delete places
 function deletePlaces(){
     global $datas;
@@ -83,7 +92,7 @@ function getPlacesByUniversityId($universityId) {
         response(['error' => 'Invalid university ID'], 400);
     }
     global $connection;
-    $stmt = $connection->prepare("SELECT id, salle_name FROM salle WHERE id_university = :university_id");
+    $stmt = $connection->prepare("SELECT id, salle_name, image FROM salle WHERE id_university = :university_id");
     $stmt->bindParam(':university_id', $universityId);
     $stmt->execute();
     $nbrs = $stmt->rowCount();

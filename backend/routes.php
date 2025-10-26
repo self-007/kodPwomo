@@ -12,6 +12,7 @@ $routes =  [
         '/orders/(\d+)' => ['services/orders.php', 'getOrderById'], //get order by id
         '/universities' => ['services/universities.php', 'getAllUniversities'], // get all universities
         '/universities/(\d+)' => ['services/universities.php', 'getUniversityById'], //get university by id
+        '/places/adm/(\d+)' => ['services/places.php', 'getPlacesByUniversityId'],
         '/places/(\d+)' => ['services/places.php', 'getPlacesByUniversityId'], //get places by university id
         '/agents/availability/(\w+)' => ['agents/agents.php', 'getAgentAvailability'], //get agentAvailability status
         '/deliveries/agent/(\w+)' => ['services/deliveries.php', 'getAgentStats'], //get deliveries by agent id
@@ -38,26 +39,26 @@ $routes =  [
     ],
     'POST' => [
         '/new/product/adm' => ['adm/adm.php', 'createProduct'], //create product
-        '/categories' => ['adm/adm.php', 'createCategory'], //create category
+        '/category/adm' => ['adm/adm.php', 'createCategory'], //create category
         '/users' => ['controllers/users.php', 'createUser'],   //create user
         '/verify-otp' => ['controllers/verify-otp.php', 'verifyOtp'], //verify OTP
         '/resend-otp' => ['controllers/resend-otp.php', 'resendOtp'], //resend OTP
         '/orders' => ['services/orders.php', 'createOrder'], //create order
-        '/notifications' => ['services/notifications.php', 'createNotification'], //create  
-        '/places/adm' => ['adm/adm.php', 'createPlace'], //create place
+        '/notifications' => ['services/notifications.php', 'createNotification'], //create
+        '/places/adm/(\d+)' => ['adm/adm.php', 'createPlace'], //create place
         '/university/super' => ['Adm/main_adm.php', 'createUniversity'], //create university from super admin
         '/category/super' => ['adm/main_adm.php', 'createCategory'], //create category from super admin
-
-
+        '/places/image-update/adm/(\d+)' => ['Adm/adm.php', 'updatePlaceImage'], //update place image from admin
+        '/products/image-update/adm/(\d+)' => ['Adm/adm.php', 'updateProductImage'], //update product image from admin
     ],
     'PUT' => [
         '/agents/availability' => ['agents/agents.php', 'setAgentAvailability'], //update agent availability
-        '/product/adm' => ['adm/adm.php', 'updateProduct'], //update product , for admin
-        '/categories/adm' => ['adm/adm.php', 'updateCategory'], //update category , for admin
+        '/product/adm/(\d+)' => ['adm/adm.php', 'updateProduct'], //update product , for admin
+        '/category/adm' => ['adm/adm.php', 'updateCategory'], //update category , for admin
         '/products/availability' => ['adm/adm.php', 'setProductAvailability'], //set product available or unavailable, for admin
         '/categories/adm' => ['adm/adm.php', 'updateCategory'], //set category available or unavailable, for admin
         '/notifications/status' => ['adm/adm.php', 'markNotificationAsRead'], //mark notification as read, for admin
-        '/places/adm' => ['adm/adm.php', 'updatePlace'], //update place , for admin
+        '/places/adm/(\d+)' => ['adm/adm.php', 'modifyPlace'], //update place , for admin
         '/users/adm' => ['controllers/users.php', 'updateUser'],   //update user, for admin
         '/user/role' => ['adm/adm.php', 'setUserRole'], //set user role, for admin
         '/users/status' => ['adm/adm.php', 'updateUserStatus'], //set user status, for admin

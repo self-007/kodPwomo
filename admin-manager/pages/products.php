@@ -533,52 +533,47 @@
         async function submitProductForm(isEdit, productData) {
             const submitBtn = document.getElementById('productSubmitBtn');
             const originalText = submitBtn.textContent;
-            
             try {
                 submitBtn.textContent = 'En cours...';
                 submitBtn.disabled = true;
 
+                // Préparer les données à envoyer (ne pas inclure id ni university_id pour PUT)
                 const productDataToSend = {
                     name: document.getElementById('productName').value.trim(),
                     category_id: parseInt(document.getElementById('productCategory').value, 10),
                     price: parseFloat(document.getElementById('productPrice').value),
                     is_available: parseInt(document.getElementById('productAvailable').value, 10),
-                    description: document.getElementById('productDescription').value.trim(),
-                    university_id: parseInt(univ, 10)
+                    description: document.getElementById('productDescription').value.trim()
                 };
 
-                if (isEdit) {
-                    productDataToSend.id = productData.id;
-                }
-
-                const url = isEdit ? '../backend/product/adm' : '../backend/new/product/adm';
-                const method = isEdit ? 'PUT' : 'POST';
                 const imageFile = document.getElementById('productImage').files[0];
 
                 let response;
                 let result;
 
                 if (!isEdit) {
+                    // Création : POST avec image obligatoire
                     if (!imageFile) {
                         throw new Error('Une image est requise pour créer un produit');
                     }
-
+                    // Inclure university_id pour la création
+                    productDataToSend.university_id = parseInt(univ, 10);
                     const formData = new FormData();
                     Object.entries(productDataToSend).forEach(([key, value]) => {
                         formData.append(key, value);
                     });
-                    // Inclure également la charge utile JSON pour audit/debug côté backend
                     formData.append('payload', JSON.stringify(productDataToSend));
                     formData.append('image', imageFile);
-
-                    response = await fetch(url, {
-                        method: method,
+                    response = await fetch('../backend/new/product/adm', {
+                        method: 'POST',
                         body: formData
                     });
                     result = await response.json();
                 } else {
+                    // Edition : PUT sur /product/adm/{id} sans id ni university_id dans le body
+                    const url = `../backend/product/adm/${productData.id}`;
                     response = await fetch(url, {
-                        method: method,
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json'
                         },
@@ -589,9 +584,9 @@
                     // Upload image uniquement si une nouvelle image est sélectionnée
                     if (response.ok && result.success && imageFile) {
                         const formData = new FormData();
-                        formData.append('product_id', productDataToSend.id);
                         formData.append('image', imageFile);
-                        await fetch('../backend/products/upload-image', {
+                        // Utiliser la bonne route backend pour update image produit
+                        await fetch(`../backend/products/image-update/adm/${productData.id}`, {
                             method: 'POST',
                             body: formData
                         });
@@ -605,7 +600,6 @@
                 } else {
                     throw new Error(result.message || 'Erreur lors de la sauvegarde');
                 }
-
             } catch (error) {
                 showSnack('Erreur: ' + error.message);
             } finally {
@@ -648,6 +642,8 @@
 
         // initial load
         fetchProducts();
+
+        // ...
     })();
     </script>
 

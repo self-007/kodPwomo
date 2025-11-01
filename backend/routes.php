@@ -10,7 +10,7 @@ $routes =  [
         '/users/(\d+)' => ['controllers/users.php', 'getUserById'], //get user by id
         '/orders' => ['services/orders.php', 'getAllOrders'], //get all orders
         '/orders/(\d+)' => ['services/orders.php', 'getOrderById'], //get order by id
-        '/universities' => ['services/universities.php', 'getAllUniversities'], // get all universities
+        '/universities' => ['services/universities.php', 'All_universities'], // get all universities
         '/universities/(\d+)' => ['services/universities.php', 'getUniversityById'], //get university by id
         '/places/adm/(\d+)' => ['services/places.php', 'getPlacesByUniversityId'],
         '/places/(\d+)' => ['services/places.php', 'getPlacesByUniversityId'], //get places by university id
@@ -50,26 +50,32 @@ $routes =  [
         '/category/super' => ['adm/main_adm.php', 'createCategory'], //create category from super admin
         '/places/image-update/adm/(\d+)' => ['Adm/adm.php', 'updatePlaceImage'], //update place image from admin
         '/products/image-update/adm/(\d+)' => ['Adm/adm.php', 'updateProductImage'], //update product image from admin
+        '/university/image-update/(\w+)' => ['Adm/main_adm.php', 'update_image_uvs'], //update university image from admin
     ],
     'PUT' => [
         '/agents/availability' => ['agents/agents.php', 'setAgentAvailability'], //update agent availability
-        '/product/adm/(\d+)' => ['adm/adm.php', 'updateProduct'], //update product , for admin
-        '/category/adm' => ['adm/adm.php', 'updateCategory'], //update category , for admin
-        '/products/availability' => ['adm/adm.php', 'setProductAvailability'], //set product available or unavailable, for admin
-        '/categories/adm' => ['adm/adm.php', 'updateCategory'], //set category available or unavailable, for admin
-        '/notifications/status' => ['adm/adm.php', 'markNotificationAsRead'], //mark notification as read, for admin
-        '/places/adm/(\d+)' => ['adm/adm.php', 'modifyPlace'], //update place , for admin
+        '/product/adm/(\d+)' => ['Adm/adm.php', 'updateProduct'], //update product , for admin
+        '/category/adm' => ['Adm/adm.php', 'updateCategory'], //update category , for admin
+        '/products/availability' => ['Adm/adm.php', 'setProductAvailability'], //set product available or unavailable, for admin
+        '/categories/adm' => ['Adm/adm.php', 'updateCategory'], //set category available or unavailable, for admin
+        '/notifications/status' => ['Adm/adm.php', 'markNotificationAsRead'], //mark notification as read, for admin
+        '/places/adm/(\d+)' => ['Adm/adm.php', 'modifyPlace'], //update place , for admin
         '/users/adm' => ['controllers/users.php', 'updateUser'],   //update user, for admin
-        '/user/role' => ['adm/adm.php', 'setUserRole'], //set user role, for admin
-        '/users/status' => ['adm/adm.php', 'updateUserStatus'], //set user status, for admin
-        '/users/verify' => ['adm/adm.php', 'setUserVerifiedStatus'], //verify user account, for admin
-        '/university/super' => ['Adm/main_adm.php', 'updateUniversity'], //update university from super admin
-        '/category/super' => ['adm/main_adm.php', 'updateCategory'], // update category from super admin
+        '/user/role' => ['Adm/adm.php', 'setUserRole'], //set user role, for admin
+        '/users/status' => ['Adm/adm.php', 'updateUserStatus'], //set user status, for admin
+        '/users/verify' => ['Adm/adm.php', 'setUserVerifiedStatus'], //verify user account, for admin
+        '/university/super/(\d+)' => ['Adm/main_adm.php', 'updateUniversity'], //update university from super admin
+        '/category/super' => ['Adm/main_adm.php', 'updateCategory'], // update category from super admin
+        '/setAdm/(\w+)' => ['Adm/main_adm.php', 'setUserAdm'], //assign admin role to user for university by super admin
+        '/setAgent/(\w+)' => ['Adm/adm.php', 'setUserAgent'], //assign agent role to user for university by super admin
+        '/setUser/(\w+)' => ['Adm/adm.php', 'setUserClient'], //assign user role to user for university by super admin
     ],
     'DELETE' => [
-        '/category/super' => ['adm/main_adm', 'deleteCategory'], // delete category from super admin
-        '/product/adm' => ['Adm/adm.php', ]
-    ],
+        '/category/super/(\d+)' => ['Adm/main_adm.php', 'deleteCategory'], // delete category from super admin
+        '/product/adm' => ['Adm/adm.php','deleteProduct'], //delete product , for admin
+        '/places/adm/(\d+)' => ['Adm/adm.php', 'deletePlace'], //delete place , for admin
+        '/university/super/(\d+)' => ['Adm/main_adm.php', 'deleteUniversity'], //delete university from super admin
+    ]
 ]; 
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

@@ -8,14 +8,10 @@ function createCategory() {
         response(['error' => 'Name is required'], 400);
     }        
     $name = sanitizeInput($datas['name']);
-    if(!isset($_FILES['image']) || $_FILES['image']['error'] !== 0){
-        response(['error' => 'Name is required'], 400);
-    }
-    $imagePath = handleProductImageUpload($_FILES['image']);
     global $connection;
-    $stmt = $connection->prepare("INSERT INTO category (name, image_path) VALUES (:name, :image_path)");
+    $stmt = $connection->prepare("INSERT INTO category (name) VALUES (:name)");
     $stmt->bindParam(':name', $name);
-    $stmt->bindParam(':image_path', $imagePath);
+   
     if ($stmt->execute()) {
         response(['success' => 'category cree avec success'], 200);
     } else {
@@ -35,20 +31,11 @@ function updateCategory() {
         response(['error' => 'Name is required'], 400);
     }        
     $name = sanitizeInput($datas['name']);
-    $sql = '';
-    if(isset($_FILES['image']) && $_FILES['image']['error'] === 0){
-        $imagePath = handleProductImageUpload($_FILES['image']);
-        $sql = "UPDATE categories SET name = :name, image_path = :image_path WHERE id = :id";
-    }
-    $stmt = "UPDATE category SET name = :name, WHERE id = :id";
+    $id = intval($datas['id']);
+    $stmt = "UPDATE category SET name = :name WHERE id = :id";
     global $connection;
-    if($sql == ''){
-        $stmt = $connection->prepare($stmt);
-    } else {
-        $stmt = $connection->prepare($sql);
-        $stmt->bindParam(':image_path', $imagePath);
-    }
-    
+   
+    $stmt = $connection->prepare($stmt);
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
@@ -63,11 +50,12 @@ function deleteCategory($id) {
     if (intval($id) <= 0) {
         response(['error' => 'Invalid category ID'], 400);
     }
+    $id = intval($id);
     global $connection;
-    $stmt = $connection->prepare("DELETE FROM categories WHERE id = :id");
+    $stmt = $connection->prepare("DELETE FROM category WHERE id = :id");
     $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
-        return ['message' => 'Category deleted successfully'];
+        response(['status' => 'success', 'message' => 'Category deleted successfully']);
     } else {
         response(['error' => 'Failed to delete category'], 500);
     }

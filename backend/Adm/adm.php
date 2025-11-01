@@ -92,7 +92,7 @@ function getAllUsersAdm($page = 1, $search = ''){
     $search = sanitizeInput($search);
     // verify $search is not empty
     global $connection;
-    $sql = 'SELECT id_unique, name, email, u.date, u.status, 
+    $sql = 'SELECT id_unique, name, email, u.date, u.status, u.role,
     (SELECT COUNT(*) FROM orders o WHERE o.id_user = u.id_unique) AS total_orders,
     (SELECT o.date FROM orders o WHERE o.id_user = u.id_unique ORDER BY o.date DESC LIMIT 1) AS last_date,
     (SELECT un.name FROM orders o JOIN salle ON salle.id = o.adresse_id JOIN university un ON un.id = salle.id_university WHERE o.id_user = u.id_unique ORDER BY o.date DESC LIMIT 1) AS last_university,

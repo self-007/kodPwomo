@@ -260,3 +260,39 @@ function setUserVerifiedStatus() {
         response(['error' => 'Failed to update user verified status'], 500);
     }
 }
+
+//set user ADM
+function setUserAdm($id){
+    global $connection;
+    if(empty($id)){
+        response(['error' => 'invalid id'], 400);  
+    }
+    $id = sanitizeInput($id);
+    $stmt = $connection->prepare('UPDATE users SET role =:role WHERE id_unique =:id');
+    $stmt->execute(['role' => 'adm', 'id' => $id]);
+    response(['status' => 'success'], 200);
+}
+
+//set user Agent
+function setUserAgent($id){
+    global $connection;
+    if(empty($id)){
+        response(['error' => 'invalid id'], 400);  
+    }
+    $id = sanitizeInput($id);
+    $stmt = $connection->prepare('UPDATE users SET role =: role WHERE id_unique =:id');
+   $stmt->execute(['role' => 'agent', 'id' => $id]);
+    response(['status' => 'success'], 200);
+}
+
+//set user client
+function setUserClient($id){
+    global $connection;
+    if(empty($id)){
+        response(['error' => 'invalid id'], 400);  
+    }
+    $id = sanitizeInput($id);
+    $stmt = $connection->prepare('UPDATE users SET role = :role WHERE id_unique =:id');
+    $stmt->execute(['role' => 'client', 'id' => $id]);
+    response(['status' => 'success'], 200);
+}

@@ -1374,6 +1374,7 @@
                     throw new Error('Erreur lors du chargement des universités');
                 }
                 const data = await response.json();
+                console.log(data);
                 return data; // Assuming your API returns the universities array
             } catch (error) {
                 console.error('API Error:', error);

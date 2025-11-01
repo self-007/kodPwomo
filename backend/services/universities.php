@@ -3,7 +3,7 @@
 function createUniversity() {
     global $datas;
     $name = $datas['name'] ?? '';
-    $location = $datas['location'] ?? '';
+    $location = $datas['zone'] ?? '';
     
     // Validate input
     if (empty($name) || empty($location)) {
@@ -12,12 +12,12 @@ function createUniversity() {
     $name = sanitizeInput($name);
     $location = sanitizeInput($location);
     global $connection;
-    if(!isset($_FILES['image']) || $_FILES['image']['error'] !== 0){
+    if(!isset($_FILES['image_file']) || $_FILES['image_file']['error'] !== 0){
        response(['error' => 'University image is required'], 400);
     }
 
-    $image = handleProductImageUpload($_FILES['image']);
-    $stmt = $connection->prepare("INSERT INTO university (name, location, image) VALUES (:name, :location, :image)");
+    $image = handleProductImageUpload($_FILES['image_file']);
+    $stmt = $connection->prepare("INSERT INTO university (name, Zone, image) VALUES (:name, :location, :image)");
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':location', $location);
     $stmt->bindParam(':image', $image);
@@ -29,39 +29,56 @@ function createUniversity() {
 }
 
 //modify university
-function updateUniversity() {
+function updateUniversity($id) {
     global $datas;
-    $id = $datas['id'] ?? 0;
-    $name = $datas['name'] ?? '';
-    $location = $datas['location'] ?? '';
-    $image = '';
+    
 
+    if (!isset($datas['name'] ) || !isset($datas['zone'])) {
+        response(['error' => ' and location are required', $datas], 400);
+    } 
+    $name = $datas['name'];
+    $location = $datas['zone'];
     // verify int value or superior to 0
     if (intval($id) <= 0) {
         response(['error' => 'Invalid university ID'], 400);
     }
     // Validate input
     if (empty($name) || empty($location)) {
-        response(['error' => 'Name and location are required'], 400);
+        response(['error' => 'Name and location are required'.$datas], 400);
     }        
     $name = sanitizeInput($name);
     $location = sanitizeInput($location);
-    if(!isset($_FILES['image']) || $_FILES['image']['error'] !== 0){
-        $university = getUniversityById($id);
-        $image = $university['image'];
-    } else {
-        $image = handleProductImageUpload($_FILES['image']);
-    }
+
     global $connection;
-    $stmt = $connection->prepare("UPDATE university SET name = :name, location = :location, image = :image WHERE id = :id");
+    $stmt = $connection->prepare("UPDATE university SET name = :name, Zone = :location WHERE id = :id");
     $stmt->bindParam(':name', $name);
     $stmt->bindParam(':location', $location);
-    $stmt->bindParam(':image', $image);
     $stmt->bindParam(':id', $id);
     if ($stmt->execute()) {
         response(['success' => 'university mise a jour avec success'], 200);
     } else {
         response(['error' => 'Failed to update university'], 500);
+    }
+}
+
+//update image
+function update_image_uvs($id){
+    global $datas;
+    if (intval($id) <= 0) {
+        response(['error' => 'Invalid university ID'], 400);
+    }
+    if(!isset($_FILES['image_file']) || $_FILES['image_file']['error'] !== 0){
+         response(['error' => 'University image is required'], 400);
+    } 
+    $image = handleProductImageUpload($_FILES['image_file']);
+    global $connection;
+    $stmt = $connection->prepare("UPDATE university SET image = :image WHERE id = :id");
+    $stmt->bindParam(':image', $image);
+    $stmt->bindParam(':id', $id);
+    if ($stmt->execute()) {
+        response(['success' => 'University image updated successfully'], 200);
+    } else {
+        response(['error' => 'Failed to update university image'], 500);
     }
 }
 
@@ -100,6 +117,12 @@ function getAllUniversities() {
     $universities = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return ['nbrs' => $nbrs, 'universities' => $universities];
 
+}
+
+//all universities response all unoversities 
+function All_universities(){
+    $university = getAllUniversities()['universities'];
+    response($university, 200);
 }
 
 // get university by id

@@ -15,13 +15,18 @@ function getNotificationsByUserId($userId) {
 function createNotification() {
     global $datas;
     //verify datas
-    if(!isset($datas['userId']) || !isset($datas['message']) || !isset($datas['type'])) {
+    if(!isset($datas['order_id']) || !isset($datas['message']) || !isset($datas['type'])) {
         response(['error' => 'donnees manquantes'], 400);
     }
     $message =  sanitizeInput($datas['message']);
-    $userId = sanitizeInput($datas['userId']);
+    $order_id = sanitizeInput($datas['order_id']);
     $type = sanitizeInput($datas['type']);
-    // verify int value or superior to 0
+    //get the client id
+    $userId = getOrderById($order_id)['id'];
+    if(!isset($userId)){
+        response(['error' => 'Invalid user ID'], 400);
+    }
+    // verify if empty userId
     if (empty($userId)) {
         response(['error' => 'Invalid user ID'], 400);
     }

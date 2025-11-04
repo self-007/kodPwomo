@@ -1376,7 +1376,7 @@
         // Nouvelle fonction pour envoyer feedback au client
         async function sendFeedbackToClientAPI(message, userId, orderId) {
             try {
-                const response = await fetch('backend/notifications/send', {
+                const response = await fetch('backend/notifications', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

@@ -48,41 +48,61 @@ function loadUsersData(cb) {
 <div id="wm-toast" class="wm-toast" style="display:none"></div>
 
 <style>
-.wm-users-module{font-family:'Poppins', 'Roboto', Arial, sans-serif;max-width:1000px;margin:auto;padding:1.5rem 1rem}
-.wm-users-title{font-size:2rem;font-weight:700;color:#0f172a;margin-bottom:.5rem}
-.wm-users-subtitle{font-size:1.15rem;color:#2563eb;margin-bottom:1.5rem}
-.wm-users-table-wrap{overflow-x:auto;background:transparent}
-.wm-users-table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;min-width:720px;box-shadow:0 2px 8px rgba(37,99,235,.07)}
-.wm-users-table th,.wm-users-table td{padding:.85rem .75rem;text-align:left;border-bottom:1px solid #f3f6fa;font-size:1rem;color:#0f172a}
-.wm-users-table thead{background:#f7fafc}
+.wm-users-module{font-family:'Inter', 'Poppins', 'Roboto', Arial, sans-serif;max-width:1100px;margin:auto;padding:2rem 1.5rem}
+.wm-users-title{font-size:2.2rem;font-weight:800;color:#1a1a2e;margin-bottom:.3rem;letter-spacing:-.5px}
+.wm-users-subtitle{font-size:0.95rem;color:#64748b;margin-bottom:2rem;font-weight:500;text-transform:uppercase;letter-spacing:1px}
+
+.wm-users-table-wrap{overflow-x:auto;background:transparent;border-radius:14px}
+.wm-users-table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;min-width:720px;box-shadow:0 4px 16px rgba(255, 107, 53, 0.08);border:1px solid rgba(255, 107, 53, 0.05)}
+.wm-users-table th{padding:1rem 1.25rem;text-align:left;border-bottom:2px solid rgba(255, 107, 53, 0.1);font-size:0.9rem;font-weight:700;color:#1a1a2e;background:linear-gradient(135deg, rgba(255, 107, 53, 0.02), rgba(0, 212, 255, 0.01));text-transform:uppercase;letter-spacing:0.5px}
+.wm-users-table td{padding:1rem 1.25rem;text-align:left;border-bottom:1px solid #f0f1f3;font-size:0.95rem;color:#2d3748}
+.wm-users-table tbody tr{transition:background .15s ease, box-shadow .15s ease}
+.wm-users-table tbody tr:hover{background:rgba(255, 107, 53, 0.02)}
 .wm-users-table tr:last-child td{border-bottom:0}
 .wm-users-table__actions{text-align:right;width:1%}
-.wm-skeleton{color:transparent;background:linear-gradient(90deg,#f7fafc 25%, #eef2ff 50%, #f7fafc 75%);background-size:200% 100%}
-.wm-badge{display:inline-block;padding:.2em .7em;font-size:.95em;border-radius:1em;font-weight:600;vertical-align:middle}
-.wm-badge--active{background:#10b981;color:#fff}
-.wm-badge--inactive{background:#ff7a18;color:#fff}
-.wm-badge--adm{display:block;font-size:.8em;color:#2563eb;margin-top:2px}
-.wm-btn{font:inherit;padding:.45rem .85rem;border-radius:8px;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:.5rem;transition:background .18s}
-.wm-btn--ghost{background:transparent;color:#2563eb;border:1px solid #2563eb}
-.wm-btn--ghost:hover{background:#2563eb;color:#fff}
-.wm-btn--mini{padding:.25rem .5rem;font-size:.9em;border-radius:6px;margin-left:.25rem}
-.wm-btn--blue{background:#2563eb;color:#fff;}
-.wm-btn--red{background:#ff7a18;color:#fff;}
-.wm-users-list{display:none;flex-direction:column;gap:.7rem}
-.wm-user-card{background:#fff;padding:1rem;border-radius:12px;box-shadow:0 2px 8px rgba(37,99,235,.07);display:flex;justify-content:space-between;align-items:center;gap:.5rem}
-.wm-user-info{display:flex;flex-direction:column}
-.wm-user-name{font-weight:600;color:#0f172a;font-size:1.1em}
-.wm-user-meta{font-size:.97em;color:#475569}
-.wm-user-status{font-size:.95em;margin-top:.2em}
-.wm-user-modal{position:fixed;z-index:1000;top:0;left:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.18);transition:opacity .2s}
+
+.wm-skeleton{color:transparent;background:linear-gradient(90deg, #f8f9fa 25%, #fff5f0 50%, #f8f9fa 75%);background-size:200% 100%;animation:shimmer 2s infinite}
+@keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
+
+.wm-badge{display:inline-block;padding:.35em .85em;font-size:0.85em;border-radius:8px;font-weight:700;vertical-align:middle;letter-spacing:0.3px}
+.wm-badge--active{background:linear-gradient(135deg, #1ABC9C, #16A085);color:#fff;box-shadow:0 2px 8px rgba(26, 188, 156, 0.2)}
+.wm-badge--inactive{background:linear-gradient(135deg, #FF6B35, #D84315);color:#fff;box-shadow:0 2px 8px rgba(255, 107, 53, 0.2)}
+.wm-badge--adm{display:inline-block;font-size:0.75em;color:#fff;background:#FF6B35;padding:0.25em 0.6em;border-radius:6px;margin-left:0.5rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
+
+.wm-btn{font:inherit;padding:.55rem 1rem;border-radius:8px;border:2px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s ease;font-weight:600;font-size:0.95rem}
+.wm-btn--ghost{background:transparent;color:#FF6B35;border:2px solid #FF6B35}
+.wm-btn--ghost:hover{background:#FF6B35;color:#fff;box-shadow:0 4px 12px rgba(255, 107, 53, 0.3)}
+.wm-btn--mini{padding:0.4rem 0.7rem;font-size:0.85em;border-radius:6px;margin-left:0.5rem}
+.wm-btn--blue{background:linear-gradient(135deg, #FF6B35, #D84315);color:#fff;border:none;box-shadow:0 4px 12px rgba(255, 107, 53, 0.25)}
+.wm-btn--blue:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(255, 107, 53, 0.35)}
+.wm-btn--blue:active{transform:translateY(0)}
+.wm-btn--red{background:#FF6B35;color:#fff;border:none;box-shadow:0 4px 12px rgba(255, 107, 53, 0.25)}
+.wm-btn--red:hover{background:#D84315;transform:translateY(-2px);box-shadow:0 6px 16px rgba(255, 107, 53, 0.35)}
+
+.wm-users-list{display:none;flex-direction:column;gap:1rem}
+.wm-user-card{background:#fff;padding:1.25rem;border-radius:12px;box-shadow:0 4px 16px rgba(255, 107, 53, 0.08);display:flex;justify-content:space-between;align-items:center;gap:1rem;border-left:5px solid #FF6B35;transition:all .2s ease;border:1px solid rgba(255, 107, 53, 0.1)}
+.wm-user-card:hover{box-shadow:0 8px 24px rgba(255, 107, 53, 0.12);transform:translateY(-2px)}
+.wm-user-info{display:flex;flex-direction:column;gap:0.35rem;flex:1}
+.wm-user-name{font-weight:800;color:#1a1a2e;font-size:1.05em;letter-spacing:-.3px}
+.wm-user-meta{font-size:0.9em;color:#64748b;font-weight:500}
+.wm-user-status{font-size:0.9em;margin-top:0.25em;display:flex;gap:0.5rem;align-items:center}
+
+.wm-user-modal{position:fixed;z-index:1000;top:0;left:0;width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:rgba(26, 26, 46, 0.3);transition:opacity .25s;backdrop-filter:blur(4px)}
 .wm-user-modal[style*="display: none"]{opacity:0;pointer-events:none}
-.wm-user-modal-dialog{background:#fff;border-radius:14px;box-shadow:0 8px 32px rgba(37,99,235,.13);padding:2rem 1.5rem;max-width:400px;width:95vw;max-height:90vh;overflow-y:auto;position:relative;animation:wm-modal-zoom .22s}
-@keyframes wm-modal-zoom{from{transform:scale(.85);opacity:0}to{transform:scale(1);opacity:1}}
-.wm-user-modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:2rem;color:#2563eb;cursor:pointer}
+.wm-user-modal-dialog{background:#fff;border-radius:16px;box-shadow:0 16px 48px rgba(255, 107, 53, 0.2);padding:2.5rem 2rem;max-width:420px;width:95vw;max-height:90vh;overflow-y:auto;position:relative;animation:wm-modal-zoom .25s cubic-bezier(0.34, 1.56, 0.64, 1);border-top:5px solid #FF6B35}
+.wm-user-modal-dialog h2{font-size:1.5rem;font-weight:800;color:#1a1a2e;margin-bottom:1.5rem;letter-spacing:-.3px}
+.wm-user-modal-dialog div{margin-bottom:1rem;font-size:0.95rem;color:#2d3748;display:flex;justify-content:space-between}
+.wm-user-modal-dialog b{color:#1a1a2e;font-weight:700;min-width:120px}
+
+@keyframes wm-modal-zoom{from{transform:scale(.9);opacity:0}to{transform:scale(1);opacity:1}}
+.wm-user-modal-close{position:absolute;top:1.5rem;right:1.5rem;background:rgba(255, 107, 53, 0.1);border:none;font-size:1.8rem;color:#FF6B35;cursor:pointer;transition:all .2s;width:40px;height:40px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.wm-user-modal-close:hover{background:#FF6B35;color:#fff;transform:rotate(90deg)}
 .wm-user-modal-backdrop{position:absolute;top:0;left:0;width:100vw;height:100vh;z-index:-1}
-.wm-toast{position:fixed;bottom:2.5rem;left:50%;transform:translateX(-50%);background:#2563eb;color:#fff;padding:.7em 1.5em;border-radius:8px;font-size:1.1em;box-shadow:0 2px 8px rgba(37,99,235,.13);z-index:2000;display:none}
-@media (max-width:900px){.wm-users-table{min-width:0}.wm-users-list{display:flex}.wm-users-table-wrap{display:none}}
-@media (max-width:600px){.wm-user-modal-dialog{padding:1.2rem .5rem}}
+.wm-toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);color:#fff;padding:1em 1.8em;border-radius:10px;font-size:1em;box-shadow:0 8px 24px rgba(255, 107, 53, 0.25);z-index:2000;display:none;font-weight:700;letter-spacing:0.3px;animation:slide-up .3s cubic-bezier(0.34, 1.56, 0.64, 1)}
+@keyframes slide-up{from{transform:translateX(-50%) translateY(20px);opacity:0}to{transform:translateX(-50%) translateY(0);opacity:1}}
+
+@media (max-width:900px){.wm-users-table{min-width:0}.wm-users-list{display:flex}.wm-users-table-wrap{display:none}.wm-users-module{padding:1.5rem 1rem}}
+@media (max-width:600px){.wm-user-modal-dialog{padding:1.5rem 1rem;border-radius:12px}.wm-users-title{font-size:1.8rem}.wm-users-subtitle{font-size:0.85rem}}
 </style>
 
 </script>
@@ -92,9 +112,9 @@ function loadUsersData(cb) {
 function showToast(msg,type){
   const toast = document.getElementById('wm-toast');
   toast.textContent = msg;
-  toast.style.background = type==='error'?'#ff7a18':'#2563eb';
+  toast.style.background = type==='error'?'linear-gradient(135deg, #FF6B35, #D84315)':'linear-gradient(135deg, #1ABC9C, #16A085)';
   toast.style.display = 'block';
-  setTimeout(()=>{toast.style.display='none';}, 2200);
+  setTimeout(()=>{toast.style.display='none';}, 2500);
 }
 // API pour nommer/révoquer admin
 function setUserRole(id, role){

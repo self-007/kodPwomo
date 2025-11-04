@@ -9,14 +9,17 @@ function safe($s) {
 
 $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page']) : '';
 
-// KodPwomo base palette (from palettes_couleurs.html)
-$primary = '#FF6B6B';
-$secondary = '#4ECDC4';
-$accent = '#45B7D1';
-$success = '#96CEB4';
-$warning = '#FFEAA7';
-$bg = '#f8fafc';
-$muted = '#6b7280';
+// KodPwomo Hybrid Color Palette
+$primary = '#FF6B35';
+$primary_dark = '#D84315';
+$secondary = '#004E89';
+$accent = '#00D4FF';
+$success = '#1ABC9C';
+$success_dark = '#16A085';
+$error = '#FF6B35';
+$warning = '#F39C12';
+$bg = '#f8f9fa';
+$muted = '#64748b';
 
 ?><!doctype html>
 <html lang="fr">
@@ -32,51 +35,52 @@ $muted = '#6b7280';
     <style>
         /* KodPwomo Design System */
         :root {
-            /* KodPwomo Brand Colors */
-            --brand-primary: #FF6B6B;
-            --brand-secondary: #4ECDC4;
-            --brand-accent: #45B7D1;
-            --brand-success: #96CEB4;
-            --brand-warning: #FFEAA7;
-            --brand-danger: #FF7675;
-            --brand-info: #74B9FF;
+            /* KodPwomo Hybrid Brand Colors */
+            --brand-primary: #FF6B35;
+            --brand-primary-dark: #D84315;
+            --brand-secondary: #004E89;
+            --brand-accent: #00D4FF;
+            --brand-success: #1ABC9C;
+            --brand-success-dark: #16A085;
+            --brand-danger: #FF6B35;
+            --brand-info: #00D4FF;
+            --brand-warning: #F39C12;
             
-            /* KodPwomo Surface Colors */
+            /* Surface Colors */
             --surface: #ffffff;
-            --surface-dim: #f8fafc;
+            --surface-dim: #f8f9fa;
             --surface-bright: #ffffff;
             --surface-container: #f1f5f9;
-            --surface-container-low: #f8fafc;
+            --surface-container-low: #f8f9fa;
             --surface-container-high: #e2e8f0;
             --surface-elevated: #ffffff;
             
-            /* KodPwomo Text Colors */
-            --on-surface: #0f172a;
+            /* Text Colors */
+            --on-surface: #1a1a2e;
             --on-surface-variant: #475569;
             --on-surface-muted: #64748b;
             --outline: #cbd5e1;
             --outline-variant: #e2e8f0;
             
-            /* KodPwomo Light Tints */
-            --primary-50: #fff5f5;
-            --primary-100: #fed7d7;
-            --secondary-50: #f0fdfa;
-            --secondary-100: #ccfbf1;
-            --accent-50: #eff6ff;
-            --accent-100: #dbeafe;
+            /* Light Tints */
+            --primary-50: #fff5f0;
+            --primary-100: #ffd9cc;
+            --secondary-50: #f0f4ff;
+            --secondary-100: #cce4ff;
+            --accent-50: #e0f7ff;
+            --accent-100: #b3f0ff;
             --success-50: #f0fdf4;
             --success-100: #dcfce7;
             --warning-50: #fffbeb;
             --warning-100: #fef3c7;
             
-            /* Material Design Elevations */
+            /* Elevations */
             --md-elevation-1: 0px 1px 3px 1px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
             --md-elevation-2: 0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30);
             --md-elevation-3: 0px 4px 8px 3px rgba(0, 0, 0, 0.15), 0px 1px 3px 0px rgba(0, 0, 0, 0.30);
             --md-elevation-4: 0px 6px 10px 4px rgba(0, 0, 0, 0.15), 0px 2px 3px 0px rgba(0, 0, 0, 0.30);
             --md-elevation-5: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30);
             
-            /* 8dp Grid System */
             --spacing-1: 8px;
             --spacing-2: 16px;
             --spacing-3: 24px;
@@ -92,81 +96,67 @@ $muted = '#6b7280';
         }
         
         body {
-            font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--surface-dim);
+            font-family: 'Inter', 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: #f8fafc;
             color: var(--on-surface);
-            line-height: 1.5;
+            line-height: 1.6;
             font-size: 14px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Header with KodPwomo branding */
+        /* Header - Simplified */
         header.admin-header {
             position: fixed;
             left: 0;
             right: 0;
             top: 0;
             height: 64px;
-            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-            color: #ffffff;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             display: flex;
             align-items: center;
             padding: 0 var(--spacing-2);
             z-index: 100;
-            border-bottom: 1px solid var(--outline-variant);
-            box-shadow: var(--md-elevation-2);
         }
         
         header .brand {
+            font-size: 20px;
             font-weight: 700;
-            font-size: 24px;
-            letter-spacing: 0.5px;
+            letter-spacing: -0.3px;
             color: #ffffff;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        header .header-right {
-            margin-left: auto;
-            display: flex;
-            gap: var(--spacing-2);
-            align-items: center;
         }
         
         header .hamburger {
             display: none;
-            background: rgba(255,255,255,0.1);
-            border: 0;
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
             color: #ffffff;
-            font-size: 24px;
             cursor: pointer;
             padding: var(--spacing-1);
-            border-radius: 50%;
+            border-radius: 8px;
             width: 40px;
             height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.2s ease;
         }
         
         header .hamburger:hover {
-            background-color: rgba(255,255,255,0.2);
-            transform: scale(1.05);
+            background: rgba(255, 255, 255, 0.25);
         }
         
         header .profile {
             display: flex;
             align-items: center;
             gap: var(--spacing-1);
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
             padding: 8px 16px;
-            border-radius: 20px;
+            border-radius: 8px;
             font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.3);
-            backdrop-filter: blur(10px);
+            font-size: 13px;
         }
         
         /* Layout */
@@ -179,16 +169,15 @@ $muted = '#6b7280';
         /* KodPwomo Navigation Sidebar */
         nav.sidebar {
             width: 280px;
-            background: linear-gradient(180deg, var(--surface-elevated), var(--surface-container-low));
-            border-right: 2px solid var(--brand-secondary);
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
             padding: var(--spacing-2) 0;
             position: fixed;
             left: 0;
             top: 64px;
             height: calc(100vh - 64px);
             overflow-y: auto;
-            overflow-x: hidden;
-            box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
         }
         
         nav.sidebar::-webkit-scrollbar {
@@ -196,8 +185,8 @@ $muted = '#6b7280';
         }
         
         nav.sidebar::-webkit-scrollbar-thumb {
-            background: var(--brand-accent);
-            border-radius: 3px;
+            background: linear-gradient(180deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+            box-shadow: inset 0 0 6px rgba(255, 107, 53, 0.3);
         }
         
         .sidebar .nav-group {
@@ -205,111 +194,64 @@ $muted = '#6b7280';
         }
         
         .sidebar .nav-group h4 {
-            margin: 0 0 var(--spacing-1) var(--spacing-2);
-            color: var(--on-surface-variant);
-            font-size: 11px;
-            font-weight: 600;
+            margin: 0 var(--spacing-2) var(--spacing-1);
+            color: #64748b;
+            font-size: 10px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.8px;
-            background: linear-gradient(90deg, var(--brand-accent), var(--brand-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
         
         .sidebar a {
             display: flex;
             align-items: center;
-            color: var(--on-surface);
-            padding: 12px var(--spacing-2);
+            color: #475569;
+            padding: 10px var(--spacing-2);
             text-decoration: none;
             margin: 4px var(--spacing-1);
-            border-radius: 16px;
+            border-radius: 8px;
             font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid transparent;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
         }
         
         .sidebar a .material-icons {
             margin-right: 12px;
-            font-size: 20px;
-            transition: all 0.3s ease;
-        }
-        
-        /* Individual icon colors */
-        .sidebar a[href*="dashboard"] .material-icons { color: var(--brand-primary); }
-        .sidebar a[href*="analytics"] .material-icons { color: var(--brand-accent); }
-        .sidebar a[href*="users"] .material-icons { color: var(--brand-secondary); }
-        .sidebar a[href*="agents"] .material-icons { color: var(--brand-info); }
-        .sidebar a[href*="products"] .material-icons { color: var(--brand-warning); }
-        .sidebar a[href*="orders"] .material-icons { color: var(--brand-success); }
-        .sidebar a[href*="places"] .material-icons { color: var(--brand-danger); }
-        .sidebar a[href*="settings"] .material-icons { color: var(--on-surface-variant); }
-        
-        .sidebar a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: 16px;
+            font-size: 18px;
+            transition: all 0.2s ease;
         }
         
         .sidebar a:hover {
-            border-color: var(--brand-accent);
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .sidebar a:hover::before {
-            opacity: 0.1;
-        }
-        
-        .sidebar a:hover .material-icons {
-            transform: scale(1.1);
-            filter: brightness(1.2);
+            background: #f1f5f9;
+            color: var(--brand-primary);
+            border-left-color: var(--brand-primary);
         }
         
         .sidebar a.active {
-            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-            color: #ffffff;
-            border-color: var(--brand-accent);
-            box-shadow: 0 6px 16px rgba(255, 107, 107, 0.3);
+            background: #fff5f0;
+            color: var(--brand-primary);
+            border-left-color: var(--brand-primary);
+            font-weight: 600;
         }
         
-        .sidebar a.active .material-icons {
-            color: #ffffff;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-        }
-        
-        .sidebar a.active::before {
-            opacity: 0;
-        }
-        
-        /* Content Area */
+        /* Content Area - Spacious */
         main.content {
             margin-left: 280px;
-            padding: var(--spacing-3);
+            padding: var(--spacing-4);
             min-height: calc(100vh - 64px);
-            transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            background: var(--surface-dim);
+            background: #f8fafc;
         }
         
         /* KodPwomo Welcome Card */
         .welcome {
-            background: linear-gradient(135deg, var(--surface-elevated), var(--surface-container-low));
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            max-width: 1200px;
+            margin: 0 auto;
             padding: var(--spacing-5);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-            max-width: 1000px;
-            margin: var(--spacing-3) auto;
-            border: 2px solid var(--brand-accent);
             position: relative;
             overflow: hidden;
         }
@@ -321,78 +263,105 @@ $muted = '#6b7280';
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary), var(--brand-accent));
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
         }
         
         .welcome h1 {
-            margin: 0 0 var(--spacing-1) 0;
-            font-size: 2.5rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            line-height: 1.3;
+            color: #1a1a2e;
+            margin-bottom: var(--spacing-2);
         }
         
         .welcome .subtitle-badge {
             display: inline-block;
-            background: linear-gradient(135deg, var(--brand-accent), var(--brand-info));
-            color: #ffffff;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 12px;
-            margin-bottom: var(--spacing-2);
-            text-transform: uppercase;
+            background: #fff5f0;
+            color: var(--brand-primary);
+            padding: 0.35rem 0.85rem;
+            border-radius: 8px;
+            font-size: 11px;
+            font-weight: 700;
             letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px rgba(69, 183, 209, 0.3);
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-2);
+            border: 1px solid #ffd9cc;
         }
         
         .welcome .lead {
-            margin-top: var(--spacing-1);
-            color: var(--on-surface-variant);
-            font-size: 16px;
-            line-height: 1.6;
+            font-size: 15px;
+            color: #64748b;
+            line-height: 1.7;
+            margin-bottom: var(--spacing-3);
+            max-width: 700px;
         }
         
-        /* Material Buttons */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            gap: var(--spacing-1);
-            padding: 10px var(--spacing-3);
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: 500;
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-3);
+            margin: var(--spacing-4) 0;
+        }
+        
+        .feature {
+            display: flex;
+            gap: var(--spacing-2);
+            padding: var(--spacing-3);
+            background: #f8fafc;
+            border-radius: 12px;
+            border-left: 3px solid var(--brand-primary);
+        }
+        
+        .feature strong {
+            color: #1a1a2e;
+            font-weight: 700;
             font-size: 14px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            min-height: 40px;
         }
         
-        .btn-primary {
-            background: var(--md-primary);
-            color: var(--md-on-primary);
-            box-shadow: var(--md-elevation-1);
+        .feature small {
+            color: #64748b;
+            font-size: 13px;
+            margin-top: 0.25rem;
         }
         
-        .btn-primary:hover {
-            box-shadow: var(--md-elevation-2);
-            transform: translateY(-1px);
+        .quick-links {
+            display: flex;
+            gap: var(--spacing-2);
+            flex-wrap: wrap;
+            margin-top: var(--spacing-4);
         }
         
-        .btn-secondary {
-            background: var(--md-secondary-container);
-            color: var(--md-on-secondary-container);
-            border: 1px solid var(--md-outline);
+        .quick-links a {
+            padding: 0.7rem 1.5rem;
+            background: linear-gradient(135deg, var(--brand-primary), var(--brand-primary-dark));
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.15);
+            border: none;
         }
         
-        .btn-secondary:hover {
-            box-shadow: var(--md-elevation-1);
+        .quick-links a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
         }
+        
+        /* Typography - Cleaner */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 700;
+            letter-spacing: -0.3px;
+        }
+        
+        h1 { font-size: 2.2rem; line-height: 1.3; }
+        h2 { font-size: 1.8rem; line-height: 1.3; }
+        h3 { font-size: 1.4rem; line-height: 1.4; }
+        h4 { font-size: 1.1rem; line-height: 1.4; }
+        h5 { font-size: 0.95rem; line-height: 1.5; }
+        h6 { font-size: 0.9rem; line-height: 1.5; }
         
         /* Enhanced Responsive Design */
         @media (max-width: 1024px) {
@@ -407,18 +376,11 @@ $muted = '#6b7280';
                 display: flex;
             }
             
-            header .brand {
-                font-size: 18px;
-            }
-            
             nav.sidebar {
                 position: fixed;
                 left: -280px;
-                top: 64px;
-                height: calc(100vh - 64px);
-                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                transition: left 0.3s ease;
                 z-index: 1000;
-                box-shadow: var(--md-elevation-4);
             }
             
             nav.sidebar.open {
@@ -427,186 +389,40 @@ $muted = '#6b7280';
             
             main.content {
                 margin-left: 0;
-                padding: var(--spacing-2);
+                padding: var(--spacing-3);
             }
             
             .welcome {
-                padding: var(--spacing-3);
+                padding: var(--spacing-4);
             }
             
             .welcome h1 {
                 font-size: 1.8rem;
             }
-            
-            /* Table Improvements */
-            .table-container {
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                border-radius: 12px;
-                margin: 0 -4px;
-            }
-            
-            table {
-                min-width: 600px;
-                width: 100%;
-            }
-            
-            th, td {
-                white-space: nowrap;
-                min-width: 100px;
-            }
-            
-            th:last-child, td:last-child {
-                position: sticky;
-                right: 0;
-                background: var(--surface-elevated);
-                z-index: 1;
-                box-shadow: -2px 0 4px rgba(0,0,0,0.1);
-            }
-            
-            .status-col {
-                min-width: 120px !important;
-                max-width: 140px;
-            }
-            
-            .btn-col {
-                min-width: 100px !important;
-                padding: 8px 4px !important;
-            }
-            
-            /* Button Fixes */
-            .btn, .btn-sm {
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
-            
-            .controls {
-                flex-wrap: wrap;
-                gap: var(--spacing-1);
-            }
-            
-            .search {
-                min-width: 160px;
-                max-width: 100%;
-                box-sizing: border-box;
-            }
         }
         
         @media (max-width: 480px) {
-            header {
-                padding: 0 var(--spacing-1);
-            }
-            
             .welcome {
-                padding: var(--spacing-2);
-                margin: var(--spacing-1);
+                padding: var(--spacing-3);
             }
             
             .welcome h1 {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
             
-            main.content {
-                padding: var(--spacing-1);
-            }
-            
-            .kpi-grid {
+            .feature-list {
                 grid-template-columns: 1fr;
-                gap: var(--spacing-1);
             }
             
-            .controls {
+            .quick-links {
                 flex-direction: column;
-                align-items: stretch;
             }
             
-            .search, .filter, .btn {
+            .quick-links a {
                 width: 100%;
-                margin-bottom: var(--spacing-1);
-            }
-            
-            /* Mobile Card Layout for Tables */
-            .mobile-cards {
-                display: block;
-            }
-            
-            .mobile-cards table {
-                display: none;
-            }
-            
-            .card {
-                background: var(--surface-elevated);
-                border: 1px solid var(--outline-variant);
-                border-radius: 12px;
-                padding: var(--spacing-2);
-                margin-bottom: var(--spacing-1);
-                box-shadow: var(--md-elevation-1);
-            }
-            
-            .card-header {
-                font-weight: 700;
-                color: var(--brand-primary);
-                margin-bottom: var(--spacing-1);
-                border-bottom: 1px solid var(--outline-variant);
-                padding-bottom: var(--spacing-1);
-            }
-            
-            .card-content {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: var(--spacing-1);
-                margin-bottom: var(--spacing-1);
-            }
-            
-            .card-field {
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .card-label {
-                font-size: 11px;
-                color: var(--on-surface-variant);
-                text-transform: uppercase;
-                font-weight: 600;
-                margin-bottom: 2px;
-            }
-            
-            .card-value {
-                font-weight: 500;
-                color: var(--on-surface);
-            }
-            
-            .card-actions {
-                display: flex;
-                gap: var(--spacing-1);
-                justify-content: flex-end;
-                flex-wrap: wrap;
-            }
-            
-            .card-actions .btn, .card-actions .btn-sm {
-                flex: 1;
-                min-width: 80px;
+                text-align: center;
             }
         }
-        
-        /* Material Typography */
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 400;
-            letter-spacing: -0.01em;
-        }
-        
-        h1 { font-size: 2.5rem; }
-        h2 { font-size: 2rem; }
-        h3 { font-size: 1.75rem; }
-        h4 { font-size: 1.5rem; }
-        h5 { font-size: 1.25rem; }
-        h6 { font-size: 1rem; }
-        
-        /* Utilities */
-        .muted { color: var(--md-on-surface-variant); }
     </style>
 </head>
 <body>

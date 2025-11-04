@@ -43,17 +43,34 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #fff5f0 0%, #f0f4ff 100%);
             min-height: 100vh;
-            color: var(--dark-gray);
+            color: #1a1a2e;
+        }
+        
+        /* ===== COLOR PALETTE (Hybrid - Optimized for KodPwomo) ===== */
+        :root {
+            --primary: #FF6B35;          /* Warm Orange-Red (Food delivery warmth) */
+            --primary-dark: #D84315;     /* Darker Orange */
+            --primary-light: #FF8C5A;    /* Light Orange */
+            --secondary: #004E89;        /* Deep Blue (Trust & professionalism) */
+            --accent: #00D4FF;           /* Cyan (Modern energy) */
+            --success: #1ABC9C;          /* Turquoise Mint (Fresh & clean) */
+            --success-dark: #16A085;
+            --warning: #F39C12;          /* Amber (Caution) */
+            --error: #E74C3C;            /* Red (Danger/Alert) */
+            --dark-gray: #1a1a2e;        /* Deep Navy */
+            --medium-gray: #64748b;      /* Slate Gray */
+            --light-gray: #f8f9fa;       /* Off White */
+            --gradient-primary: linear-gradient(135deg, #FF6B35 0%, #004E89 100%);
         }
         
         /* ===== HEADER ===== */
         .header {
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(26, 26, 46, 0.97);
             backdrop-filter: blur(10px);
             padding: 15px 0;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 20px rgba(255, 107, 53, 0.15);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -71,12 +88,15 @@
         .logo {
             font-size: 28px;
             font-weight: 800;
-            color: var(--primary);
+            background: linear-gradient(135deg, #FF6B35, #00D4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             text-decoration: none;
         }
         
         .cart-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, #FF6B35, #D84315);
             color: white;
             border: none;
             padding: 12px 20px;
@@ -87,17 +107,17 @@
             align-items: center;
             gap: 8px;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
         }
         
         .cart-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.6);
         }
         
         .cart-count {
             background: white;
-            color: var(--primary);
+            color: #FF6B35;
             border-radius: 50%;
             width: 24px;
             height: 24px;
@@ -123,13 +143,13 @@
         .section-title {
             font-size: 32px;
             font-weight: 700;
-            color: var(--dark-gray);
+            color: #1f2937;
             margin-bottom: 15px;
         }
         
         .section-subtitle {
             font-size: 18px;
-            color: var(--medium-gray);
+            color: #6b7280;
             margin-bottom: 40px;
             max-width: 600px;
             margin-left: auto;
@@ -148,7 +168,7 @@
             background: white;
             border-radius: 20px;
             padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.08);
             transition: all 0.3s ease;
             cursor: pointer;
             border: 3px solid transparent;
@@ -156,8 +176,8 @@
         
         .university-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15);
+            border-color: #FF6B35;
         }
         
         .university-image {
@@ -171,12 +191,12 @@
         .university-name {
             font-size: 24px;
             font-weight: 700;
-            color: var(--dark-gray);
+            color: #1f2937;
             margin-bottom: 10px;
         }
         
         .university-location {
-            color: var(--medium-gray);
+            color: #6b7280;
             font-size: 16px;
         }
         
@@ -195,8 +215,8 @@
         }
         
         .back-btn {
-            background: var(--light-gray);
-            color: var(--dark-gray);
+            background: #f8f9fa;
+            color: #1a1a2e;
             border: none;
             padding: 12px 24px;
             border-radius: 25px;
@@ -209,8 +229,8 @@
         }
         
         .back-btn:hover {
-            background: var(--medium-gray);
-            color: white;
+            background: #e2e8f0;
+            color: #FF6B35;
         }
         
         .university-info {
@@ -228,14 +248,14 @@
             background: white;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.08);
             transition: all 0.3s ease;
             cursor: pointer;
         }
         
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.15);
         }
         
         .product-image {
@@ -251,14 +271,17 @@
         .product-name {
             font-size: 18px;
             font-weight: 700;
-            color: var(--dark-gray);
+            color: #1f2937;
             margin-bottom: 8px;
         }
         
         .product-price {
             font-size: 24px;
             font-weight: 800;
-            color: var(--primary);
+            background: linear-gradient(135deg, #FF6B35, #00D4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 8px;
         }
         
@@ -378,9 +401,9 @@
         .quantity-btn {
             width: 40px;
             height: 40px;
-            border: 2px solid var(--primary);
+            border: 2px solid #FF6B35;
             background: white;
-            color: var(--primary);
+            color: #FF6B35;
             border-radius: 50%;
             font-size: 20px;
             font-weight: 700;
@@ -392,22 +415,12 @@
         }
         
         .quantity-btn:hover {
-            background: var(--primary);
+            background: #FF6B35;
             color: white;
         }
         
-        .quantity-input {
-            width: 80px;
-            height: 40px;
-            border: 2px solid var(--light-gray);
-            border-radius: 8px;
-            text-align: center;
-            font-size: 16px;
-            font-weight: 600;
-        }
-        
         .add-to-cart-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, #FF6B35, #D84315);
             color: white;
             border: none;
             padding: 15px 30px;
@@ -420,8 +433,8 @@
         }
         
         .add-to-cart-btn:hover {
-            background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
         }
         
         /* ===== CART MODAL ===== */
@@ -532,7 +545,7 @@
         }
         
         .checkout-btn {
-            background: var(--success);
+            background: linear-gradient(135deg, #1ABC9C, #16A085);
             color: white;
             border: none;
             padding: 15px;
@@ -545,8 +558,8 @@
         }
         
         .checkout-btn:hover {
-            background: var(--success-dark);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(26, 188, 156, 0.5);
         }
         
         .empty-cart {
@@ -705,6 +718,85 @@
                 font-size: 14px;
             }
         }
+        
+        /* ===== CATEGORIES BAR ===== */
+        .categories-bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .category-btn {
+            background: white;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover {
+            border-color: #FF6B35;
+            color: #FF6B35;
+            background: rgba(255, 107, 53, 0.05);
+        }
+        
+        .category-btn.active {
+            background: linear-gradient(135deg, #FF6B35, #D84315);
+            color: white;
+            border-color: #FF6B35;
+        }
+        
+        /* ===== PRODUCT CARD ===== */
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.15);
+        }
+        
+        /* ===== TAILWIND CSS STYLES ===== */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom scrollbar for WebKit browsers */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--light-gray);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #FF6B35, #004E89);
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #D84315, #003566);
+        }
     </style>
 </head>
 <body>
@@ -741,13 +833,18 @@
                 <button id="backBtn" class="back-btn">
                     ← Retour aux universités
                 </button>
-                
                 <div class="university-info">
                     <h2 id="currentUniversityName" class="section-title"></h2>
                     <p class="section-subtitle">Découvrez nos produits disponibles sur ce campus</p>
                 </div>
             </div>
-            
+            <!-- Barre de catégories (PC) -->
+            <nav id="categoriesBar" class="categories-bar" style="display:none;"></nav>
+            <!-- Menu burger (mobile/tablette) -->
+            <div id="categoriesBurger" class="categories-burger" style="display:none;">
+                <button id="openCategoriesMenu" class="burger-btn">☰ Catégories</button>
+                <div id="categoriesMenu" class="categories-menu-overlay" style="display:none;"></div>
+            </div>
             <div id="productsGrid" class="products-grid">
                 <!-- Products will be loaded here -->
             </div>
@@ -905,7 +1002,7 @@
             });
         }
 
-        async function selectUniversity(university) {
+    async function selectUniversity(university) {
             currentUniversity = university;
             
             // Stocker l'ID et le nom de l'université dans localStorage
@@ -914,19 +1011,33 @@
             
             showLoading(true);
             
+
             try {
-                // Load products for this university using real API
-                const products = await loadProductsByUniversityFromAPI(university.id);
-                displayProducts(products);
+                // Charger les catégories et les produits
+                const categories = await loadCategoriesByUniversityFromAPI(university.id);
+                window.currentCategories = categories;
+                
+                // Charger tous les produits une seule fois
+                await loadProductsByUniversityFromAPI(university.id);
+                
+                // Afficher la barre ou le menu burger selon la taille d'écran
+                showCategoriesUI(categories);
+                
+                // Par défaut, sélectionner la catégorie "Nourriture" si elle existe, sinon la première
+                let defaultCategory = categories.find(cat => cat.name.toLowerCase().includes('nourriture')) || categories[0];
+                if (defaultCategory) {
+                    await selectCategory(defaultCategory);
+                } else {
+                    displayProducts([]);
+                }
                 
                 // Switch to products view
                 document.getElementById('universitiesSection').style.display = 'none';
                 document.getElementById('productsSection').style.display = 'block';
                 document.getElementById('currentUniversityName').textContent = university.name;
-                
             } catch (error) {
-                console.error('Erreur lors du chargement des produits:', error);
-                showAlert('Erreur lors du chargement des produits', 'error');
+                console.error('Erreur lors du chargement des catégories:', error);
+                showAlert('Erreur lors du chargement des catégories', 'error');
             } finally {
                 showLoading(false);
             }
@@ -951,13 +1062,6 @@
                 const card = document.createElement('div');
                 card.className = 'product-card';
                 card.onclick = () => openProductModal(product);
-                
-                // Use your backend structure: id, name, picture, prices, description, stock, id_university, id_category
-                const stockClass = product.stock <= 0 ? 'out' : product.stock <= 5 ? 'low' : '';
-                const stockText = product.stock <= 0 ? 'Rupture de stock' : 
-                                 product.stock <= 5 ? `Plus que ${product.stock} en stock` : 
-                                 `${product.stock} disponibles`;
-                
                 card.innerHTML = `
                     <img src="${product.picture || 'https://via.placeholder.com/300x200/96CEB4/FFFFFF?text=' + encodeURIComponent(product.name)}" 
                          alt="${product.name}" class="product-image"
@@ -965,46 +1069,113 @@
                     <div class="product-info">
                         <h3 class="product-name">${product.name}</h3>
                         <div class="product-price">${product.prices} HTG</div>
-                        <div class="product-stock ${stockClass}">${stockText}</div>
                     </div>
                 `;
-                
                 grid.appendChild(card);
             });
         }
 
-        function openProductModal(product) {
-            if (product.stock <= 0) {
-                showAlert('Ce produit n\'est plus en stock', 'error');
-                return;
-            }
-            
+        async function openProductModal(product) {
             currentProduct = product;
-            
             document.getElementById('modalProductImage').src = product.picture || 'https://via.placeholder.com/400x300/96CEB4/FFFFFF?text=' + encodeURIComponent(product.name);
             document.getElementById('modalProductName').textContent = product.name;
             document.getElementById('modalProductPrice').textContent = product.prices + ' HTG';
             document.getElementById('modalProductDescription').textContent = product.description || 'Aucune description disponible.';
-            
-            const quantityInput = document.getElementById('quantityInput');
-            quantityInput.max = product.stock;
-            quantityInput.value = 1;
-            
+            document.getElementById('quantityInput').value = 1;
             document.getElementById('productModal').style.display = 'block';
         }
 
         function closeProductModal() {
             document.getElementById('productModal').style.display = 'none';
-            currentProduct = null;
         }
 
-        function increaseQuantity() {
-            const input = document.getElementById('quantityInput');
-            const current = parseInt(input.value);
-            const max = parseInt(input.max);
-            
-            if (current < max) {
-                input.value = current + 1;
+        // Affiche la barre de catégories (PC) ou le menu burger (mobile/tablette)
+        function showCategoriesUI(categories) {
+            const bar = document.getElementById('categoriesBar');
+            const burger = document.getElementById('categoriesBurger');
+            const menu = document.getElementById('categoriesMenu');
+            // Responsive : barre horizontale sur PC, burger sur mobile
+            function updateCategoriesDisplay() {
+                if (window.innerWidth > 900) {
+                    // PC : barre horizontale
+                    bar.style.display = 'flex';
+                    burger.style.display = 'none';
+                    bar.innerHTML = '';
+                    categories.forEach(cat => {
+                        const btn = document.createElement('button');
+                        btn.className = 'category-btn';
+                        btn.textContent = cat.name;
+                        btn.onclick = () => selectCategory(cat);
+                        bar.appendChild(btn);
+                    });
+                } else {
+                    // Mobile/tablette : menu burger
+                    bar.style.display = 'none';
+                    burger.style.display = 'block';
+                    menu.innerHTML = '';
+                    categories.forEach(cat => {
+                        const btn = document.createElement('button');
+                        btn.className = 'category-btn';
+                        btn.textContent = cat.name;
+                        btn.onclick = () => {
+                            selectCategory(cat);
+                            menu.style.display = 'none';
+                        };
+                        menu.appendChild(btn);
+                    });
+                }
+            }
+            updateCategoriesDisplay();
+            window.addEventListener('resize', updateCategoriesDisplay);
+            // Burger menu toggle
+            document.getElementById('openCategoriesMenu').onclick = () => {
+                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+            };
+        }
+
+        // Sélection d'une catégorie : filtre les produits déjà chargés
+        async function selectCategory(category) {
+            try {
+                showLoading(true);
+                // Filtrer les produits déjà chargés par catégorie
+                const filteredProducts = (window.allProducts || []).filter(
+                    product => product.id_category === category.id
+                );
+                displayProducts(filteredProducts);
+            } catch (error) {
+                showAlert('Erreur lors du chargement des produits', 'error');
+                displayProducts([]);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // API pour charger les catégories d'une université
+        async function loadCategoriesByUniversityFromAPI(universityId) {
+            try {
+                const response = await fetch(`backend/categories`);
+                if (!response.ok) throw new Error('Erreur lors du chargement des catégories');
+                const data = await response.json();
+                // L'API renvoie {categories: [...]} donc on extrait le tableau
+                return data.categories || data;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
+            }
+        }
+
+        // API pour charger les produits d'une université
+        async function loadProductsByUniversityFromAPI(universityId) {
+            try {
+                const response = await fetch(`backend/products/${universityId}`);
+                if (!response.ok) throw new Error('Erreur lors du chargement des produits');
+                const data = await response.json();
+                // Stocker tous les produits pour filtrage au front
+                window.allProducts = data.products || data || [];
+                return window.allProducts;
+            } catch (error) {
+                console.error('API Error:', error);
+                throw error;
             }
         }
 
@@ -1014,6 +1185,16 @@
             
             if (current > 1) {
                 input.value = current - 1;
+            }
+        }
+
+        function increaseQuantity() {
+            const input = document.getElementById('quantityInput');
+            const current = parseInt(input.value);
+            const max = parseInt(input.max);
+            
+            if (current < max) {
+                input.value = current + 1;
             }
         }
 
@@ -1376,20 +1557,6 @@
                 const data = await response.json();
                 console.log(data);
                 return data; // Assuming your API returns the universities array
-            } catch (error) {
-                console.error('API Error:', error);
-                throw error;
-            }
-        }
-
-        async function loadProductsByUniversityFromAPI(universityId) {
-            try {
-                const response = await fetch(`backend/products/${universityId}`);
-                if (!response.ok) {
-                    throw new Error('Erreur lors du chargement des produits');
-                }
-                const data = await response.json();
-                return data; // Assuming your API returns the products array
             } catch (error) {
                 console.error('API Error:', error);
                 throw error;

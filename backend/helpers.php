@@ -17,6 +17,7 @@ function validateRequest() {
     return is_array($data) ? $data : [];
 
 }
+$datas = validateRequest() ?? []; 
 //filter input to prevent SQL injection
 function sanitizeInput($input) {
     return htmlspecialchars(strip_tags(trim($input)));
@@ -58,7 +59,22 @@ function handleProductImageUpload($file) {
     return $newFileName;
 }
 
-
+// get order by order_id
+function getOrderById($id) {
+    // id is alpha num value
+    $id = sanitizeInput($id);
+    global $connection;
+    $stmt = $connection->prepare("SELECT * FROM orders WHERE order_id = :id GROUP BY order_id");
+    $stmt->bindParam(':id', $id); 
+    $stmt->execute();
+    if ($stmt->rowCount() === 0) {
+       return ['nbrs' => 0, 'order' => null];
+    }
+    $nbrs = $stmt->rowCount();
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    $newId = $order['id_user'];
+    return ['nbrs' => $nbrs, 'order' => $order, 'id' => $newId];
+}
 // create idTransactions
 function idTrs(){
 

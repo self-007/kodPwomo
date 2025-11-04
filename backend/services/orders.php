@@ -15,32 +15,57 @@ function getAllOrders() {
     $total_amount = $orders[0]['total_deliveries'];
     return ['nbrs' => $nbrs, 'orders' => $orders, 'money' => $total_amount];
 }
-// get order by id
-function getOrderById($id) {
-    // id is alpha num value
-    $id = sanitizeInput($id);
+
+function addOrders($orderCode, $idUser, $idProduct, $price, $qnt, $idPlace, $status = 'pending'){
+    $resquestStat = '';
     global $connection;
-    $stmt = $connection->prepare("SELECT * FROM orders WHERE order_id = :id");
-    $stmt->bindParam(':id', $id); 
-    $stmt->execute();
-    if ($stmt->rowCount() === 0) {
-       return ['nbrs' => 0, 'order' => null];
+    $stmt = $connection->prepare("INSERT INTO orders (id_user, order_id, id_product, price, status, qnt, adresse_id) VALUES (:user_id, :order_code, :id_product, :price, :status, :qnt, :place)");
+    $stmt->bindParam(':user_id', $idUser);
+    $stmt->bindParam(':order_code', $orderCode);
+    $stmt->bindParam(':id_product', $idProduct);
+    $stmt->bindParam(':price', $price);
+    $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':qnt', $qnt);
+    $stmt->bindParam(':place', $idPlace);
+    if($stmt->execute()){
+        $resquestStat = 'success';
+    }else{
+        $resquestStat = 'error';
     }
-    $nbrs = $stmt->rowCount();
-    $order = $stmt->fetch(PDO::FETCH_ASSOC);
-    return ['nbrs' => $nbrs, 'order' => $order];
+    if($resquestStat == 'error'){
+        response(['error' => 'order failed'], 500);
+    }
+
+
 }
 //create order
-function createOrder($userId, $productList, $totalAmount, $status = 'pending') {
-    // verify int value or superior to 0
-    if (empty($userId) || empty($productList) || floatval($totalAmount) <= 0) {
-        response(['error' => 'Invalid user ID, product list, or total amount'], 400);
+function createOrder( $status = 'pending') {
+    $userId ='GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12'; // Example user ID, replace with actual user ID from session or token
+    global $datas;
+    //verify datas for order
+    if(!isset($datas['delivery_place_id']) || !isset($datas['university_id']) || !isset($datas['total_amount']) || !isset($datas['products'])){
+        response(['error' => 'Missing required fields for order', $datas], 400);
     }
+    // verify int value or superior to 0
+    if (empty($userId) || floatval($datas['total_amount']) <= 0) {
+        response(['error' => 'Invalid user ID or total amount'], 400);
+    }
+    $product = $datas['products'];
     $userId = sanitizeInput($userId);
-    $totalAmount = floatval($totalAmount);
+    $totalAmount = floatval($datas['total_amount']);
     $orderCode = orderCode();
-    global $connection;
-    try {
+    $place_id = intval($datas['delivery_place_id']);
+    foreach($product as $products){
+        $productId = $products['product_id'];
+        $qnt = $products['quantity'];
+        $price = $products['unit_price'];
+        addOrders($orderCode, $userId, $productId, $price, $qnt, $place_id);
+
+    }
+    response(['status' => 'success'],200);
+    
+    
+    /*try {
         $connection->beginTransaction();
         $stmt = $connection->prepare("INSERT INTO orders (user_id, order_code, product_list, total_amount, status) VALUES (:user_id, :order_code, :product_list, :total_amount, :status)");
         $stmt->bindParam(':user_id', $userId);
@@ -61,7 +86,7 @@ function createOrder($userId, $productList, $totalAmount, $status = 'pending') {
     } catch (Exception $e) {
         $connection->rollBack();
         response(['error' => 'Failed to create order: ' . $e->getMessage()], 500);
-    }
+    } */
 }
 // update order status
 function updateOrderStatus($orderId, $status) {
@@ -210,7 +235,7 @@ function getTotalOrdersByYear() {
 //get productname, qnt , get orderid, university, room, 
 function getPendingOrderData(){
     global $connection;
-    $stmt = 'SELECT products.name as product_name, orders.order_id, orders.qnt, orders.price, university.name as university_name, salle_name FROM products JOIN orders ON orders.id_product = products.id JOIN salle ON salle.id = adresse_id JOIN university ON university.id = salle.id_university WHERE status = ""';
+    $stmt = 'SELECT products.name as product_name, orders.order_id, orders.qnt, orders.price, university.name as university_name, salle_name FROM products JOIN orders ON orders.id_product = products.id JOIN salle ON salle.id = adresse_id JOIN university ON university.id = salle.id_university WHERE status = "pending"';
     $stmt = $connection->prepare($stmt);
     $stmt->execute();
     $nbrs = $stmt->rowCount();

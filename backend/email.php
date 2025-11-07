@@ -29,7 +29,7 @@ if (isset($email)) {
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
         $mail->Username   = 'voltairebilljamesky@gmail.com';
-        $mail->Password   = 'hhch idly cafc dpjx'; // 16 caractères générés
+        $mail->Password   = 'vxvj yevq wgoy kmej'; // 16 caractères générés
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
         $mail->Port       = 587;
 
@@ -140,8 +140,8 @@ Votre code de sécurité : $otp
         $mail->send();
        // echo "✅ OTP envoyé à $email";
     } catch (Exception $e) {
-        echo "❌ Erreur d'envoi : {$mail->ErrorInfo}";
+        response("❌ Erreur d'envoi : {$mail->ErrorInfo}");
     }
 } else {
-    echo json_encode(['error' => 'Email non fourni']);
+    response("❌ Email non fourni");
 }

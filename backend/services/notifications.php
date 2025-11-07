@@ -1,15 +1,24 @@
 <?php
 //get notifications
 function getNotificationsByUserId($userId) {
-    // verify int value or superior to 0
-    if (intval($userId) <= 0) {
+    // verify userId
+    if (empty($userId)) {
         response(['error' => 'Invalid user ID'], 400);
     }
+    //sanitize userId
+    $userId = sanitizeInput($userId);
     global $connection;
-    $stmt = $connection->prepare("SELECT * FROM notifications WHERE user_id = :user_id ORDER BY created_at DESC");
+    $stmt = $connection->prepare("SELECT * FROM notifications WHERE id_user = :user_id AND status != 'deleted' ORDER BY date DESC");
     $stmt->bindParam(':user_id', $userId);
     $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($stmt->rowCount() > 0) {
+        $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $nbrs = $stmt->rowCount();
+        response(['nbrs' => $nbrs, 'notifications' => $notifications], 200);
+    } else {
+        response(['nbrs' => 0, 'notifications' => []], 200);
+    }
+    
 }
 //create notification
 function createNotification() {

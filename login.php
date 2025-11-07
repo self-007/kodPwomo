@@ -458,6 +458,11 @@
         <div class="modal-content">
             <button class="btn-close" onclick="closeOtpModal()">&times;</button>
             
+            <!-- Alerte de succès dans le modal -->
+            <div id="otpAlert" class="alert" style="margin-top: 0;">
+                <span id="otpAlertMessage"></span>
+            </div>
+            
             <div class="modal-header">
                 <h2>🔐 Code de Vérification</h2>
                 <p>Nous avons envoyé un code à 6 chiffres sur votre email. Saisissez-le ci-dessous pour confirmer votre compte.</p>
@@ -487,6 +492,8 @@
         // Variables globales
         let currentUserEmail = '';
         let fingerPrint = '';
+        let lastResendTime = 0; // Timestamp du dernier resend
+        const RESEND_COOLDOWN = 5 * 60 * 1000; // 5 minutes en millisecondes
         
         // Générer un fingerprint simple
         function generateFingerprint() {
@@ -689,7 +696,7 @@
                         // Succès direct (Google)
                         showAlert('success', result.message);
                         setTimeout(() => {
-                            window.location.href = 'dashboard.html';
+                            window.location.href = 'boutique.php';
                         }, 2000);
                     }
                 } else {
@@ -736,18 +743,52 @@
             document.querySelectorAll('.otp-digit').forEach(input => input.value = '');
         }
         
-        // Navigation dans les champs OTP
-        function moveToNext(current, index) {
-            if (current.value.length === 1 && index < 5) {
-                document.querySelectorAll('.otp-digit')[index + 1].focus();
-            }
+        // Navigation fluide dans les champs OTP
+        document.querySelectorAll('.otp-digit').forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                // Autoriser seulement les chiffres
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                
+                // Passer au champ suivant si rempli
+                if (e.target.value.length === 1 && index < 5) {
+                    document.querySelectorAll('.otp-digit')[index + 1].focus();
+                }
+                
+                // Auto-vérification si tous les champs sont remplis
+                const allFilled = Array.from(document.querySelectorAll('.otp-digit'))
+                                      .every(input => input.value.length === 1);
+                if (allFilled) {
+                    setTimeout(verifyOtp, 500);
+                }
+            });
             
-            // Auto-vérification si tous les champs sont remplis
-            const allFilled = Array.from(document.querySelectorAll('.otp-digit'))
-                                  .every(input => input.value.length === 1);
-            if (allFilled) {
-                setTimeout(verifyOtp, 500);
-            }
+            // Gestion du clavier (Backspace)
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    
+                    // Si le champ actuel a une valeur, la supprimer
+                    if (e.target.value.length > 0) {
+                        e.target.value = '';
+                    } else if (index > 0) {
+                        // Sinon, aller au champ précédent et le vider
+                        const prevInput = document.querySelectorAll('.otp-digit')[index - 1];
+                        prevInput.value = '';
+                        prevInput.focus();
+                    }
+                } else if (e.key === 'ArrowLeft' && index > 0) {
+                    // Flèche gauche : aller au champ précédent
+                    document.querySelectorAll('.otp-digit')[index - 1].focus();
+                } else if (e.key === 'ArrowRight' && index < 5) {
+                    // Flèche droite : aller au champ suivant
+                    document.querySelectorAll('.otp-digit')[index + 1].focus();
+                }
+            });
+        });
+        
+        // Supprimer l'ancienne fonction moveToNext (non utilisée maintenant)
+        function moveToNext(current, index) {
+            // Cette fonction est remplacée par la gestion d'événements ci-dessus
         }
         
         // Vérifier le code OTP
@@ -756,7 +797,7 @@
             const otpCode = Array.from(otpDigits).map(input => input.value).join('');
             
             if (otpCode.length !== 6) {
-                showAlert('error', 'Veuillez saisir les 6 chiffres du code');
+                showOtpAlert('error', 'Veuillez saisir les 6 chiffres du code');
                 return;
             }
             
@@ -776,19 +817,24 @@
                 
                 const result = await response.json();
                 
-                if (result.success) {
+                if (result.status === 'success') {
+                    // Stocker le token d'accès dans localStorage
+                    if (result.access_token) {
+                        localStorage.setItem('access_token', result.access_token);
+                    }
+                    
                     closeOtpModal();
                     showAlert('success', 'Compte créé avec succès ! Redirection...');
                     setTimeout(() => {
                         window.location.href = 'dashboard.html';
                     }, 2000);
                 } else {
-                    showAlert('error', result.error || 'Code OTP incorrect');
+                    showOtpAlert('error', result.error || 'Code OTP incorrect');
                 }
                 
             } catch (error) {
                 console.error('Erreur:', error);
-                showAlert('error', 'Erreur lors de la vérification');
+                showOtpAlert('error', 'Erreur lors de la vérification');
             }
             
             showLoading(false);
@@ -796,7 +842,22 @@
         
         // Renvoyer le code OTP
         async function resendOtp() {
+            const now = Date.now();
+            const timeSinceLastResend = now - lastResendTime;
+            
+            // Vérifier le cooldown
+            if (lastResendTime > 0 && timeSinceLastResend < RESEND_COOLDOWN) {
+                const remainingSeconds = Math.ceil((RESEND_COOLDOWN - timeSinceLastResend) / 1000);
+                const minutes = Math.floor(remainingSeconds / 60);
+                const seconds = remainingSeconds % 60;
+                showOtpAlert('error', `⏳ Veuillez patienter ${minutes}m ${seconds}s avant de renvoyer le code`);
+                return;
+            }
+            
             try {
+                const resendBtn = document.querySelector('.btn-resend');
+                resendBtn.disabled = true;
+                
                 const response = await fetch('backend/resend-otp', {
                     method: 'POST',
                     headers: {
@@ -809,16 +870,66 @@
                 
                 const result = await response.json();
                 
-                if (result.success) {
-                    showAlert('success', 'Nouveau code envoyé !');
+                if (result.success === true) {
+                    lastResendTime = now;
+                    showOtpAlert('success', '✅ Nouveau code envoyé ! Vérifiez votre email');
+                    
+                    // Démarrer le compte à rebours
+                    startResendCooldown(resendBtn);
                 } else {
-                    showAlert('error', result.error || 'Erreur lors du renvoi');
+                    showOtpAlert('error', '❌ ' + (result.error || 'Erreur lors du renvoi'));
+                    resendBtn.disabled = false;
                 }
                 
             } catch (error) {
                 console.error('Erreur:', error);
-                showAlert('error', 'Erreur de connexion');
+                showOtpAlert('error', '❌ Erreur de connexion');
+                document.querySelector('.btn-resend').disabled = false;
             }
+        }
+        
+        // Afficher une alerte dans le modal OTP
+        function showOtpAlert(type, message) {
+            const otpAlert = document.getElementById('otpAlert');
+            const otpAlertMessage = document.getElementById('otpAlertMessage');
+            
+            otpAlert.className = `alert alert-${type}`;
+            otpAlertMessage.textContent = message;
+            otpAlert.style.display = 'block';
+            
+            // Auto-masquer après 5 secondes pour les succès
+            if (type === 'success') {
+                setTimeout(() => {
+                    otpAlert.style.display = 'none';
+                }, 5000);
+            }
+        }
+        
+        // Démarrer le compte à rebours du cooldown
+        function startResendCooldown(button) {
+            let remainingTime = RESEND_COOLDOWN;
+            const originalText = '📤 Renvoyer le Code';
+            
+            const updateButton = () => {
+                const seconds = Math.ceil(remainingTime / 1000);
+                const minutes = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                button.textContent = `⏱️ Attendre ${minutes}m ${secs}s`;
+            };
+            
+            updateButton();
+            
+            const interval = setInterval(() => {
+                remainingTime -= 1000;
+                
+                if (remainingTime <= 0) {
+                    clearInterval(interval);
+                    button.textContent = originalText;
+                    button.disabled = false;
+                } else {
+                    updateButton();
+                }
+            }, 1000);
         }
         
         // Gestion du clavier dans le modal OTP

@@ -40,13 +40,13 @@ function getAgentAvailability($id) {
 function setAgentAvailability() {
     global $datas;
     //verify if data exist or empty
-    if(!isset($datas['id']) || !isset($datas['status'])){
+    if(!isset($datas['agentId']) || !isset($datas['isAvailable'])){
         response(['donnees manquantes'], 404);
     }
 
     //clean id. id is an alpha num value
-    $agentId = sanitizeInput($datas['id']);
-    $isAvailable = sanitizeInput($datas['status']);
+    $agentId = sanitizeInput($datas['agentId']);
+    $isAvailable = sanitizeInput($datas['isAvailable']);
     call_user_func_array('getAgentById', [$agentId]); // Check if agent exists
     $isAvailable = $isAvailable !== 'active' ? 'inactive' : 'active';
     global $connection;

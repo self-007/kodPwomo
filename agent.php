@@ -14,6 +14,25 @@
     <link rel="stylesheet" href="assets/css/kodpwomo-colors.css">
     
     <style>
+        /* ===== CUSTOM COLOR PALETTE ===== */
+        :root {
+            --primary: #FF6B35;
+            --primary-dark: #E55A28;
+            --secondary: #004E89;
+            --secondary-dark: #003A63;
+            --success: #06A77D;
+            --success-dark: #058968;
+            --error: #D62828;
+            --error-dark: #B82222;
+            --warning: #F77F00;
+            --info: #06A77D;
+            --dark-gray: #1A1A1A;
+            --medium-gray: #666666;
+            --light-gray: #F5F5F5;
+            --border-color: #E0E0E0;
+            --bg-gradient: linear-gradient(135deg, #FF6B35 0%, #06A77D 100%);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -22,17 +41,17 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
             min-height: 100vh;
             color: var(--dark-gray);
         }
         
         /* ===== HEADER ===== */
         .header {
-            background: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
             backdrop-filter: blur(10px);
-            padding: 15px 0;
-            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            padding: 12px 0;
+            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.15);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -41,74 +60,81 @@
         .header-content {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         
         .logo {
-            font-size: 28px;
+            font-size: 24px;
             font-weight: 800;
-            color: var(--primary);
+            color: white;
             text-decoration: none;
         }
         
         .agent-info {
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 12px;
         }
         
         .agent-name {
             font-weight: 600;
-            color: var(--dark-gray);
+            color: white;
+            font-size: 14px;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         
         .logout-btn {
-            background: var(--error);
+            background: rgba(255, 255, 255, 0.2);
             color: white;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 8px 16px;
             border-radius: 20px;
-            font-size: 14px;
+            font-size: 13px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         .logout-btn:hover {
-            background: var(--error-dark);
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-1px);
         }
         
         /* ===== MAIN CONTAINER ===== */
         .main-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 30px 20px;
+            padding: 20px 15px;
         }
         
         /* ===== WELCOME SECTION ===== */
         .welcome-section {
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
+            border-radius: 16px;
+            padding: 24px 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
             text-align: center;
+            border-top: 4px solid var(--primary);
         }
         
         .welcome-title {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: var(--dark-gray);
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
         
         .welcome-message {
-            font-size: 18px;
+            font-size: 15px;
             color: var(--medium-gray);
-            margin-bottom: 30px;
-            line-height: 1.6;
+            margin-bottom: 24px;
+            line-height: 1.5;
         }
         
         /* ===== STATUS SECTION ===== */
@@ -116,33 +142,35 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 20px;
+            gap: 15px;
             flex-wrap: wrap;
         }
         
         .status-indicator {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 15px 25px;
+            gap: 8px;
+            padding: 12px 20px;
             border-radius: 25px;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
         }
         
         .status-available {
-            background: var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
         }
         
         .status-unavailable {
-            background: var(--error);
+            background: linear-gradient(135deg, var(--error) 0%, #991B1B 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
         }
         
         .status-icon {
-            width: 12px;
-            height: 12px;
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
             background: white;
             animation: pulse 2s infinite;
@@ -154,62 +182,85 @@
         }
         
         .toggle-status-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            padding: 15px 30px;
+            padding: 12px 24px;
             border-radius: 25px;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
         }
         
         .toggle-status-btn:hover {
-            background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
         /* ===== ACTION BUTTONS ===== */
         .action-buttons {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+            margin-top: 30px;
         }
         
         .action-btn {
             background: white;
-            border: 3px solid var(--light-gray);
-            border-radius: 20px;
-            padding: 30px;
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px 18px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             color: var(--dark-gray);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
         
         .action-btn:hover {
             border-color: var(--primary);
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(255, 107, 53, 0.15);
+        }
+        
+        .action-btn:hover::before {
+            transform: scaleX(1);
         }
         
         .action-btn-icon {
-            font-size: 48px;
-            margin-bottom: 15px;
+            font-size: 40px;
+            margin-bottom: 12px;
         }
         
         .action-btn-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            color: var(--primary);
         }
         
         .action-btn-desc {
             color: var(--medium-gray);
-            line-height: 1.5;
+            font-size: 14px;
+            line-height: 1.4;
         }
         
         /* ===== MODALS ===== */
@@ -220,37 +271,36 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
+            background: rgba(26, 26, 26, 0.85);
             z-index: 2000;
             backdrop-filter: blur(5px);
+            overflow-y: auto;
+            padding: 20px 15px;
         }
         
         .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
             background: white;
-            border-radius: 20px;
-            padding: 30px;
-            max-width: 90vw;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-            width: 800px;
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 800px;
+            margin: 20px auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            position: relative;
+            width: 100%;
+            border-top: 4px solid var(--primary);
         }
         
         .modal-close {
             position: absolute;
             top: 15px;
-            right: 20px;
-            background: none;
+            right: 15px;
+            background: var(--light-gray);
             border: none;
-            font-size: 30px;
+            font-size: 28px;
             color: var(--medium-gray);
             cursor: pointer;
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -259,46 +309,53 @@
         }
         
         .modal-close:hover {
-            background: var(--light-gray);
-            color: var(--error);
+            background: var(--error);
+            color: white;
         }
         
         .modal-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--light-gray);
         }
         
         .modal-title {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 700;
-            color: var(--dark-gray);
+            color: var(--primary);
         }
         
         .modal-icon {
-            font-size: 32px;
+            font-size: 28px;
         }
         
-        /* ===== TRANSACTIONS MODAL ===== */
+        /* ===== STATS GRID ===== */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 24px;
         }
         
         .stat-card {
-            background: var(--light-gray);
-            padding: 20px;
-            border-radius: 15px;
+            background: linear-gradient(135deg, var(--light-gray) 0%, #f0f0f0 100%);
+            padding: 18px;
+            border-radius: 12px;
             text-align: center;
+            border-left: 4px solid var(--primary);
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 107, 53, 0.1);
         }
         
         .stat-number {
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 800;
             color: var(--primary);
             margin-bottom: 5px;
@@ -307,258 +364,269 @@
         .stat-label {
             color: var(--medium-gray);
             font-weight: 600;
+            font-size: 13px;
         }
         
-        .transactions-list {
-            max-height: 400px;
+        /* ===== LISTS ===== */
+        .transactions-list, .orders-list {
+            max-height: 450px;
             overflow-y: auto;
         }
         
-        .transaction-item {
+        .transaction-item, .order-item {
             background: white;
-            border: 1px solid var(--light-gray);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 12px;
             transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
         }
         
-        .transaction-item:hover {
+        .transaction-item:hover, .order-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
         }
         
-        .transaction-header {
+        .transaction-header, .order-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
-        .transaction-id {
+        .transaction-id, .order-id {
             font-weight: 700;
-            color: var(--dark-gray);
+            color: var(--primary);
+            font-size: 14px;
         }
         
         .transaction-date {
             color: var(--medium-gray);
-            font-size: 14px;
+            font-size: 12px;
         }
         
         .transaction-details {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
+            gap: 12px;
+            font-size: 13px;
         }
         
         .transaction-status {
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
+            width: fit-content;
         }
         
         .status-completed {
-            background: var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
             color: white;
         }
         
         .status-pending {
-            background: var(--warning);
-            color: var(--dark-gray);
-        }
-        
-        .status-in-progress {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
             color: white;
         }
         
-        /* ===== ORDERS MODAL ===== */
-        .order-item {
-            background: white;
-            border: 2px solid var(--light-gray);
-            border-radius: 15px;
-            padding: 25px;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+        .status-in-progress {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
         }
         
-        .order-item:hover {
-            border-color: var(--primary);
-        }
-        
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
+        /* ===== ORDER SPECIFIC ===== */
         .order-info {
             flex: 1;
-        }
-        
-        .order-id {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--dark-gray);
-            margin-bottom: 5px;
+            min-width: 150px;
         }
         
         .order-university {
-            color: var(--primary);
+            color: var(--secondary);
             font-weight: 600;
-        }
-        
-        .order-total {
-            text-align: right;
+            font-size: 13px;
         }
         
         .order-amount {
-            font-size: 24px;
+            font-size: 20px;
             font-weight: 800;
-            color: var(--success);
-        }
-        
-        .order-products {
-            margin: 15px 0;
+            color: var(--primary);
         }
         
         .product-summary {
             background: var(--light-gray);
-            padding: 15px;
+            padding: 12px;
             border-radius: 10px;
-            margin-bottom: 15px;
+            margin: 12px 0;
+            font-size: 13px;
+            border-left: 3px solid var(--primary);
         }
         
         .take-order-btn {
-            background: var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 12px 20px;
+            border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
+            font-size: 14px;
             width: 100%;
             transition: all 0.3s ease;
+            margin-top: 12px;
+            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
         }
         
         .take-order-btn:hover {
-            background: var(--success-dark);
             transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(6, 168, 125, 0.4);
         }
         
-        /* ===== DELIVERY MODAL ===== */
+        /* ===== DELIVERY ===== */
         .delivery-details {
             background: var(--light-gray);
-            padding: 25px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border-left: 4px solid var(--primary);
         }
         
         .detail-row {
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
-            padding: 5px 0;
+            padding: 8px 0;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .detail-label {
             font-weight: 600;
-            color: var(--dark-gray);
+            color: var(--primary);
         }
         
         .detail-value {
             color: var(--medium-gray);
+            text-align: right;
+            flex: 1;
         }
         
         .delivery-actions {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-bottom: 25px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
         
         .delivery-btn {
-            padding: 15px;
-            border-radius: 25px;
+            padding: 12px;
+            border-radius: 20px;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             border: none;
             transition: all 0.3s ease;
         }
         
         .done-btn {
-            background: var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
         }
         
         .done-btn:hover {
-            background: var(--success-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(6, 168, 125, 0.4);
         }
         
         .feedback-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
         }
         
         .feedback-btn:hover {
-            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
         .feedback-section {
             border-top: 2px solid var(--light-gray);
-            padding-top: 25px;
+            padding-top: 18px;
+        }
+        
+        .feedback-section h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: var(--primary);
         }
         
         .feedback-form {
             display: flex;
-            gap: 15px;
+            gap: 10px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
         }
         
         .feedback-input {
             flex: 1;
-            padding: 12px 15px;
-            border: 2px solid var(--light-gray);
-            border-radius: 25px;
-            font-size: 16px;
+            min-width: 200px;
+            padding: 10px 14px;
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 13px;
+            transition: all 0.3s ease;
         }
         
         .feedback-input:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
         }
         
         .send-feedback-btn {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 25px;
+            padding: 10px 18px;
+            border-radius: 20px;
             font-weight: 600;
             cursor: pointer;
+            font-size: 13px;
+            white-space: nowrap;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .send-feedback-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
         .feedback-list {
-            margin-top: 20px;
-            max-height: 200px;
+            max-height: 250px;
             overflow-y: auto;
         }
         
         .feedback-item {
             background: white;
-            padding: 15px;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
             border-left: 4px solid var(--primary);
+            font-size: 13px;
         }
         
         .feedback-time {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--medium-gray);
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         
         /* ===== LOADING & ALERTS ===== */
@@ -569,21 +637,22 @@
             left: 50%;
             transform: translate(-50%, -50%);
             background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
             z-index: 3000;
             text-align: center;
+            border-top: 4px solid var(--primary);
         }
         
         .loading-spinner {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border: 4px solid var(--light-gray);
             border-top: 4px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
+            margin: 0 auto 12px;
         }
         
         @keyframes spin {
@@ -593,14 +662,16 @@
         
         .alert {
             position: fixed;
-            top: 100px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 10px;
+            top: 80px;
+            right: 15px;
+            padding: 12px 16px;
+            border-radius: 8px;
             font-weight: 600;
+            font-size: 13px;
             z-index: 3000;
             transform: translateX(400px);
             transition: all 0.3s ease;
+            max-width: 300px;
         }
         
         .alert.show {
@@ -608,73 +679,272 @@
         }
         
         .alert.success {
-            background: var(--success);
+            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
         }
         
         .alert.error {
-            background: var(--error);
+            background: linear-gradient(135deg, var(--error) 0%, #991B1B 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
         }
         
         .alert.warning {
-            background: var(--warning);
-            color: var(--dark-gray);
+            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(247, 127, 0, 0.3);
         }
         
         .alert.info {
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        .alert.taken {
+            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
+            color: white;
+            box-shadow: 0 4px 12px rgba(247, 127, 0, 0.3);
+        }
+        
+        /* ===== NOTIFICATIONS ===== */
+        .notifications-container {
+            position: fixed;
+            top: 70px;
+            right: 15px;
+            z-index: 2500;
+            max-width: 380px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .notification {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border-left: 4px solid var(--primary);
+            position: relative;
+            animation: slideIn 0.3s ease;
+            min-width: 300px;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+        
+        .notification.closing {
+            animation: slideOut 0.3s ease forwards;
+        }
+        
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+        
+        .notification-title {
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--dark-gray);
+            flex: 1;
+        }
+        
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--medium-gray);
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .notification-close:hover {
+            color: var(--error);
+            transform: rotate(90deg);
+        }
+        
+        .notification-message {
+            font-size: 13px;
+            color: var(--medium-gray);
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        
+        .notification-time {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+        
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        
+        .notification-btn {
+            padding: 8px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        /* ===== NOTIFICATION TYPES ===== */
+        /* PROMO */
+        .notification.promo {
+            border-left-color: var(--warning);
+            background: linear-gradient(135deg, rgba(247, 127, 0, 0.05) 0%, rgba(217, 119, 6, 0.05) 100%);
+        }
+        
+        .notification.promo .notification-title {
+            color: var(--warning);
+        }
+        
+        .notification.promo .take-promo-btn {
+            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(247, 127, 0, 0.2);
+        }
+        
+        .notification.promo .take-promo-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(247, 127, 0, 0.3);
+        }
+        
+        /* AGENT */
+        .notification.agent {
+            border-left-color: var(--success);
+            background: linear-gradient(135deg, rgba(6, 168, 125, 0.05) 0%, rgba(4, 120, 87, 0.05) 100%);
+        }
+        
+        .notification.agent .notification-title {
+            color: var(--success);
+        }
+        
+        .notification.agent .take-order-notification-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(6, 168, 125, 0.2);
+        }
+        
+        .notification.agent .take-order-notification-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
+        }
+        
+        /* DELIVERY_FEEDBACK */
+        .notification.delivery_feedback {
+            border-left-color: var(--primary);
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(229, 90, 40, 0.05) 100%);
+        }
+        
+        .notification.delivery_feedback .notification-title {
+            color: var(--primary);
+        }
+        
+        .notification.delivery_feedback .mark-read-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+        }
+        
+        .notification.delivery_feedback .mark-read-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        }
+        
+        /* COMMANDE (Order confirmation) */
+        .notification.commande {
+            border-left-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(0, 78, 137, 0.05) 0%, rgba(0, 58, 99, 0.05) 100%);
+        }
+        
+        .notification.commande .notification-title {
+            color: var(--secondary);
+        }
+        
+        .notification.commande .mark-read-btn {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 78, 137, 0.2);
+        }
+        
+        .notification.commande .mark-read-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 78, 137, 0.3);
+        }
+        
+        .notification.unread {
+            background-color: rgba(255, 107, 53, 0.08);
+        }
+        
+        .notification-icon {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 16px;
         }
         
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 768px) {
-            .header-content {
-                padding: 0 15px;
+        @media (max-width: 480px) {
+            .notifications-container {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+                top: 60px;
             }
             
-            .main-container {
-                padding: 20px 15px;
+            .notification {
+                min-width: 100%;
+                max-width: none;
             }
             
-            .welcome-section {
-                padding: 20px;
-            }
-            
-            .welcome-title {
-                font-size: 24px;
-            }
-            
-            .status-section {
+            .notification-actions {
                 flex-direction: column;
             }
             
-            .action-buttons {
-                grid-template-columns: 1fr;
-                gap: 15px;
+            .notification-btn {
+                width: 100%;
+                text-align: center;
             }
-            
-            .modal-content {
-                width: 95vw;
-                margin: 10px;
-                padding: 20px;
-            }
-            
-            .delivery-actions {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .transaction-details {
-                grid-template-columns: 1fr;
-            }
-            
-            .feedback-form {
-                flex-direction: column;
-            }
+        }
+        
+        .notifications-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        .notifications-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 3px;
         }
     </style>
 </head>
@@ -811,6 +1081,9 @@
     <!-- Alert -->
     <div id="alert" class="alert"></div>
 
+    <!-- Notifications Container -->
+    <div id="notificationsContainer" class="notifications-container"></div>
+
     <script>
         // ===== GLOBAL VARIABLES =====
         let currentAgent = null;
@@ -837,6 +1110,7 @@
                 if (currentAgent) {
                     displayAgentInfo();
                     await checkAgentStatus();
+                    initNotificationSystem(); // Ajouter cette ligne
                 } else {
                     // Redirect to login if not authenticated
                     window.location.href = 'login.php';
@@ -1067,8 +1341,8 @@
                     price: parseFloat(item.price) || 0
                 });
                 
-                groupedOrders[orderId].total_amount += parseFloat(item.price) || 0;
-                groupedOrders[orderId].total_quantity += parseInt(item.qnt) || 1;
+                groupedOrders[orderId].total_amount += parseFloat(item.price) * parseInt(item.qnt)|| 0;
+                groupedOrders[orderId].total_quantity += parseInt(item.qnt)  || 1;
             });
             
             // Afficher chaque commande groupée
@@ -1116,20 +1390,24 @@
             try {
                 const result = await assignOrderToAgentAPI(orderId, AGENT_UNIQUE_ID);
                 
-                if (result.success) {
-                    showAlert('Commande prise avec succès !', 'success');
+                if (result.success === true) {
+                    showAlert('✅ Commande prise avec succès !', 'success');
                     closeOrdersModal();
-                    // Refresh the orders list
-                    setTimeout(() => openOrdersModal(), 1000);
+                    // Refresh the orders list after a short delay
+                    setTimeout(() => openOrdersModal(), 1500);
+                } else if (result.status === 'taken') {
+                    showAlert('⚠️ ' + result.message, 'taken');
+                    // Refresh the orders list to show available orders
+                    setTimeout(() => openOrdersModal(), 1500);
                 } else {
-                    showAlert(result.message || 'Cette commande n\'est plus disponible', 'error');
-                    // Refresh the orders list
+                    showAlert(result.message || '❌ Erreur lors de la prise de commande', 'error');
+                    // Refresh the orders list to show available orders
                     setTimeout(() => openOrdersModal(), 1000);
                 }
                 
             } catch (error) {
                 console.error('Erreur lors de la prise de commande:', error);
-                showAlert('Erreur lors de la prise de commande', 'error');
+                showAlert('❌ Erreur lors de la prise de commande', 'error');
             } finally {
                 showLoading(false);
             }
@@ -1489,6 +1767,286 @@
             document.getElementById('deliveryModal').style.display = 'none';
         }
 
+        // ===== NOTIFICATIONS =====
+        let notificationCheckInterval = null;
+        let activeNotifications = [];
+        
+        // Initialiser le système de notifications
+        function initNotificationSystem() {
+            // Charger les notifications immédiatement
+            loadNotifications();
+            
+            // Puis toutes les 30 secondes
+            notificationCheckInterval = setInterval(() => {
+                if (!document.hidden) {
+                    loadNotifications();
+                }
+            }, 30000);
+        }
+        
+        async function loadNotifications() {
+            try {
+                const response = await fetch(`backend/notifications/${AGENT_UNIQUE_ID}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Vérifier format backend: {nbrs: 1, notifications: [...]}
+                if (!data.notifications || data.notifications.length === 0 || data.nbrs === 0) {
+                    console.log('Aucune notification');
+                    return;
+                }
+                
+                // Traiter chaque notification du backend
+                data.notifications.forEach(notification => {
+                    // Vérifier si la notification n'est pas déjà affichée
+                    if (!activeNotifications.find(n => n.id === notification.id)) {
+                        displayNotification(notification);
+                        activeNotifications.push(notification);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Erreur lors du chargement des notifications:', error);
+            }
+        }
+        
+        function displayNotification(notification) {
+            const container = document.getElementById('notificationsContainer');
+            const notifId = `notif_${notification.id}`;
+            const notifElement = document.createElement('div');
+            notifElement.id = notifId;
+            
+            // Utiliser 'type' du backend au lieu de 'category'
+            const notificationType = notification.type || 'info';
+            notifElement.className = `notification ${notificationType}`;
+            
+            let content = '';
+            
+            // Construire le contenu selon le type de notification du backend
+            switch(notificationType) {
+                case 'promo':
+                    content = buildPromoNotification(notification);
+                    break;
+                case 'agent':
+                    content = buildAgentNotification(notification);
+                    break;
+                case 'delivery_feedback':
+                    content = buildDeliveryFeedbackNotification(notification);
+                    break;
+                case 'commande':
+                    content = buildOrderConfirmationNotification(notification);
+                    break;
+                default:
+                    content = buildDefaultNotification(notification);
+            }
+            
+            notifElement.innerHTML = content;
+            container.appendChild(notifElement);
+            
+            // Afficher un son ou une vibration selon le type
+            triggerNotificationFeedback(notificationType);
+            
+            // NE PAS auto-fermer - l'utilisateur doit réagir
+        }
+        
+        function buildPromoNotification(notif) {
+            return `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        <span class="notification-icon">🎉</span>
+                        Nouvelle Promo
+                    </div>
+                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
+                </div>
+                <div class="notification-message">${escapeHtml(notif.message)}</div>
+                <div class="notification-time">${formatDateTime(notif.date)}</div>
+                <div class="notification-actions">
+                    <button class="notification-btn take-promo-btn" onclick="handlePromoClick(${notif.id})">
+                        Voir l'offre
+                    </button>
+                </div>
+            `;
+        }
+        
+        function buildAgentNotification(notif) {
+            return `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        <span class="notification-icon">📦</span>
+                        Nouvelle Commande
+                    </div>
+                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
+                </div>
+                <div class="notification-message">${escapeHtml(notif.message)}</div>
+                <div class="notification-time">${formatDateTime(notif.date)}</div>
+                <div class="notification-actions">
+                    <button class="notification-btn take-order-notification-btn" onclick="handleAgentOrderNotification(${notif.id})">
+                        🚚 Prendre la commande
+                    </button>
+                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
+                        Ignorer
+                    </button>
+                </div>
+            `;
+        }
+        
+        function buildDeliveryFeedbackNotification(notif) {
+            return `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        <span class="notification-icon">💬</span>
+                        Message du Client
+                    </div>
+                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
+                </div>
+                <div class="notification-message">${escapeHtml(notif.message)}</div>
+                <div class="notification-time">${formatDateTime(notif.date)}</div>
+                <div class="notification-actions">
+                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
+                        ✓ Marqué comme lu
+                    </button>
+                </div>
+            `;
+        }
+        
+        function buildOrderConfirmationNotification(notif) {
+            return `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        <span class="notification-icon">✅</span>
+                        Commande Confirmée
+                    </div>
+                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
+                </div>
+                <div class="notification-message">${escapeHtml(notif.message)}</div>
+                <div class="notification-time">${formatDateTime(notif.date)}</div>
+                <div class="notification-actions">
+                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
+                        ✓ Marqué comme lu
+                    </button>
+                </div>
+            `;
+        }
+        
+        function buildDefaultNotification(notif) {
+            return `
+                <div class="notification-header">
+                    <div class="notification-title">
+                        <span class="notification-icon">ℹ️</span>
+                        Notification
+                    </div>
+                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
+                </div>
+                <div class="notification-message">${escapeHtml(notif.message)}</div>
+                <div class="notification-time">${formatDateTime(notif.date)}</div>
+                <div class="notification-actions">
+                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
+                        ✓ Marqué comme lu
+                    </button>
+                </div>
+            `;
+        }
+        
+        function closeNotification(notifId) {
+            const element = document.getElementById(notifId);
+            if (element) {
+                element.classList.add('closing');
+                setTimeout(() => {
+                    element.remove();
+                    // Retirer du tableau des notifications actives
+                    const notifIdNum = notifId.replace('notif_', '');
+                    const index = activeNotifications.findIndex(n => n.id == notifIdNum);
+                    if (index > -1) {
+                        activeNotifications.splice(index, 1);
+                    }
+                }, 300);
+            }
+        }
+        
+        async function markNotificationAsRead(notificationId) {
+            try {
+                const response = await fetch('backend/notifications/mark-read', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        notification_id: notificationId
+                    })
+                });
+                
+                if (response.ok) {
+                    closeNotification(`notif_${notificationId}`);
+                } else {
+                    closeNotification(`notif_${notificationId}`);
+                }
+            } catch (error) {
+                console.error('Erreur lors du marquage de la notification:', error);
+                closeNotification(`notif_${notificationId}`);
+            }
+        }
+        
+        function handlePromoClick(notificationId) {
+            markNotificationAsRead(notificationId);
+            showAlert('Redirection vers l\'offre spéciale...', 'info');
+        }
+        
+        async function handleAgentOrderNotification(notificationId) {
+            // Prendre la commande directement depuis la notification
+            try {
+                showLoading(true);
+                
+                // Ouvrir le modal des commandes disponibles
+                await openOrdersModal();
+                markNotificationAsRead(notificationId);
+                
+            } catch (error) {
+                console.error('Erreur:', error);
+                markNotificationAsRead(notificationId);
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        function triggerNotificationFeedback(notificationType) {
+            // Vibration légère si supportée
+            if (navigator.vibrate) {
+                switch(notificationType) {
+                    case 'agent':
+                        navigator.vibrate([100, 50, 100]); // Double vibration
+                        break;
+                    case 'promo':
+                        navigator.vibrate([50, 50, 50, 50, 50]); // Triple vibration
+                        break;
+                    case 'delivery_feedback':
+                        navigator.vibrate([80, 40, 80]); // Double vibration
+                        break;
+                    default:
+                        navigator.vibrate([50]);
+                }
+            }
+        }
+        
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
         // ===== AUTO REFRESH =====
         function startAutoRefresh() {
             // Refresh data every 30 seconds
@@ -1679,21 +2237,78 @@
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération des commandes disponibles:', error);
-                showNotification('Erreur lors du chargement des commandes', 'error');
+                showAlert('Erreur lors du chargement des commandes', 'error');
                 return [];
             }
         }
 
         async function assignOrderToAgentAPI(orderId, agentId) {
-            // Mock API call
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        success: true,
-                        message: 'Order assigned successfully'
-                    });
-                }, 800);
-            });
+            try {
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+
+                const response = await fetch('backend/orders/assign', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        order_id: orderId,
+                        agent_id: agentId
+                    }),
+                    signal: controller.signal
+                });
+
+                clearTimeout(timeoutId);
+
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                // Check for different status scenarios
+                if (data.status === 'taken' || data.message?.toLowerCase().includes('taken') || data.message?.toLowerCase().includes('déjà prise')) {
+                    return {
+                        success: false,
+                        status: 'taken',
+                        message: 'Cette commande a déjà été prise par un autre agent',
+                        ...data
+                    };
+                }
+                
+                // Check if success is true (boolean, string, or number)
+                const isSuccess = data.success === true || data.success === 'true' || data.success === 1;
+                console.log(data.success, isSuccess);
+                // Ensure success property exists
+                return {
+                    success: isSuccess,
+                    status: isSuccess ? 'success' : 'error',
+                    message: data.message || (isSuccess ? 'Commande assignée avec succès' : 'Erreur lors de l\'assignation'),
+                    ...data
+                };
+            } catch (error) {
+                console.error('Erreur API assignOrder:', error);
+                
+                let errorMessage = 'Erreur lors de l\'assignation de la commande';
+                let errorStatus = 'error';
+                
+                if (error.name === 'AbortError') {
+                    errorMessage = 'Le serveur n\'a pas répondu à temps. Veuillez réessayer.';
+                    errorStatus = 'timeout';
+                } else if (error instanceof TypeError) {
+                    errorMessage = 'Erreur de connexion au serveur. Vérifiez votre connexion internet.';
+                    errorStatus = 'connection';
+                }
+                
+                return {
+                    success: false,
+                    status: errorStatus,
+                    message: errorMessage,
+                    error: error.message
+                };
+            }
         }
 
         async function getCurrentDeliveryAPI(agentId) {
@@ -1719,41 +2334,9 @@
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération de la livraison en cours:', error);
-                showNotification('Erreur lors du chargement de la livraison en cours', 'error');
+                showAlert('Erreur lors du chargement de la livraison en cours', 'error');
                 return null;
             }
-        }
-
-        async function sendDeliveryFeedbackAPI(deliveryId, agentId, message) {
-            // Mock API call
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        success: true,
-                        feedback_id: 'fb_' + Date.now()
-                    });
-                }, 500);
-            });
-        }
-
-        async function getDeliveryFeedbacksAPI(deliveryId) {
-            // Mock data - replace with real API
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve([
-                        {
-                            id: 'fb_001',
-                            message: 'Je suis en route vers votre campus',
-                            sent_at: '2024-01-16T16:10:00Z'
-                        },
-                        {
-                            id: 'fb_002',
-                            message: 'Arrivé sur le campus, je me dirige vers le bloc C',
-                            sent_at: '2024-01-16T16:25:00Z'
-                        }
-                    ]);
-                }, 500);
-            });
         }
 
         async function completeDeliveryAPI(deliveryId, agentId) {
@@ -1793,6 +2376,9 @@
         window.addEventListener('beforeunload', function() {
             if (refreshInterval) {
                 clearInterval(refreshInterval);
+            }
+            if (notificationCheckInterval) {
+                clearInterval(notificationCheckInterval);
             }
         });
     </script>

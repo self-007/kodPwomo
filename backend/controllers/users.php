@@ -82,11 +82,6 @@ function createUser() {
     } 
     //create userId
     $userid = idUser();       
-    //create access token
-    $accessToken = createAccessToken($username, $userid);
-    //create refresh token
-    $refreshToken = createRefreshToken($userid);
-
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     $stmt = $connection->prepare("INSERT INTO users (name, password, email, firstname, id_unique, refresh_token, is_verified) VALUES (:username, :password, :email, :firstname, :id_unique, :refresh_token, 0)");

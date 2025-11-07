@@ -88,23 +88,7 @@ function createOrder( $status = 'pending') {
         response(['error' => 'Failed to create order: ' . $e->getMessage()], 500);
     } */
 }
-// update order status
-function updateOrderStatus($orderId, $status) {
-    // verify int value or superior to 0
-    if (intval($orderId) <= 0 || empty($status)) {
-        response(['error' => 'Invalid order ID or status'], 400);
-    }
-    $status = sanitizeInput($status);
-    global $connection;
-    $stmt = $connection->prepare("UPDATE orders SET status = :status WHERE id = :id");
-    $stmt->bindParam(':status', $status);
-    $stmt->bindParam(':id', $orderId);
-    if ($stmt->execute()) {
-        return ['message' => 'Order status updated successfully'];
-    } else {
-        response(['error' => 'Failed to update order status'], 500);
-    }
-}
+
 // get orders by user id alpha numeric
 function getOrdersByUserId($userId) {
     // id is alpha num value

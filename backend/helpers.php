@@ -64,7 +64,7 @@ function getOrderById($id) {
     // id is alpha num value
     $id = sanitizeInput($id);
     global $connection;
-    $stmt = $connection->prepare("SELECT * FROM orders WHERE order_id = :id GROUP BY order_id");
+    $stmt = $connection->prepare("SELECT id_user, SUM(price * qnt) as total_price FROM orders WHERE order_id = :id GROUP BY order_id");
     $stmt->bindParam(':id', $id); 
     $stmt->execute();
     if ($stmt->rowCount() === 0) {
@@ -73,7 +73,26 @@ function getOrderById($id) {
     $nbrs = $stmt->rowCount();
     $order = $stmt->fetch(PDO::FETCH_ASSOC);
     $newId = $order['id_user'];
-    return ['nbrs' => $nbrs, 'order' => $order, 'id' => $newId];
+    $totalPrice = $order['total_price'];
+    return ['nbrs' => $nbrs, 'order' => $order, 'id' => $newId, 'total_price' => $totalPrice];
+}
+// update order status
+function updateOrderStatus($orderId, $status) {
+    // verify parameters
+    if (empty($orderId) || empty($status)) {
+        response(['error' => 'Invalid order ID or status'], 400);
+    }
+    $status = sanitizeInput($status);
+    $orderId = sanitizeInput($orderId);
+    global $connection;
+    $stmt = $connection->prepare("UPDATE orders SET status = :status WHERE order_id = :id");
+    $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':id', $orderId);
+    if ($stmt->execute()) {
+        return ['message' => 'Order status updated successfully'];
+    } else {
+        response(['error' => 'Failed to update order status'], 500);
+    }
 }
 // create idTransactions
 function idTrs(){
@@ -117,14 +136,14 @@ function sendOtp($email) {
 //create refresh token,
 $ACCESS_SECRET = 'une_cle_que_seul_vous_connaissez';
 $REFRESH_SECRET = 'une_autre_cle_que_seul_vous_connaissez';
-function createRefreshToken($userId) {
+function createRefreshToken($userId, $role) {
     global $REFRESH_SECRET;
     // Création du payload pour le refresh token
     $refreshPayload = [
         'iat' => time(),
         'exp' => time() + 1209600, // Expiration dans 2 semaines
         'sub' => $userId,
-        'role' => 'user'
+        'role' => $role
     ];
 
     return JWT::encode($refreshPayload, $REFRESH_SECRET, 'HS256');
@@ -142,14 +161,14 @@ function setRefreshTokenCookie($refreshToken) {
 }
 
 //create access token
-function createAccessToken($username, $user_id) {
+function createAccessToken($username, $user_id, $role) {
     global $ACCESS_SECRET;
     // Création du payload pour le access token
     $accessPayload = [
         'iat' => time(), // Heure d'émission
         'exp' => time() + 300, // Expiration dans 5 minutes
         'username' => $username, // Informations utilisateur
-        'role' => 'user', // Rôle utilisateur (exemple)
+        'role' => $role, // Rôle client/agent/ADM (exemple)
         'sub' => $user_id
     ];
     return JWT::encode($accessPayload, $ACCESS_SECRET, 'HS256');

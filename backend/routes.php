@@ -36,9 +36,11 @@ $routes =  [
         '/university/super' => ['Adm/main_adm.php', 'allUniversities'], // get universities from super admin
         '/category/super' => ['Adm/main_adm.php', 'allCategories'], // get all categories from super admin
         '/category/adm' => ['Adm/adm.php', 'allCategories'], // get all categories from admin-manager
+        '/notifications/([\w\-\.]+)' => ['services/notifications.php', 'getNotificationsByUserId'], //get notifications by user id
     ],
     'POST' => [
         '/new/product/adm' => ['adm/adm.php', 'createProduct'], //create product
+        '/orders/assign' => ['services/deliveries.php', 'createDelivery'], //assign order to agent
         '/category/adm' => ['adm/adm.php', 'createCategory'], //create category
         '/users' => ['controllers/users.php', 'createUser'],   //create user
         '/verify-otp' => ['controllers/verify-otp.php', 'verifyOtp'], //verify OTP

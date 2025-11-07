@@ -1,25 +1,49 @@
 <?php
 require_once 'agents/agents.php';
 // create a livraison
-function createDelivery($orderId, $agentId, $status = 'pending') {
-    // verify int value or superior to 0
-    if (intval($orderId) <= 0 || intval($agentId) <= 0) {
+function createDelivery( $status = 'processing') {
+    global $datas;
+    //verify datas
+    if (empty($datas['order_id']) || empty($datas['agent_id'])) {
         response(['error' => 'Invalid order ID or agent ID'], 400);
         
     }
+    $orderId = sanitizeInput($datas['order_id']);
+    $agentId = sanitizeInput($datas['agent_id']);
     // Verify if that order exists
-    $order = getOrderById($orderId);
-    if ($order) {
-        response(['error' => 'this order has been taken by another agent'], 400);
-        exit();
+    $order = getOrderById($orderId)['nbrs'];
+    if ($order === 0) {
+        response(['error' => 'this order doesn\'t exist'], 400);
     }
-    global $connection; 
-    $stmt = $connection->prepare("INSERT INTO deliveries (order_id, agent_id, status) VALUES (:order_id, :agent_id, :status)");
+    // Verify if that agent exists
+    $agent = getAgentById($agentId);
+    if (!isset($agent)) {
+        response(['error' => 'your agent ID is invalid'], 404);
+    }
+    //verify if deliveries for that order already exists
+    $vrfDeliveries = getDeliveriesByOrderId($orderId);
+    if ($vrfDeliveries !== null) {
+        response(['error' => 'Delivery for this order already exists', 'status' => 'taken'], 200);
+    }
+    //get the order total price
+    $total_price = getOrderById($orderId)['total_price'];
+    //verify if total_price is number and > 0
+    if (!is_numeric($total_price) || $total_price <= 0) {
+        response(['error' => 'invalid total_price'], 400);
+    }
+    //get delivery cost
+    $deliveryCost = ($total_price * 10) / 100; 
+    global $connection;
+    $stmt = $connection->prepare("INSERT INTO deliveries (id_commande, id_agent, status, delivery_price) VALUES (:order_id, :agent_id, :status, :delivery_cost)");
     $stmt->bindParam(':order_id', $orderId);
     $stmt->bindParam(':agent_id', $agentId);
     $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':delivery_cost', $deliveryCost);
     if ($stmt->execute()) {
-        return $connection->lastInsertId();
+        //update order status to 'processing'
+        updateOrderStatus($orderId, 'processing');
+        response(['success' => true, 'message' => 'Commande assignée avec succès'], 200);
+
     } else {
         response(['error' => 'Failed to create delivery'], 500);
     }
@@ -82,10 +106,13 @@ function getDeliveriesByOrderId($orderId) {
     //orderID is alphaNumeric , clean id
     $orderId = sanitizeInput($orderId);
     global $connection;
-    $stmt = $connection->prepare("SELECT * FROM deliveries WHERE order_id = :order_id");
+    $stmt = $connection->prepare("SELECT * FROM deliveries WHERE id_commande = :order_id");
     $stmt->bindParam(':order_id', $orderId);
     $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($stmt->rowCount() > 0) {
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    return null;
 }
 // get all deliveries
 function getAllDeliveries() {

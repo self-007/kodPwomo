@@ -34,7 +34,9 @@ function verifyOtp() {
             response(['error' => 'Utilisateur non trouvé'], 404);
             return;
         }
-
+        $userid = $user['id_unique'];
+        $username = $user['name'];
+        $role = $user['role'];
         // - Vérifier l'expiration du code
         if (intval($user['otp']) !== intval($otp)) {
             response(['error' => 'Code OTP incorrect'.$otp], 400);
@@ -49,9 +51,16 @@ function verifyOtp() {
         // - Marquer l'utilisateur comme vérifié
         $stmt = $connection->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
         $stmt->execute([$email]);
+        //create access token
+        $accessToken = createAccessToken($username, $userid, $role);
+        //create refresh token
+        $refreshToken = createRefreshToken($userid, $role);
+        //set cookie for refresh token
+        setRefreshTokenCookie($refreshToken);
         response([
             'status' => 'success',
-            'message' => 'Code OTP vérifié avec succès'
+            'message' => 'Code OTP vérifié avec succès',
+            'access_token' => $accessToken
         ], 200);
 
         

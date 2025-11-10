@@ -50,18 +50,27 @@ function createDelivery( $status = 'processing') {
 }
 
 // update delivery status
-function updateDeliveryStatus($deliveryId, $status) {
+function updateDeliveryStatus($deliveryId) {
+    global $datas;
+    //verify datas
+    if(!isset($datas['status']) || !isset($datas['order_id']) || !isset($datas['agent_id'])) {
+        response(['error' => 'Invalid status'], 400); 
+    }
     // verify int value or superior to 0
-    if (intval($deliveryId) <= 0 || empty($status)) {
+    if (intval($deliveryId) <= 0 || empty($datas['status']) || empty($datas['order_id']) || empty($datas['agent_id'])) {
         response(['error' => 'Invalid delivery ID or status'], 400);
     }
-    $status = sanitizeInput($status);
+    $status = sanitizeInput($datas['status']);
+    $orderId = sanitizeInput($datas['order_id']);
+    $agentId = sanitizeInput($datas['agent_id']);
     global $connection;
-    $stmt = $connection->prepare("UPDATE deliveries SET status = :status WHERE id = :id");
+    $stmt = $connection->prepare("UPDATE deliveries SET status = :status WHERE id = :id AND id_agent = :agent_id AND id_commande = :order_id");
     $stmt->bindParam(':status', $status);
     $stmt->bindParam(':id', $deliveryId);
+    $stmt->bindParam(':agent_id', $agentId);
+    $stmt->bindParam(':order_id', $orderId);
     if ($stmt->execute()) {
-        return ['message' => 'Delivery status updated successfully'];
+        response(['message' => 'Delivery status updated successfully']);
     } else {
         response(['error' => 'Failed to update delivery status'], 500);
     }
@@ -288,7 +297,7 @@ function getProcessingDeliveriesByAgent($agentId){
     //id is alphaNumeric , clean id
     $agentId = sanitizeInput($agentId);
     global $connection;
-    $stmt = 'SELECT products.name as product_name, delivery_price, orders.price as order_price, orders.qnt, orders.order_id, university.name, salle_name FROM deliveries JOIN orders ON id_commande = orders.order_id
+    $stmt = 'SELECT deliveries.id as delivery_id, products.name as product_name, delivery_price, orders.price as order_price, orders.qnt, orders.order_id, university.name, salle_name FROM deliveries JOIN orders ON id_commande = orders.order_id
      JOIN  products ON products.id = orders.id_product JOIN salle ON salle.id = adresse_id JOIN university ON salle.id_university = university.id WHERE deliveries.status = "processing" AND 
     deliveries.id_agent = ?';
     $stmt = $connection->prepare($stmt);

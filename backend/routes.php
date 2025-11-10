@@ -71,6 +71,7 @@ $routes =  [
         '/setAdm/(\w+)' => ['Adm/main_adm.php', 'setUserAdm'], //assign admin role to user for university by super admin
         '/setAgent/(\w+)' => ['Adm/adm.php', 'setUserAgent'], //assign agent role to user for university by super admin
         '/setUser/(\w+)' => ['Adm/adm.php', 'setUserClient'], //assign user role to user for university by super admin
+        '/delivery/status/(\d+)' => ['services/deliveries.php', 'updateDeliveryStatus'], //update delivery status
     ],
     'DELETE' => [
         '/category/super/(\d+)' => ['Adm/main_adm.php', 'deleteCategory'], // delete category from super admin

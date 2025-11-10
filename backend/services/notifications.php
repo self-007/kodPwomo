@@ -8,17 +8,41 @@ function getNotificationsByUserId($userId) {
     //sanitize userId
     $userId = sanitizeInput($userId);
     global $connection;
-    $stmt = $connection->prepare("SELECT * FROM notifications WHERE id_user = :user_id AND status != 'deleted' ORDER BY date DESC");
+    $stmt = $connection->prepare("SELECT * FROM notifications WHERE id_user = :user_id AND status != 'deleted' AND status != 'read' AND calls < 2 ORDER BY date DESC");
     $stmt->bindParam(':user_id', $userId);
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
         $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $allNotifications = $notifications;
         $nbrs = $stmt->rowCount();
-        response(['nbrs' => $nbrs, 'notifications' => $notifications], 200);
+        foreach ($notifications as $notifications) {
+            //update each notifications call
+            setNotificationCall($notifications['id']);
+        }
+        response(['nbrs' => $nbrs, 'notifications' => $allNotifications], 200);
     } else {
         response(['nbrs' => 0, 'notifications' => []], 200);
     }
     
+}
+//set notification call + 1
+function setNotificationCall($id) {
+    // verify if intval
+    if(!is_numeric($id) || $id === null){
+        response(['error' => 'Invalid notification ID'], 400);
+    }
+    // verify int value or superior to 0
+    if (intval($id) <= 0) {
+        response(['error' => 'Invalid notification ID'], 400);
+    }
+    global $connection;
+    $stmt = $connection->prepare("UPDATE notifications SET calls = calls + 1 WHERE id = :id");
+    $stmt->bindParam(':id', $id);
+    if ($stmt->execute()) {
+        return ['message' => 'Notification call incremented successfully'];
+    } else {
+        response(['error' => 'Failed to increment notification call'], 500);
+    }
 }
 //create notification
 function createNotification() {
@@ -45,7 +69,7 @@ function createNotification() {
     }        
    
     global $connection;
-    $stmt = $connection->prepare("INSERT INTO notifications (id_user, message, type) VALUES (:user_id, :message, :type)");
+    $stmt = $connection->prepare("INSERT INTO notifications (id_user, message, type, status) VALUES (:user_id, :message, :type, 'unread')");
     $stmt->bindParam(':user_id', $userId);
     $stmt->bindParam(':message', $message);
     $stmt->bindParam(':type', $type);
@@ -72,7 +96,13 @@ function deleteNotification($id) {
 }
 //mark notification as read
 //must veify if this is the current user notifications
-function markNotificationAsRead($id) {
+function markNotificationAsRead() {
+    global $datas;
+    //verify datas
+    if(!isset($datas['notification_id'])) {
+        response(['error' => 'Missing notification ID'], 400);
+    }
+    $id = $datas['notification_id'];
     // verify int value or superior to 0
     if (intval($id) <= 0) {
         response(['error' => 'Invalid notification ID'], 400);

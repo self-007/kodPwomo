@@ -16,21 +16,15 @@
     <style>
         /* ===== CUSTOM COLOR PALETTE ===== */
         :root {
-            --primary: #FF6B35;
-            --primary-dark: #E55A28;
-            --secondary: #004E89;
-            --secondary-dark: #003A63;
-            --success: #06A77D;
-            --success-dark: #058968;
-            --error: #D62828;
-            --error-dark: #B82222;
-            --warning: #F77F00;
-            --info: #06A77D;
+            --primary: #f39c12;
+            --primary-dark: #e67e22;
+            --secondary: #27ae60;
+            --secondary-dark: #229954;
+            --white: #ffffff;
             --dark-gray: #1A1A1A;
             --medium-gray: #666666;
             --light-gray: #F5F5F5;
             --border-color: #E0E0E0;
-            --bg-gradient: linear-gradient(135deg, #FF6B35 0%, #06A77D 100%);
         }
         
         * {
@@ -41,17 +35,16 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            background: #f5f5f5;
             min-height: 100vh;
             color: var(--dark-gray);
         }
         
         /* ===== HEADER ===== */
         .header {
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-            backdrop-filter: blur(10px);
+            background: var(--secondary);
             padding: 12px 0;
-            box-shadow: 0 4px 20px rgba(255, 107, 53, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -69,7 +62,7 @@
         .logo {
             font-size: 24px;
             font-weight: 800;
-            color: white;
+            color: var(--white);
             text-decoration: none;
         }
         
@@ -81,7 +74,7 @@
         
         .agent-name {
             font-weight: 600;
-            color: white;
+            color: var(--white);
             font-size: 14px;
             max-width: 120px;
             overflow: hidden;
@@ -90,18 +83,18 @@
         }
         
         .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.1);
+            color: var(--white);
+            border: 1px solid rgba(0, 0, 0, 0.2);
             padding: 8px 16px;
-            border-radius: 20px;
+            border-radius: 6px;
             font-size: 13px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
         
         .logout-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(0, 0, 0, 0.2);
             transform: translateY(-1px);
         }
         
@@ -114,10 +107,10 @@
         
         /* ===== WELCOME SECTION ===== */
         .welcome-section {
-            background: white;
-            border-radius: 16px;
+            background: var(--white);
+            border-radius: 12px;
             padding: 24px 20px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
             margin-bottom: 25px;
             text-align: center;
             border-top: 4px solid var(--primary);
@@ -151,28 +144,28 @@
             align-items: center;
             gap: 8px;
             padding: 12px 20px;
-            border-radius: 25px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 14px;
         }
         
         .status-available {
-            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
+            background: var(--secondary);
+            color: var(--white);
+            box-shadow: 0 2px 6px rgba(39, 174, 96, 0.2);
         }
         
         .status-unavailable {
-            background: linear-gradient(135deg, var(--error) 0%, #991B1B 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
+            background: #e74c3c;
+            color: var(--white);
+            box-shadow: 0 2px 6px rgba(231, 76, 60, 0.2);
         }
         
         .status-icon {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: white;
+            background: var(--white);
             animation: pulse 2s infinite;
         }
         
@@ -182,22 +175,22 @@
         }
         
         .toggle-status-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
+            background: var(--primary);
+            color: var(--white);
             border: none;
             padding: 12px 24px;
-            border-radius: 25px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            box-shadow: 0 2px 6px rgba(243, 156, 18, 0.2);
         }
         
         .toggle-status-btn:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
         /* ===== ACTION BUTTONS ===== */
@@ -209,9 +202,9 @@
         }
         
         .action-btn {
-            background: white;
+            background: var(--white);
             border: 2px solid var(--border-color);
-            border-radius: 16px;
+            border-radius: 12px;
             padding: 24px 18px;
             text-align: center;
             cursor: pointer;
@@ -229,7 +222,7 @@
             left: 0;
             width: 100%;
             height: 4px;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
+            background: var(--primary);
             transform: scaleX(0);
             transform-origin: left;
             transition: transform 0.3s ease;
@@ -238,7 +231,7 @@
         .action-btn:hover {
             border-color: var(--primary);
             transform: translateY(-4px);
-            box-shadow: 0 12px 24px rgba(255, 107, 53, 0.15);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
         }
         
         .action-btn:hover::before {
@@ -271,20 +264,19 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(26, 26, 26, 0.85);
+            background: rgba(0, 0, 0, 0.5);
             z-index: 2000;
-            backdrop-filter: blur(5px);
             overflow-y: auto;
             padding: 20px 15px;
         }
         
         .modal-content {
-            background: white;
-            border-radius: 16px;
+            background: var(--white);
+            border-radius: 12px;
             padding: 24px;
             max-width: 800px;
             margin: 20px auto;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             position: relative;
             width: 100%;
             border-top: 4px solid var(--primary);
@@ -309,8 +301,8 @@
         }
         
         .modal-close:hover {
-            background: var(--error);
-            color: white;
+            background: #e74c3c;
+            color: var(--white);
         }
         
         .modal-header {
@@ -341,17 +333,18 @@
         }
         
         .stat-card {
-            background: linear-gradient(135deg, var(--light-gray) 0%, #f0f0f0 100%);
+            background: var(--white);
             padding: 18px;
             border-radius: 12px;
             text-align: center;
+            border: 2px solid var(--border-color);
             border-left: 4px solid var(--primary);
             transition: all 0.3s ease;
         }
         
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 107, 53, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         
         .stat-number {
@@ -374,9 +367,9 @@
         }
         
         .transaction-item, .order-item {
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            background: var(--white);
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
             padding: 18px;
             margin-bottom: 12px;
             transition: all 0.3s ease;
@@ -385,7 +378,7 @@
         
         .transaction-item:hover, .order-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.15);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
         
         .transaction-header, .order-header {
@@ -418,7 +411,7 @@
         .transaction-status {
             display: inline-block;
             padding: 4px 10px;
-            border-radius: 12px;
+            border-radius: 6px;
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
@@ -426,18 +419,18 @@
         }
         
         .status-completed {
-            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-            color: white;
+            background: var(--secondary);
+            color: var(--white);
         }
         
         .status-pending {
-            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
-            color: white;
+            background: #f39c12;
+            color: var(--white);
         }
         
         .status-in-progress {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
+            background: var(--primary);
+            color: var(--white);
         }
         
         /* ===== ORDER SPECIFIC ===== */
@@ -447,7 +440,7 @@
         }
         
         .order-university {
-            color: var(--secondary);
+            color: #555;
             font-weight: 600;
             font-size: 13px;
         }
@@ -461,30 +454,29 @@
         .product-summary {
             background: var(--light-gray);
             padding: 12px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin: 12px 0;
             font-size: 13px;
             border-left: 3px solid var(--primary);
         }
         
         .take-order-btn {
-            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-            color: white;
+            background: var(--secondary);
+            color: var(--white);
             border: none;
             padding: 12px 20px;
-            border-radius: 20px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             font-size: 14px;
             width: 100%;
             transition: all 0.3s ease;
             margin-top: 12px;
-            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
         }
         
         .take-order-btn:hover {
+            background: var(--secondary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(6, 168, 125, 0.4);
         }
         
         /* ===== DELIVERY ===== */
@@ -526,7 +518,7 @@
         
         .delivery-btn {
             padding: 12px;
-            border-radius: 20px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
@@ -535,25 +527,23 @@
         }
         
         .done-btn {
-            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
+            background: var(--secondary);
+            color: var(--white);
         }
         
         .done-btn:hover {
+            background: var(--secondary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(6, 168, 125, 0.4);
         }
         
         .feedback-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            background: var(--primary);
+            color: var(--white);
         }
         
         .feedback-btn:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
         .feedback-section {
@@ -579,7 +569,7 @@
             min-width: 200px;
             padding: 10px 14px;
             border: 2px solid var(--border-color);
-            border-radius: 20px;
+            border-radius: 6px;
             font-size: 13px;
             transition: all 0.3s ease;
         }
@@ -587,26 +577,25 @@
         .feedback-input:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+            box-shadow: 0 0 0 3px rgba(243, 156, 18, 0.1);
         }
         
         .send-feedback-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
+            background: var(--primary);
+            color: var(--white);
             border: none;
             padding: 10px 18px;
-            border-radius: 20px;
+            border-radius: 6px;
             font-weight: 600;
             cursor: pointer;
             font-size: 13px;
             white-space: nowrap;
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
             transition: all 0.3s ease;
         }
         
         .send-feedback-btn:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
         }
         
         .feedback-list {
@@ -615,9 +604,9 @@
         }
         
         .feedback-item {
-            background: white;
+            background: var(--white);
             padding: 12px;
-            border-radius: 8px;
+            border-radius: 6px;
             margin-bottom: 8px;
             border-left: 4px solid var(--primary);
             font-size: 13px;
@@ -636,10 +625,10 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: var(--white);
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
             z-index: 3000;
             text-align: center;
             border-top: 4px solid var(--primary);
@@ -679,33 +668,28 @@
         }
         
         .alert.success {
-            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
+            background: var(--secondary);
+            color: var(--white);
         }
         
         .alert.error {
-            background: linear-gradient(135deg, var(--error) 0%, #991B1B 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(214, 40, 40, 0.3);
+            background: #e74c3c;
+            color: var(--white);
         }
         
         .alert.warning {
-            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(247, 127, 0, 0.3);
+            background: var(--primary);
+            color: var(--white);
         }
         
         .alert.info {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+            background: var(--primary);
+            color: var(--white);
         }
         
         .alert.taken {
-            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
-            color: white;
-            box-shadow: 0 4px 12px rgba(247, 127, 0, 0.3);
+            background: var(--primary);
+            color: var(--white);
         }
         
         /* ===== NOTIFICATIONS ===== */
@@ -785,133 +769,150 @@
         }
         
         .notification-close:hover {
-            color: var(--error);
+            color: #e74c3c;
             transform: rotate(90deg);
         }
         
         .notification-message {
-            font-size: 13px;
-            color: var(--medium-gray);
-            margin-bottom: 12px;
-            line-height: 1.4;
+            font-size: 15px;
+            color: #000000;
+            margin-bottom: 14px;
+            line-height: 1.6;
+            font-weight: 600;
         }
         
         .notification-time {
-            font-size: 11px;
-            color: #999;
-            margin-bottom: 12px;
-        }
-        
-        .notification-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        
-        .notification-btn {
-            padding: 8px 12px;
-            border-radius: 16px;
             font-size: 12px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
+            color: #444444;
+            margin-bottom: 14px;
+            font-weight: 500;
         }
         
         /* ===== NOTIFICATION TYPES ===== */
         /* PROMO */
         .notification.promo {
-            border-left-color: var(--warning);
-            background: linear-gradient(135deg, rgba(247, 127, 0, 0.05) 0%, rgba(217, 119, 6, 0.05) 100%);
+            border-left-color: var(--primary);
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.08) 0%, rgba(230, 126, 34, 0.08) 100%);
         }
         
         .notification.promo .notification-title {
-            color: var(--warning);
+            color: var(--primary);
         }
         
-        .notification.promo .take-promo-btn {
-            background: linear-gradient(135deg, var(--warning) 0%, #D97706 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(247, 127, 0, 0.2);
-        }
-        
-        .notification.promo .take-promo-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(247, 127, 0, 0.3);
+        .notification.promo .notification-message {
+            color: #000000;
         }
         
         /* AGENT */
         .notification.agent {
-            border-left-color: var(--success);
-            background: linear-gradient(135deg, rgba(6, 168, 125, 0.05) 0%, rgba(4, 120, 87, 0.05) 100%);
+            border-left-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.08) 0%, rgba(34, 153, 84, 0.08) 100%);
         }
         
         .notification.agent .notification-title {
-            color: var(--success);
+            color: var(--secondary);
         }
         
-        .notification.agent .take-order-notification-btn {
-            background: linear-gradient(135deg, var(--success) 0%, #047857 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(6, 168, 125, 0.2);
-        }
-        
-        .notification.agent .take-order-notification-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(6, 168, 125, 0.3);
+        .notification.agent .notification-message {
+            color: #000000;
         }
         
         /* DELIVERY_FEEDBACK */
         .notification.delivery_feedback {
             border-left-color: var(--primary);
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.05) 0%, rgba(229, 90, 40, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.08) 0%, rgba(230, 126, 34, 0.08) 100%);
         }
         
         .notification.delivery_feedback .notification-title {
             color: var(--primary);
         }
         
-        .notification.delivery_feedback .mark-read-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
-        }
-        
-        .notification.delivery_feedback .mark-read-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
+        .notification.delivery_feedback .notification-message {
+            color: #000000;
         }
         
         /* COMMANDE (Order confirmation) */
         .notification.commande {
             border-left-color: var(--secondary);
-            background: linear-gradient(135deg, rgba(0, 78, 137, 0.05) 0%, rgba(0, 58, 99, 0.05) 100%);
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.08) 0%, rgba(34, 153, 84, 0.08) 100%);
         }
         
         .notification.commande .notification-title {
             color: var(--secondary);
         }
         
-        .notification.commande .mark-read-btn {
-            background: linear-gradient(135deg, var(--secondary) 0%, var(--secondary-dark) 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(0, 78, 137, 0.2);
-        }
-        
-        .notification.commande .mark-read-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0, 78, 137, 0.3);
+        .notification.commande .notification-message {
+            color: #000000;
         }
         
         .notification.unread {
-            background-color: rgba(255, 107, 53, 0.08);
+            background-color: rgba(243, 156, 18, 0.08);
         }
         
         .notification-icon {
             display: inline-block;
             margin-right: 8px;
             font-size: 16px;
+        }
+        
+        /* ===== NOTIFICATION BUTTONS ===== */
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .notification-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            text-align: center;
+        }
+        
+        .take-promo-btn {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 6px rgba(243, 156, 18, 0.2);
+        }
+        
+        .take-promo-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .take-order-notification-btn {
+            background: var(--secondary);
+            color: white;
+            box-shadow: 0 2px 6px rgba(39, 174, 96, 0.2);
+            flex: 1.5;
+        }
+        
+        .take-order-notification-btn:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-2px);
+        }
+        
+        .mark-read-btn {
+            background: var(--light-gray);
+            color: var(--primary);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        .mark-read-btn:hover {
+            background: var(--border-color);
+            transform: translateY(-2px);
+        }
+        
+        .notification-btn:active {
+            transform: translateY(0);
         }
         
         /* ===== RESPONSIVE ===== */
@@ -1113,7 +1114,7 @@
                     initNotificationSystem(); // Ajouter cette ligne
                 } else {
                     // Redirect to login if not authenticated
-                    window.location.href = 'login.php';
+                   // window.location.href = 'login.php';
                 }
                 
             } catch (error) {
@@ -1121,7 +1122,7 @@
                 showAlert('Erreur lors du chargement des données', 'error');
                 // Redirect to login on error
                 setTimeout(() => {
-                    window.location.href = 'login.php';
+                //    window.location.href = 'login.php';
                 }, 2000);
             } finally {
                 showLoading(false);
@@ -1212,9 +1213,15 @@
         }
 
         function displayTransactions(data) {
-            // Extraire les données du backend
-            const transactions = data.deliveries || [];
-            const stats = data.stats || {};
+            // Vérifier que data est un objet valide
+            if (!data || typeof data !== 'object') {
+                showAlert('Format de données invalide reçu du serveur', 'error');
+                return;
+            }
+
+            // Extraire les données du backend avec sécurité
+            const transactions = Array.isArray(data.deliveries) ? data.deliveries : [];
+            const stats = (typeof data.stats === 'object' && data.stats) ? data.stats : {};
             
             // Update stats depuis le backend
             const totalDeliveries = stats.totalDeliveries || transactions.length;
@@ -1308,6 +1315,17 @@
             const ordersList = document.getElementById('ordersList');
             ordersList.innerHTML = '';
             
+            // Vérifier que orders est un array valide
+            if (!Array.isArray(orders)) {
+                ordersList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
+                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
+                        <p>Erreur : Format de données invalide</p>
+                    </div>
+                `;
+                return;
+            }
+
             if (orders.length === 0) {
                 ordersList.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
@@ -1457,6 +1475,7 @@
                             university_name: item.name,
                             salle_name: item.salle_name,
                             id_user: item.id_user,
+                            delivery_id: item.delivery_id,
                             items: [],
                             total_order_amount: 0,
                             total_delivery_amount: 0,
@@ -1470,6 +1489,7 @@
                         quantity: parseInt(item.qnt) || 1,
                         order_price: parseFloat(item.order_price) || 0,
                         delivery_price: parseFloat(item.delivery_price) || 0
+                        
                     });
                     
                     groupedOrders[orderId].total_order_amount += parseFloat(item.order_price) || 0;
@@ -1517,7 +1537,7 @@
                     </div>
                     
                     <div class="delivery-actions">
-                        <button class="delivery-btn done-btn" onclick="markDeliveryDone('${delivery.order_id}')">
+                        <button class="delivery-btn done-btn" onclick="markDeliveryDone('${delivery.order_id}', '${delivery.delivery_id}' )">
                             ✅ Terminé
                         </button>
                         <button class="delivery-btn feedback-btn" onclick="showFeedbackForm()">
@@ -1571,7 +1591,7 @@
                     </div>
                     
                     <div class="delivery-actions">
-                        <button class="delivery-btn done-btn" onclick="markDeliveryDone('${deliveryData.id || deliveryData.order_id}')">
+                        <button class="delivery-btn done-btn" onclick="markDeliveryDone('${deliveryData.order_id}', '${deliveryData.delivery_id}')">
                             ✅ Terminé
                         </button>
                         <button class="delivery-btn feedback-btn" onclick="showFeedbackForm()">
@@ -1597,7 +1617,7 @@
                 `;
                 
                 // Load existing feedbacks
-                loadDeliveryFeedbacks(deliveryData.id || deliveryData.order_id);
+                loadDeliveryFeedbacks(deliveryData.order_id);
             }
         }
 
@@ -1731,7 +1751,9 @@
             loadLocalFeedbacks(orderId);
         }
 
-        async function markDeliveryDone(orderId) {
+        async function markDeliveryDone(orderId, deliveryId) {
+            console.log(`Marquer la livraison ${deliveryId} de la commande ${orderId} comme terminée`);
+            //orderID is a string deliveryId is intval for the number of delivery place
             if (!confirm('Êtes-vous sûr que la livraison est terminée ? Cette action ne peut pas être annulée.')) {
                 return;
             }
@@ -1739,320 +1761,84 @@
             showLoading(true);
             
             try {
-                const result = await completeDeliveryAPI(orderId, AGENT_UNIQUE_ID);
+                const result = await completeDeliveryAPI(orderId, AGENT_UNIQUE_ID, deliveryId);
                 
                 if (result.success) {
                     // Nettoyer automatiquement les feedbacks localStorage
                     clearDeliveryFeedbacks(orderId);
                     
-                    showAlert('✅ Livraison terminée ! Messages nettoyés.', 'success');
+                    // Afficher le message renvoyé par le backend (ou message par défaut)
+                    showAlert('✅ ' + (result.message || 'Livraison terminée ! Messages nettoyés.'), 'success');
                     closeDeliveryModal();
                     currentDelivery = null;
                     
-                    // Refresh des données
-                    checkAgentStatus();
+                    // Refresh des données si nécessaire
                 } else {
-                    showAlert('Erreur lors de la finalisation de la livraison', 'error');
+                    // Afficher message d'erreur fourni par le backend si présent
+                    showAlert('❌ ' + (result.message || 'Erreur lors de la finalisation de la livraison'), 'error');
                 }
                 
             } catch (error) {
                 console.error('Erreur lors de la finalisation:', error);
-                showAlert('Erreur lors de la finalisation de la livraison', 'error');
+                showAlert('❌ Erreur lors de la finalisation de la livraison', 'error');
             } finally {
                 showLoading(false);
             }
         }
 
-        function closeDeliveryModal() {
-            document.getElementById('deliveryModal').style.display = 'none';
-        }
-
-        // ===== NOTIFICATIONS =====
-        let notificationCheckInterval = null;
-        let activeNotifications = [];
-        
-        // Initialiser le système de notifications
-        function initNotificationSystem() {
-            // Charger les notifications immédiatement
-            loadNotifications();
-            
-            // Puis toutes les 30 secondes
-            notificationCheckInterval = setInterval(() => {
-                if (!document.hidden) {
-                    loadNotifications();
-                }
-            }, 30000);
-        }
-        
-        async function loadNotifications() {
+        async function completeDeliveryAPI(deliveryId, agentId, id) {
             try {
-                const response = await fetch(`backend/notifications/${AGENT_UNIQUE_ID}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                // Vérifier format backend: {nbrs: 1, notifications: [...]}
-                if (!data.notifications || data.notifications.length === 0 || data.nbrs === 0) {
-                    console.log('Aucune notification');
-                    return;
-                }
-                
-                // Traiter chaque notification du backend
-                data.notifications.forEach(notification => {
-                    // Vérifier si la notification n'est pas déjà affichée
-                    if (!activeNotifications.find(n => n.id === notification.id)) {
-                        displayNotification(notification);
-                        activeNotifications.push(notification);
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Erreur lors du chargement des notifications:', error);
-            }
-        }
-        
-        function displayNotification(notification) {
-            const container = document.getElementById('notificationsContainer');
-            const notifId = `notif_${notification.id}`;
-            const notifElement = document.createElement('div');
-            notifElement.id = notifId;
-            
-            // Utiliser 'type' du backend au lieu de 'category'
-            const notificationType = notification.type || 'info';
-            notifElement.className = `notification ${notificationType}`;
-            
-            let content = '';
-            
-            // Construire le contenu selon le type de notification du backend
-            switch(notificationType) {
-                case 'promo':
-                    content = buildPromoNotification(notification);
-                    break;
-                case 'agent':
-                    content = buildAgentNotification(notification);
-                    break;
-                case 'delivery_feedback':
-                    content = buildDeliveryFeedbackNotification(notification);
-                    break;
-                case 'commande':
-                    content = buildOrderConfirmationNotification(notification);
-                    break;
-                default:
-                    content = buildDefaultNotification(notification);
-            }
-            
-            notifElement.innerHTML = content;
-            container.appendChild(notifElement);
-            
-            // Afficher un son ou une vibration selon le type
-            triggerNotificationFeedback(notificationType);
-            
-            // NE PAS auto-fermer - l'utilisateur doit réagir
-        }
-        
-        function buildPromoNotification(notif) {
-            return `
-                <div class="notification-header">
-                    <div class="notification-title">
-                        <span class="notification-icon">🎉</span>
-                        Nouvelle Promo
-                    </div>
-                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
-                </div>
-                <div class="notification-message">${escapeHtml(notif.message)}</div>
-                <div class="notification-time">${formatDateTime(notif.date)}</div>
-                <div class="notification-actions">
-                    <button class="notification-btn take-promo-btn" onclick="handlePromoClick(${notif.id})">
-                        Voir l'offre
-                    </button>
-                </div>
-            `;
-        }
-        
-        function buildAgentNotification(notif) {
-            return `
-                <div class="notification-header">
-                    <div class="notification-title">
-                        <span class="notification-icon">📦</span>
-                        Nouvelle Commande
-                    </div>
-                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
-                </div>
-                <div class="notification-message">${escapeHtml(notif.message)}</div>
-                <div class="notification-time">${formatDateTime(notif.date)}</div>
-                <div class="notification-actions">
-                    <button class="notification-btn take-order-notification-btn" onclick="handleAgentOrderNotification(${notif.id})">
-                        🚚 Prendre la commande
-                    </button>
-                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
-                        Ignorer
-                    </button>
-                </div>
-            `;
-        }
-        
-        function buildDeliveryFeedbackNotification(notif) {
-            return `
-                <div class="notification-header">
-                    <div class="notification-title">
-                        <span class="notification-icon">💬</span>
-                        Message du Client
-                    </div>
-                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
-                </div>
-                <div class="notification-message">${escapeHtml(notif.message)}</div>
-                <div class="notification-time">${formatDateTime(notif.date)}</div>
-                <div class="notification-actions">
-                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
-                        ✓ Marqué comme lu
-                    </button>
-                </div>
-            `;
-        }
-        
-        function buildOrderConfirmationNotification(notif) {
-            return `
-                <div class="notification-header">
-                    <div class="notification-title">
-                        <span class="notification-icon">✅</span>
-                        Commande Confirmée
-                    </div>
-                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
-                </div>
-                <div class="notification-message">${escapeHtml(notif.message)}</div>
-                <div class="notification-time">${formatDateTime(notif.date)}</div>
-                <div class="notification-actions">
-                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
-                        ✓ Marqué comme lu
-                    </button>
-                </div>
-            `;
-        }
-        
-        function buildDefaultNotification(notif) {
-            return `
-                <div class="notification-header">
-                    <div class="notification-title">
-                        <span class="notification-icon">ℹ️</span>
-                        Notification
-                    </div>
-                    <button class="notification-close" onclick="closeNotification('notif_${notif.id}')">×</button>
-                </div>
-                <div class="notification-message">${escapeHtml(notif.message)}</div>
-                <div class="notification-time">${formatDateTime(notif.date)}</div>
-                <div class="notification-actions">
-                    <button class="notification-btn mark-read-btn" onclick="markNotificationAsRead(${notif.id})">
-                        ✓ Marqué comme lu
-                    </button>
-                </div>
-            `;
-        }
-        
-        function closeNotification(notifId) {
-            const element = document.getElementById(notifId);
-            if (element) {
-                element.classList.add('closing');
-                setTimeout(() => {
-                    element.remove();
-                    // Retirer du tableau des notifications actives
-                    const notifIdNum = notifId.replace('notif_', '');
-                    const index = activeNotifications.findIndex(n => n.id == notifIdNum);
-                    if (index > -1) {
-                        activeNotifications.splice(index, 1);
-                    }
-                }, 300);
-            }
-        }
-        
-        async function markNotificationAsRead(notificationId) {
-            try {
-                const response = await fetch('backend/notifications/mark-read', {
-                    method: 'POST',
+                const response = await fetch(`backend/delivery/status/${id}`, {
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        notification_id: notificationId
+                        order_id: deliveryId,
+                        agent_id: agentId,
+                        status: 'completed'
                     })
                 });
-                
-                if (response.ok) {
-                    closeNotification(`notif_${notificationId}`);
-                } else {
-                    closeNotification(`notif_${notificationId}`);
+
+                // Lire le JSON même en cas d'erreur pour afficher le message backend
+                let data = {};
+                try {
+                    data = await response.json();
+                } catch (e) {
+                    // body vide ou non JSON
+                    data = {};
                 }
-            } catch (error) {
-                console.error('Erreur lors du marquage de la notification:', error);
-                closeNotification(`notif_${notificationId}`);
-            }
-        }
-        
-        function handlePromoClick(notificationId) {
-            markNotificationAsRead(notificationId);
-            showAlert('Redirection vers l\'offre spéciale...', 'info');
-        }
-        
-        async function handleAgentOrderNotification(notificationId) {
-            // Prendre la commande directement depuis la notification
-            try {
-                showLoading(true);
-                
-                // Ouvrir le modal des commandes disponibles
-                await openOrdersModal();
-                markNotificationAsRead(notificationId);
-                
-            } catch (error) {
-                console.error('Erreur:', error);
-                markNotificationAsRead(notificationId);
-            } finally {
-                showLoading(false);
-            }
-        }
-        
-        function triggerNotificationFeedback(notificationType) {
-            // Vibration légère si supportée
-            if (navigator.vibrate) {
-                switch(notificationType) {
-                    case 'agent':
-                        navigator.vibrate([100, 50, 100]); // Double vibration
-                        break;
-                    case 'promo':
-                        navigator.vibrate([50, 50, 50, 50, 50]); // Triple vibration
-                        break;
-                    case 'delivery_feedback':
-                        navigator.vibrate([80, 40, 80]); // Double vibration
-                        break;
-                    default:
-                        navigator.vibrate([50]);
+
+                if (!response.ok) {
+                    // retourner success=false et message backend si fourni
+                    return {
+                        success: false,
+                        message: data.message || `Erreur serveur (${response.status})`,
+                        _data: data
+                    };
                 }
+
+                // Réponse OK
+                return {
+                    success: (typeof data.success !== 'undefined') ? Boolean(data.success) : true,
+                    message: data.message || 'Livraison terminée avec succès',
+                    data: data
+                };
+            } catch (error) {
+                console.error('Erreur API completeDelivery:', error);
+                return {
+                    success: false,
+                    message: 'Erreur lors de la communication avec le serveur'
+                };
             }
-        }
-        
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, m => map[m]);
         }
 
         // ===== AUTO REFRESH =====
         function startAutoRefresh() {
-            // Refresh data every 30 seconds
+            // Refresh data every 30 seconds - BUT NOT FOR AVAILABILITY
             refreshInterval = setInterval(() => {
                 if (!document.hidden) { // Only refresh if page is visible
-                    checkAgentStatus();
+                    // checkAgentStatus(); // REMOVED - Only check on initial load and after manual toggle
                 }
             }, 30000);
         }
@@ -2183,11 +1969,11 @@
                 
                 // Adapter les données backend au format attendu par le frontend
                 return {
-                    deliveries: data.lastMonthDeliveries || [],
+                    deliveries: Array.isArray(data.lastMonthDeliveries) ? data.lastMonthDeliveries : [],
                     stats: {
                         totalDeliveries: data.nbrsTotalDeliveries || 0,
                         totalAmount: data.totalAmount || 0,
-                        completedDeliveries: data.lastMonthDeliveries ? data.lastMonthDeliveries.filter(d => d.status === 'completed' || d.status === 1).length : 0
+                        completedDeliveries: Array.isArray(data.lastMonthDeliveries) ? data.lastMonthDeliveries.filter(d => d.status === 'completed' || d.status === 1).length : 0
                     }
                 };
             } catch (error) {
@@ -2230,8 +2016,11 @@
                 
                 const data = await response.json();
                 
-                if (data.orders && data.orders.length > 0) {
+                // Retourner un array, jamais undefined
+                if (Array.isArray(data.orders)) {
                     return data.orders;
+                } else if (Array.isArray(data)) {
+                    return data;
                 } else {
                     return [];
                 }
@@ -2268,26 +2057,7 @@
 
                 const data = await response.json();
                 
-                // Check for different status scenarios
-                if (data.status === 'taken' || data.message?.toLowerCase().includes('taken') || data.message?.toLowerCase().includes('déjà prise')) {
-                    return {
-                        success: false,
-                        status: 'taken',
-                        message: 'Cette commande a déjà été prise par un autre agent',
-                        ...data
-                    };
-                }
-                
-                // Check if success is true (boolean, string, or number)
-                const isSuccess = data.success === true || data.success === 'true' || data.success === 1;
-                console.log(data.success, isSuccess);
-                // Ensure success property exists
-                return {
-                    success: isSuccess,
-                    status: isSuccess ? 'success' : 'error',
-                    message: data.message || (isSuccess ? 'Commande assignée avec succès' : 'Erreur lors de l\'assignation'),
-                    ...data
-                };
+                // ...existing code...
             } catch (error) {
                 console.error('Erreur API assignOrder:', error);
                 
@@ -2326,11 +2096,13 @@
                 
                 const data = await response.json();
                 
-                // Retourner toutes les livraisons en cours pour traitement
-                if (data.deliveries && data.deliveries.length > 0) {
-                    return data.deliveries; // Toutes les livraisons pour regroupement
+                // Retourner les données en toute sécurité
+                if (Array.isArray(data.deliveries) && data.deliveries.length > 0) {
+                    return data.deliveries;
+                } else if (Array.isArray(data) && data.length > 0) {
+                    return data;
                 } else {
-                    return null; // Aucune livraison en cours
+                    return null;
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération de la livraison en cours:', error);
@@ -2339,16 +2111,67 @@
             }
         }
 
-        async function completeDeliveryAPI(deliveryId, agentId) {
-            // Mock API call
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        success: true,
-                        message: 'Delivery completed successfully'
-                    });
-                }, 800);
-            });
+        // ===== NOTIFICATIONS =====
+        let notificationCheckInterval = null;
+        let activeNotifications = [];
+        
+        // Initialiser le système de notifications
+        function initNotificationSystem() {
+            // Charger les notifications immédiatement
+            loadNotifications();
+            
+            // Puis toutes les 30 secondes
+            notificationCheckInterval = setInterval(() => {
+                if (!document.hidden) {
+                    loadNotifications();
+                }
+            }, 30000);
+        }
+        
+        async function loadNotifications() {
+            try {
+                const response = await fetch(`backend/notifications/${AGENT_UNIQUE_ID}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                // Vérifier format backend: {nbrs: 1, notifications: {...}}
+                // Le backend retourne un objet unique, pas un array
+                if (!data.notifications || data.nbrs === 0) {
+                    console.log('Aucune notification');
+                    return;
+                }
+                
+                // Traiter la notification - peut être un objet ou un array
+                let notificationsArray = Array.isArray(data.notifications) ? data.notifications : [data.notifications];
+                
+                notificationsArray.forEach(notification => {
+                    // Vérifier si la notification n'est pas déjà affichée
+                    if (!activeNotifications.find(n => n.id === notification.id)) {
+                        displayNotification(notification);
+                        activeNotifications.push(notification);
+                    }
+                });
+                
+            } catch (error) {
+                console.error('Erreur lors du chargement des notifications:', error);
+            }
+        }
+        
+        function displayNotification(notification) {
+            // ...existing code...
+        }
+
+        function closeDeliveryModal() {
+            document.getElementById('deliveryModal').style.display = 'none';
         }
 
         // ===== EVENT LISTENERS =====

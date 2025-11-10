@@ -1526,14 +1526,22 @@
             });
 
             // Show selected section
-            document.getElementById(sectionId).classList.add('active');
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
 
-            // Add active class to clicked nav link
-            event.target.closest('.nav-link').classList.add('active');
+            // Add active class to clicked nav link (safely)
+            if (event && event.target) {
+                const navLink = event.target.closest('.nav-link');
+                if (navLink) {
+                    navLink.classList.add('active');
+                }
+            }
 
             // Close sidebar on mobile
             const sidebar = document.getElementById('sidebar');
-            if (window.innerWidth <= 768) {
+            if (sidebar && window.innerWidth <= 768) {
                 sidebar.classList.remove('show');
             }
         }
@@ -1571,17 +1579,26 @@
         // Open Order Details Modal
         function openOrderModal(orderId) {
             const modal = document.getElementById('orderModal');
+            if (!modal) return;
+            
             const ratingSection = document.getElementById('ratingSection');
             
             // Show rating section only for delivered orders
             const orderStatus = document.querySelectorAll('.order-status')[orderId - 1];
             if (orderStatus && orderStatus.textContent.includes('Livrée')) {
-                ratingSection.style.display = 'block';
+                if (ratingSection) {
+                    ratingSection.style.display = 'block';
+                }
                 currentRating = 0;
-                document.getElementById('deliveryFeedback').value = '';
+                const feedbackElement = document.getElementById('deliveryFeedback');
+                if (feedbackElement) {
+                    feedbackElement.value = '';
+                }
                 updateRatingDisplay();
             } else {
-                ratingSection.style.display = 'none';
+                if (ratingSection) {
+                    ratingSection.style.display = 'none';
+                }
             }
             
             modal.classList.add('show');
@@ -1590,7 +1607,9 @@
         // Close Order Details Modal
         function closeOrderModal() {
             const modal = document.getElementById('orderModal');
-            modal.classList.remove('show');
+            if (modal) {
+                modal.classList.remove('show');
+            }
         }
 
         // Open Complete Delivery Confirmation Modal
@@ -1600,54 +1619,71 @@
                 return;
             }
 
-            const feedback = document.getElementById('deliveryFeedback').value.trim();
+            const feedbackElement = document.getElementById('deliveryFeedback');
+            const feedback = feedbackElement ? feedbackElement.value.trim() : '';
+            
             if (!feedback) {
                 alert('Veuillez donner votre impression sur le livreur.');
                 return;
             }
 
-            document.getElementById('agentCodeInput').value = '';
-            document.getElementById('codeError').style.display = 'none';
+            const codeInput = document.getElementById('agentCodeInput');
+            const codeError = document.getElementById('codeError');
+            
+            if (codeInput) codeInput.value = '';
+            if (codeError) codeError.style.display = 'none';
             
             const completeModal = document.getElementById('completeDeliveryModal');
-            completeModal.classList.add('show');
-            
-            // Focus on input
-            setTimeout(() => {
-                document.getElementById('agentCodeInput').focus();
-            }, 300);
+            if (completeModal) {
+                completeModal.classList.add('show');
+                
+                // Focus on input
+                setTimeout(() => {
+                    if (codeInput) codeInput.focus();
+                }, 300);
+            }
         }
 
         // Close Complete Delivery Modal
         function closeCompleteDeliveryModal() {
             const modal = document.getElementById('completeDeliveryModal');
-            modal.classList.remove('show');
-            document.getElementById('agentCodeInput').value = '';
-            document.getElementById('codeError').style.display = 'none';
+            if (modal) {
+                modal.classList.remove('show');
+            }
+            
+            const codeInput = document.getElementById('agentCodeInput');
+            const codeError = document.getElementById('codeError');
+            
+            if (codeInput) codeInput.value = '';
+            if (codeError) codeError.style.display = 'none';
         }
 
         // Confirm Delivery with Code
         function confirmDeliveryWithCode() {
-            const enteredCode = document.getElementById('agentCodeInput').value;
+            const codeInput = document.getElementById('agentCodeInput');
+            const enteredCode = codeInput ? codeInput.value : '';
             const correctCode = '4821'; // Agent code (should come from backend)
             const codeError = document.getElementById('codeError');
 
             if (enteredCode === correctCode) {
-                codeError.style.display = 'none';
+                if (codeError) codeError.style.display = 'none';
                 alert('✅ Livraison confirmée avec succès !\nNote: ' + currentRating + '/5\nMerci pour votre feedback !');
                 closeCompleteDeliveryModal();
                 closeOrderModal();
                 // Here you would typically update the database with the rating and feedback
             } else {
-                codeError.style.display = 'block';
-                document.getElementById('agentCodeInput').value = '';
-                document.getElementById('agentCodeInput').focus();
+                if (codeError) codeError.style.display = 'block';
+                if (codeInput) {
+                    codeInput.value = '';
+                    codeInput.focus();
+                }
             }
         }
 
         // Allow Enter key to submit code
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' && document.getElementById('completeDeliveryModal').classList.contains('show')) {
+            const completeModal = document.getElementById('completeDeliveryModal');
+            if (e.key === 'Enter' && completeModal && completeModal.classList.contains('show')) {
                 confirmDeliveryWithCode();
             }
         });

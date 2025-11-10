@@ -10,13 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #FF6B35;
-            --primary-dark: #D84315;
-            --secondary: #004E89;
-            --accent: #00D4FF;
-            --success: #1ABC9C;
-            --success-dark: #16A085;
-            --error: #FF6B35;
+            --primary: #FF8C42;
+            --primary-dark: #E67E2A;
+            --secondary: #27AE60;
+            --secondary-dark: #1E8449;
+            --success: #27AE60;
+            --error: #E74C3C;
             --dark: #1a1a2e;
             --gray: #64748b;
             --light: #f8f9fa;
@@ -40,20 +39,23 @@
         }
 
         .am-header {
-            margin-bottom: 2.5rem;
+            background: var(--secondary);
+            margin: -2rem -1.5rem 2.5rem -1.5rem;
+            padding: 2rem 1.5rem;
+            border-radius: 0 0 12px 12px;
         }
 
         .am-title {
             font-size: 2.2rem;
             font-weight: 800;
-            color: var(--dark);
+            color: var(--white);
             margin: 0 0 0.5rem 0;
             letter-spacing: -0.5px;
         }
 
         .am-subtitle {
             font-size: 0.95rem;
-            color: var(--gray);
+            color: rgba(255, 255, 255, 0.85);
             margin: 0;
             font-weight: 500;
             text-transform: uppercase;
@@ -81,33 +83,32 @@
         }
 
         .am-btn--primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            box-shadow: 0 4px 12px rgba(255, 107, 53, 0.25);
+            background: var(--primary);
+            color: var(--white);
         }
 
         .am-btn--primary:hover {
+            background: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(255, 107, 53, 0.35);
         }
 
         .am-btn--secondary {
-            background: transparent;
+            background: var(--white);
             color: var(--primary);
             border: 2px solid var(--primary);
         }
 
         .am-btn--secondary:hover {
             background: var(--primary);
-            color: white;
+            color: var(--white);
         }
 
         /* Table */
         .am-table-wrap {
             background: var(--white);
             border-radius: 14px;
-            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.08);
-            border: 1px solid rgba(255, 107, 53, 0.05);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
             overflow: hidden;
             margin-bottom: 2rem;
         }
@@ -119,15 +120,15 @@
         }
 
         .am-table thead {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.02), rgba(0, 212, 255, 0.01));
-            border-bottom: 2px solid rgba(255, 107, 53, 0.1);
+            background: var(--secondary);
+            border-bottom: 2px solid var(--secondary-dark);
         }
 
         .am-table th {
             padding: 1rem 1.25rem;
             text-align: left;
             font-weight: 700;
-            color: var(--dark);
+            color: var(--white);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 0.85rem;
@@ -144,7 +145,7 @@
         }
 
         .am-table tbody tr:hover {
-            background: rgba(255, 107, 53, 0.02);
+            background: #f5f5f5;
         }
 
         .am-table tbody tr:last-child td {
@@ -162,20 +163,18 @@
         }
 
         .am-badge--online {
-            background: linear-gradient(135deg, var(--success), var(--success-dark));
-            color: white;
-            box-shadow: 0 2px 8px rgba(26, 188, 156, 0.2);
+            background: var(--success);
+            color: var(--white);
         }
 
         .am-badge--offline {
-            background: rgba(100, 116, 139, 0.1);
-            color: var(--gray);
+            background: #e0e0e0;
+            color: #666;
         }
 
         .am-badge--busy {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            box-shadow: 0 2px 8px rgba(255, 107, 53, 0.2);
+            background: var(--primary);
+            color: var(--white);
         }
 
         /* Cards for Mobile */
@@ -183,14 +182,14 @@
             background: var(--white);
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.08);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             border-left: 5px solid var(--primary);
             margin-bottom: 1rem;
             transition: all 0.2s ease;
         }
 
         .am-card:hover {
-            box-shadow: 0 8px 24px rgba(255, 107, 53, 0.12);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transform: translateY(-2px);
         }
 
@@ -222,7 +221,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(26, 26, 46, 0.3);
+            background: rgba(0, 0, 0, 0.3);
             backdrop-filter: blur(4px);
             align-items: center;
             justify-content: center;
@@ -238,8 +237,8 @@
             padding: 2.5rem 2rem;
             max-width: 500px;
             width: 95vw;
-            box-shadow: 0 16px 48px rgba(255, 107, 53, 0.2);
-            border-top: 5px solid var(--primary);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border-top: 5px solid var(--secondary);
             animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
         }
@@ -253,10 +252,10 @@
             position: absolute;
             top: 1.5rem;
             right: 1.5rem;
-            background: rgba(255, 107, 53, 0.1);
+            background: #f0f0f0;
             border: none;
             font-size: 1.8rem;
-            color: var(--primary);
+            color: var(--gray);
             cursor: pointer;
             width: 40px;
             height: 40px;
@@ -269,8 +268,7 @@
 
         .am-modal-close:hover {
             background: var(--primary);
-            color: white;
-            transform: rotate(90deg);
+            color: var(--white);
         }
 
         .am-form-group {
@@ -296,8 +294,8 @@
 
         .am-input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+            border-color: var(--secondary);
+            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
         }
 
         /* Toast */
@@ -311,36 +309,36 @@
             font-weight: 700;
             z-index: 2000;
             animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            color: white;
+            color: var(--white);
         }
 
         .am-toast--success {
-            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            background: var(--success);
         }
 
         .am-toast--error {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            background: var(--error);
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .am-container { padding: 1rem; }
+            .am-header { margin: -1rem -1rem 2.5rem -1rem; padding: 1.5rem 1rem; }
             .am-title { font-size: 1.8rem; }
             .am-table-wrap { display: none; }
             .am-modal-dialog { padding: 1.5rem 1rem; }
         }
 
         .am-skeleton {
-            background: linear-gradient(90deg, #f8f9fa 25%, #fff5f0 50%, #f8f9fa 75%);
-            background-size: 200% 100%;
+            background: #e8e8e8;
             animation: shimmer 2s infinite;
             border-radius: 8px;
             height: 1rem;
         }
 
         @keyframes shimmer {
-            0% { background-position: 0%; }
-            100% { background-position: 200%; }
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
         }
     </style>
 </head>

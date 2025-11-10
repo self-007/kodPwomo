@@ -3,90 +3,86 @@
 ?>
 <section aria-labelledby="orders-title">
     <style>
-        /* KodPwomo Orders Styles */
+        /* KodPwomo Orders Styles - Unified Green Palette */
         .orders-hero{
             display:flex;align-items:center;justify-content:space-between;gap:20px;
-            background:linear-gradient(135deg, var(--surface-elevated, #ffffff), var(--surface-container-low, #f8fafc));
-            padding:20px 24px;border-radius:16px;border:2px solid var(--brand-success, #96CEB4);
-            box-shadow:0 4px 12px rgba(150, 206, 180, 0.15);margin-bottom:20px;flex-wrap:wrap;
+            background:#ffffff;padding:20px 24px;border-radius:16px;border:1px solid #e2e8f0;
+            box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:20px;flex-wrap:wrap;
+            border-left:4px solid var(--primary);
         }
         .orders-hero h2{
-            margin:0;font-weight:700;font-size:1.5rem;
-            background:linear-gradient(45deg, var(--brand-success, #96CEB4), var(--brand-secondary, #4ECDC4));
-            -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+            margin:0;font-weight:700;font-size:1.5rem;color:var(--primary);
         }
         .orders-hero .controls{
             display:flex;gap:8px;align-items:center;flex-wrap:wrap;
         }
         .orders-table{
-            margin-top:20px;background:var(--surface-elevated, #ffffff);padding:20px;border-radius:16px;
-            border:2px solid var(--brand-success, #96CEB4);box-shadow:0 8px 24px rgba(150, 206, 180, 0.15)
+            margin-top:20px;background:#ffffff;padding:20px;border-radius:16px;
+            border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.05);
+            border-left:4px solid var(--primary);
         }
         .orders-table-container{
             overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;margin-top:16px;
         }
         .orders-table table{width:100%;border-collapse:collapse;min-width:1000px}
-        .orders-table thead{background:linear-gradient(135deg, var(--brand-success, #96CEB4), var(--brand-secondary, #4ECDC4))}
+        .orders-table thead{background:var(--primary)}
         .orders-table th{
             padding:16px 12px;text-align:left;color:#ffffff;font-weight:700;
             text-transform:uppercase;letter-spacing:0.5px;border:none;white-space:nowrap;
         }
         .orders-table .status-col{min-width:120px;width:120px}
         .orders-table td{
-            padding:14px 12px;border-bottom:1px solid var(--success-100, #dcfce7);
-            color:var(--on-surface, #0f172a);font-weight:500;white-space:nowrap;
+            padding:14px 12px;border-bottom:1px solid #f1f5f9;
+            color:#475569;font-weight:500;white-space:nowrap;
         }
-        .orders-table tbody tr:nth-child(odd){background:linear-gradient(90deg, var(--success-50, #f0fdf4), var(--secondary-50, #f0fdfa))}
+        .orders-table tbody tr:nth-child(odd){background:#f8fafc}
         .orders-table tbody tr:hover{
-            background:linear-gradient(90deg, var(--success-100, #dcfce7), var(--secondary-100, #ccfbf1));
-            transform:scale(1.01);transition:all 0.2s ease
+            background:#f0fdf4;transition:all 0.2s ease
         }
         .search{
-            padding:10px 12px;border-radius:12px;border:2px solid var(--brand-success, #96CEB4);
-            background:var(--surface-elevated, #ffffff);transition:all 0.3s ease;min-width:200px;
+            padding:10px 12px;border-radius:12px;border:2px solid #e2e8f0;
+            background:#ffffff;transition:all 0.3s ease;min-width:200px;
             box-sizing:border-box;
         }
-        .search:focus{border-color:var(--brand-secondary, #4ECDC4);outline:none;box-shadow:0 0 0 3px rgba(78, 205, 196, 0.2)}
+        .search:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(39,174,96,0.1)}
         .btn{
-            padding:8px 16px;border-radius:12px;border:2px solid var(--brand-success, #96CEB4);
-            background:var(--success-100, #dcfce7);color:var(--brand-success, #96CEB4);
+            padding:8px 16px;border-radius:12px;border:2px solid var(--primary);
+            background:#ffffff;color:var(--primary);
             font-weight:600;cursor:pointer;transition:all 0.3s ease;white-space:nowrap;
             box-sizing:border-box;
         }
-        .btn:hover{background:var(--brand-success, #96CEB4);color:#ffffff;transform:scale(1.05)}
-        .muted{color:var(--on-surface-muted, #64748b)}
+        .btn:hover{background:var(--primary);color:#ffffff;transform:scale(1.05)}
+        .muted{color:#64748b}
         .pager{
             display:flex;gap:10px;align-items:center;margin-top:16px;justify-content:center;
             flex-wrap:wrap;
         }
         .pager button{
-            padding:8px 12px;border-radius:12px;border:0;
-            background:linear-gradient(135deg, var(--surface-elevated, #ffffff), var(--surface-container-low, #f8fafc));
-            color:var(--brand-success, #96CEB4);cursor:pointer;font-weight:600;
-            border:2px solid var(--brand-success, #96CEB4);transition:all 0.3s ease;
-            min-width:40px;
+            padding:8px 12px;border-radius:12px;border:2px solid var(--primary);
+            background:#ffffff;color:var(--primary);cursor:pointer;font-weight:600;
+            transition:all 0.3s ease;min-width:40px;
         }
         .pager button:hover{
-            background:linear-gradient(135deg, var(--brand-success, #96CEB4), var(--brand-secondary, #4ECDC4));
-            color:#fff;transform:translateY(-2px)
+            background:var(--primary);color:#ffffff;transform:translateY(-2px)
+        }
+        .pager button:disabled{
+            opacity:0.5;cursor:not-allowed
         }
         .tag{
             padding:4px 10px;border-radius:16px;font-weight:600;font-size:10px;
-            text-transform:uppercase;letter-spacing:0.3px;box-shadow:0 2px 6px rgba(0,0,0,0.1);
+            text-transform:uppercase;letter-spacing:0.3px;
             white-space:nowrap;max-width:100px;overflow:hidden;text-overflow:ellipsis;
         }
         .tag-completed{
-            background:linear-gradient(135deg, var(--success-100, #dcfce7), var(--success-50, #f0fdf4));
-            color:var(--brand-success, #96CEB4);border:2px solid var(--brand-success, #96CEB4)
+            background:#f0fdf4;color:var(--primary);border:1px solid var(--primary);
         }
         .tag-completed::before{content:'✅';margin-right:4px}
         .tag-processing{
-            background:linear-gradient(135deg, var(--warning-100, #fef3c7), var(--warning-50, #fffbeb));
-            color:var(--brand-warning, #FFEAA7);border:2px solid var(--brand-warning, #FFEAA7)
+            background:#fff5f0;color:#F39C12;border:1px solid #F39C12;
         }
         .tag-processing::before{content:'⏳';margin-right:4px}
         
-        /* Enhanced Responsive Design */
+        /* Responsive */
         @media (max-width:1024px){
             .orders-table table{min-width:900px}
             .orders-table th, .orders-table td{padding:12px 8px}

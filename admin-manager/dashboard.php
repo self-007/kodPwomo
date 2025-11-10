@@ -40,7 +40,7 @@
         left: 0;
         right: 0;
         height: 3px;
-        background: linear-gradient(90deg, var(--brand-primary), var(--brand-accent));
+        background: var(--primary);
     }
 
     .kpi-label {
@@ -65,11 +65,11 @@
     }
 
     .kpi-change.positive {
-        color: var(--brand-success);
+        color: var(--primary);
     }
 
     .kpi-change.negative {
-        color: var(--brand-danger);
+        color: #E74C3C;
     }
 
     .kpi-icon {
@@ -86,24 +86,19 @@
         opacity: 0.8;
     }
 
-    .kpi-icon.primary {
-        background: rgba(255, 107, 53, 0.1);
-        color: var(--brand-primary);
+    .kpi-icon.color-green {
+        background: #f0fdf4;
+        color: var(--primary);
     }
 
-    .kpi-icon.accent {
-        background: rgba(0, 212, 255, 0.1);
-        color: var(--brand-accent);
+    .kpi-icon.color-orange {
+        background: #fff5f0;
+        color: #F39C12;
     }
 
-    .kpi-icon.success {
-        background: rgba(26, 188, 156, 0.1);
-        color: var(--brand-success);
-    }
-
-    .kpi-icon.warning {
-        background: rgba(243, 156, 18, 0.1);
-        color: var(--brand-warning);
+    .kpi-icon.color-red {
+        background: #fef2f2;
+        color: #E74C3C;
     }
 
     /* Charts Section */
@@ -120,6 +115,7 @@
         border-radius: 12px;
         padding: var(--spacing-3);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid var(--primary);
     }
 
     .chart-title {
@@ -130,7 +126,7 @@
     }
 
     .chart-placeholder {
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        background: #f8fafc;
         border-radius: 8px;
         height: 300px;
         display: flex;
@@ -147,6 +143,7 @@
         border-radius: 12px;
         padding: var(--spacing-3);
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        border-left: 4px solid var(--primary);
     }
 
     .activity-title {
@@ -163,15 +160,15 @@
     }
 
     .activity-table thead {
-        background: #f8fafc;
+        background: #f0fdf4;
     }
 
     .activity-table th {
         padding: var(--spacing-2);
         text-align: left;
         font-weight: 600;
-        color: #64748b;
-        border-bottom: 1px solid #e2e8f0;
+        color: var(--primary);
+        border-bottom: 2px solid var(--primary);
         text-transform: uppercase;
         letter-spacing: 0.5px;
         font-size: 11px;
@@ -198,23 +195,23 @@
     }
 
     .status-badge.completed {
-        background: rgba(26, 188, 156, 0.1);
-        color: var(--brand-success);
+        background: #f0fdf4;
+        color: var(--primary);
     }
 
     .status-badge.pending {
-        background: rgba(243, 156, 18, 0.1);
-        color: var(--brand-warning);
+        background: #fff5f0;
+        color: #F39C12;
     }
 
     .status-badge.processing {
-        background: rgba(0, 212, 255, 0.1);
-        color: var(--brand-accent);
+        background: #f0fdf4;
+        color: var(--primary);
     }
 
     .status-badge.failed {
-        background: rgba(255, 107, 53, 0.1);
-        color: var(--brand-danger);
+        background: #fef2f2;
+        color: #E74C3C;
     }
 
     /* Responsive */
@@ -247,36 +244,36 @@
 
     <!-- KPI Cards -->
     <div class="kpi-grid">
-        <!-- Total Orders -->
+        <!-- Total Orders - Green -->
         <div class="kpi-card">
             <div class="kpi-label">Commandes totales</div>
             <div class="kpi-value">1,247</div>
             <div class="kpi-change positive">↑ 12% cette semaine</div>
-            <div class="kpi-icon primary">📦</div>
+            <div class="kpi-icon color-green">📦</div>
         </div>
 
-        <!-- Active Users -->
+        <!-- Active Users - Orange -->
         <div class="kpi-card">
             <div class="kpi-label">Utilisateurs actifs</div>
             <div class="kpi-value">542</div>
             <div class="kpi-change positive">↑ 8% aujourd'hui</div>
-            <div class="kpi-icon accent">👥</div>
+            <div class="kpi-icon color-orange">👥</div>
         </div>
 
-        <!-- Revenue -->
+        <!-- Revenue - Green -->
         <div class="kpi-card">
             <div class="kpi-label">Chiffre d'affaires</div>
             <div class="kpi-value">45.2K</div>
             <div class="kpi-change positive">↑ 23% ce mois</div>
-            <div class="kpi-icon success">💰</div>
+            <div class="kpi-icon color-green">💰</div>
         </div>
 
-        <!-- Active Agents -->
+        <!-- Active Agents - Red -->
         <div class="kpi-card">
             <div class="kpi-label">Agents en ligne</div>
             <div class="kpi-value">28</div>
             <div class="kpi-change negative">↓ 2 hors ligne</div>
-            <div class="kpi-icon warning">🚚</div>
+            <div class="kpi-icon color-red">🚚</div>
         </div>
     </div>
 

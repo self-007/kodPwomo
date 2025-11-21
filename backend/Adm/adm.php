@@ -51,8 +51,8 @@ function getMonthRevenueByUniversityId($universityId) {
     $month = date('Y-m');
     global $connection;
     $stmt = $connection->prepare("
-        SELECT SUM(delivery_price) FROM deliveries JOIN orders ON deliveries.id_commande = orders.order_id JOIN Salle ON adresse_id = Salle.id
-        JOIN university ON Salle.id_university = university.id
+        SELECT SUM(delivery_price) FROM deliveries JOIN orders ON deliveries.id_commande = orders.order_id JOIN salle ON adresse_id = salle.id
+        JOIN university ON salle.id_university = university.id
         WHERE DATE_FORMAT(deliveries.date, '%Y-%m') = :month AND university.id = :university_id
     ");
     $stmt->bindParam(':university_id', $universityId);
@@ -72,7 +72,7 @@ function getOrdersDataByUniversityId($universityId) {
         response(['error' => 'Invalid university ID'], 400);
     }
     global $connection;
-    $stmt = $connection->prepare("SELECT products.name as product_name, users.name as user_name, orders.order_id, orders.date, orders.status, orders.qnt, orders.price, salle.salle_name as salle_name FROM products JOIN orders ON orders.id_product = products.id JOIN users ON users.id_unique = orders.id_user JOIN salle ON salle.id = adresse_id WHERE products.id_university = :university_id AND salle.id_university = :university_id");
+    $stmt = $connection->prepare("SELECT products.name as product_name, users.name as user_name, orders.order_id, orders.date, orders.status, orders.qnt, orders.price, salle.sall_name as sall_name FROM products JOIN orders ON orders.id_product = products.id JOIN users ON users.id_unique = orders.id_user JOIN salle ON salle.id = adresse_id WHERE products.id_university = :university_id AND salle.id_university = :university_id");
     $stmt->bindParam(':university_id', $universityId);
     $stmt->execute();
     $nbrs = $stmt->rowCount();
@@ -215,7 +215,7 @@ function ordersDataByUniversityId($universityId, $search = '', $page = 1) {
     $offset = ($page - 1) * $limit;
     global $connection;
     $sql = "SELECT products.name as product_name, users.name as user_name, orders.order_id,
-     orders.date, orders.status, orders.qnt, orders.price, salle.salle_name as salle_name, d.id_agent, d.note,
+     orders.date, orders.status, orders.qnt, orders.price, salle.sall_name as sall_name, d.id_agent, d.note,
      (SELECT users.name FROM users WHERE users.id_unique = d.id_agent) AS agent_name
      
      FROM products JOIN orders ON orders.id_product = products.id JOIN deliveries d ON d.id_commande = orders.order_id
@@ -224,7 +224,7 @@ function ordersDataByUniversityId($universityId, $search = '', $page = 1) {
     // if search is not empty
     if(!empty($search)){
         $search = sanitizeInput($search);
-        $condition = 'AND (products.name LIKE :search OR users.name LIKE :search OR orders.order_id LIKE :search OR salle.salle_name LIKE :search) GROUP BY orders.order_id LIMIT 20 OFFSET :offset ';
+        $condition = 'AND (products.name LIKE :search OR users.name LIKE :search OR orders.order_id LIKE :search OR salle.sall_name LIKE :search) GROUP BY orders.order_id LIMIT 20 OFFSET :offset ';
         
         $sql .= $condition;
         $stmt = $connection->prepare($sql);

@@ -120,7 +120,7 @@ function getDeliveriesByOrderId($orderId) {
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        exit();
+       
     }
     return null;
 }

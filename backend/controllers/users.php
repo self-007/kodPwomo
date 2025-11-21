@@ -269,14 +269,20 @@ function setUserAdm($id){
 }
 
 //set user Agent
-function setUserAgent($id){
+function setUserAgent(){
+    global $datas;
+    if(!isset($datas['id']) || !isset($datas['role'])){
+        response(['error' => 'Invalid user ID or role'], 400);
+    }
+    $id = sanitizeInput($datas['id']);
+    $role = sanitizeInput($datas['role']);
     global $connection;
     if(empty($id)){
         response(['error' => 'invalid id'], 400);  
     }
     $id = sanitizeInput($id);
-    $stmt = $connection->prepare('UPDATE users SET role =: role WHERE id_unique =:id');
-   $stmt->execute(['role' => 'agent', 'id' => $id]);
+    $stmt = $connection->prepare('UPDATE users SET role =:role WHERE id_unique =:id');
+    $stmt->execute(['role' => $role, 'id' => $id]);
     response(['status' => 'success'], 200);
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 // point d'entree de l'API
 // 1. D'abord charger les autoloaders
 require_once __DIR__ . '/vendor/autoload.php';
@@ -10,7 +11,7 @@ use Firebase\JWT\Key;
 
 // 3. Ensuite les fichiers qui utilisent ces classes
 require_once __DIR__ . '/helpers.php';
-require_once ('db.php');
+require_once __DIR__ . '/db.php';
 
 
 // CORS basique (ajuste pour prod)

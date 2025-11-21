@@ -1,5 +1,5 @@
 <?php
-require_once 'agents/agents.php';
+require_once __DIR__.'/../agents/agents.php';
 // create a livraison
 function createDelivery( $status = 'processing') {
     global $datas;
@@ -120,6 +120,7 @@ function getDeliveriesByOrderId($orderId) {
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        exit();
     }
     return null;
 }
@@ -445,3 +446,38 @@ function getAllDeliveriesByMonth($month = null) {
     $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return ['nbrs' => $nbrs, 'deliveries' => $deliveries];
 }
+
+//get user deliveries datas
+// get total deliveries
+// get total completed delivery
+// get total processing
+  
+function getUserDeliDatas($userId){  
+    //verify datas  
+    if(empty($userId)){
+        response(['error' => 'Invalid user ID'], 400);
+    }
+    $userId = sanitizeInput($userId);
+    global $connection;
+    $stmt = "SELECT d.id_commande, d.note, d.status, d.feedback FROM deliveries d
+    JOIN orders o ON d.id_commande = o.order_id
+    WHERE o.id_user = :user_id GROUP BY d.id_commande";
+    $stmt = $connection->prepare($stmt);
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->execute();
+    $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    if($stmt->rowCount() === 0){
+        response(['total_delivery' => 0, 'processing_delivery' => 0, 'completed_delivery' => 0], 200);
+    }
+    // calcul total spent
+    $stmt = "SELECT SUM(o.qnt * o.price) as total_order_amount, SUM(d.delivery_price) as total_amount FROM deliveries d
+    JOIN orders o ON d.id_commande = o.order_id
+    WHERE o.id_user = :user_id ";
+    $stmt = $connection->prepare($stmt);
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->execute();
+    $totalAmounts = $stmt->fetch(PDO::FETCH_ASSOC);
+    $totalSpent = $totalAmounts['total_order_amount'] - $totalAmounts['total_amount'];
+    response(['datas' => $datas, 'totalAmounts' => $totalAmounts, 'totalSpent' => $totalSpent], 200);
+} 

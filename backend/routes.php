@@ -17,6 +17,7 @@ $routes =  [
         '/agents/availability/(\w+)' => ['agents/agents.php', 'getAgentAvailability'], //get agentAvailability status
         '/deliveries/agent/(\w+)' => ['services/deliveries.php', 'getAgentStats'], //get deliveries by agent id
         '/orders/available' => ['services/orders.php', 'getPendingOrderData'], //get datas from availables orders
+        '/deliveries/user/([\w\-\.]+)' => ['services/deliveries.php', 'getUserDeliDatas'], //get deliveries by user id
         '/deliveries/agent/orderProcess/(\w+)' => ['services/deliveries.php', 'getProcessingDeliveriesByAgent'], //get processing datas deliveries by agent id
         '/dashboard/adm/(\d+)' => ['Adm/adm.php', 'getDashboardStatsByUniversity'], //get dashboard stats by university id
         '/users/adm' => ['Adm/adm.php', 'getAllUsersAdm'], //get all users for admin with pagination and search
@@ -39,15 +40,15 @@ $routes =  [
         '/notifications/([\w\-\.]+)' => ['services/notifications.php', 'getNotificationsByUserId'], //get notifications by user id
     ],
     'POST' => [
-        '/new/product/adm' => ['adm/adm.php', 'createProduct'], //create product
+        '/new/product/adm' => ['Adm/adm.php', 'createProduct'], //create product
         '/orders/assign' => ['services/deliveries.php', 'createDelivery'], //assign order to agent
-        '/category/adm' => ['adm/adm.php', 'createCategory'], //create category
+        '/category/adm' => ['Adm/adm.php', 'createCategory'], //create category
         '/users' => ['controllers/users.php', 'createUser'],   //create user
         '/verify-otp' => ['controllers/verify-otp.php', 'verifyOtp'], //verify OTP
         '/resend-otp' => ['controllers/resend-otp.php', 'resendOtp'], //resend OTP
         '/orders' => ['services/orders.php', 'createOrder'], //create order
         '/notifications' => ['services/notifications.php', 'createNotification'], //create
-        '/places/adm/(\d+)' => ['adm/adm.php', 'createPlace'], //create place
+        '/places/adm/(\d+)' => ['Adm/adm.php', 'createPlace'], //create place
         '/university/super' => ['Adm/main_adm.php', 'createUniversity'], //create university from super admin
         '/category/super' => ['adm/main_adm.php', 'createCategory'], //create category from super admin
         '/places/image-update/adm/(\d+)' => ['Adm/adm.php', 'updatePlaceImage'], //update place image from admin
@@ -83,7 +84,13 @@ $routes =  [
 $method = $_SERVER['REQUEST_METHOD'];
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $oldPath = $path;
-$path = str_replace('/kodpwomo/backend', '', $path);
+
+// Détecter automatiquement le base path
+$scriptName = dirname($_SERVER['SCRIPT_NAME']);
+if ($scriptName !== '/') {
+    $path = substr($path, strlen($scriptName));
+}
+
 if($path !== '/' && substr($path, -1) === '/') {
     $path = rtrim($path, '/');
 }
@@ -103,5 +110,5 @@ if (isset($routes[$method])) {
     
 }
 if ($controllerRequest !== true) {
-    response(['error' => 'Endpoint not found: ' . $path . ' Method: ' . $method. ' Route: ' . $oldPath], 404);
+    response(['error' => 'Endpoint not found: ' . $path . ' Method: ' . $method. ' Route: ' . $oldPath. ' base: ' . $scriptName], 404);
 }

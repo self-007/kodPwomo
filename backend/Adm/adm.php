@@ -1,6 +1,6 @@
 <?php
 // KodPwomo Backend Integration
-require_once __DIR__.'/../agents/agents.php';
+//require_once __DIR__.'/../agents/agents.php';
 require_once __DIR__.'/../controllers/users.php';
 require_once __DIR__.'/../controllers/verify-otp.php';
 require_once __DIR__.'/../controllers/resend-otp.php';
@@ -11,7 +11,7 @@ require_once __DIR__.'/../services/universities.php';
 require_once __DIR__.'/../services/categories.php';
 require_once __DIR__.'/../services/places.php';
 require_once __DIR__.'/../services/notifications.php';
-require_once __DIR__.'/../vendor-firebase/autoload.php';
+//require_once __DIR__.'/../vendor-firebase/autoload.php';
 
 
 // Maintenant vous pouvez utiliser toutes les fonctions de vos backends :

@@ -180,7 +180,7 @@
     const cards = Array.from(document.querySelectorAll('.wm-card'));
 
     // Construire URL relative
-    const API_URL = '/kodpwomo/backend/dashboard/super';
+    const API_URL = '/backend/dashboard/super';
 
     // Fetch et rendu
     async function loadData(){

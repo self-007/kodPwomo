@@ -1,6 +1,6 @@
 <?php
 // /c:/wamp64/www/kodPwomo/admin-main/pages/universities.php
-// Minimal admin page for managing universities. Expects JSON API under /kodpwomo/backend/university/*
+// Minimal admin page for managing universities. Expects JSON API under /backend/university/*
 ?>
 <!doctype html>
 <html lang="fr">
@@ -134,7 +134,7 @@
     <script>
         // GitHub Copilot style JS: robust, defensive, minimal dependencies
         (function () {
-            const API_BASE = '/kodpwomo/backend/university';
+            const API_BASE = '/backend/university';
             const listTable = document.getElementById('university-list');
             const tbody = listTable ? listTable.querySelector('tbody') : null;
             const btnAdd = document.getElementById('btn-add-university');

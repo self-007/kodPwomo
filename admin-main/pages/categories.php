@@ -91,7 +91,7 @@
 // Charge les catégories depuis l'API backend
 async function loadCategories() {
     try {
-        const res = await fetch('/kodpwomo/backend/category/super', { credentials: 'same-origin' });
+        const res = await fetch('/backend/category/super', { credentials: 'same-origin' });
         if (!res.ok) throw new Error('Erreur serveur');
         const data = await res.json();
         // On accepte data sous forme d'objet { categories: [...] } ou tableau direct
@@ -136,7 +136,7 @@ document.addEventListener('click', function(e) {
         // handled elsewhere
     } else if (action === 'delete') {
         if (confirm('Supprimer la catégorie ID: ' + id + ' ?')) {
-            fetch(`/kodpwomo/backend/category/super/${id}`, {
+            fetch(`/backend/category/super/${id}`, {
                 method: 'DELETE',
                 credentials: 'same-origin'
             })
@@ -207,7 +207,7 @@ modalValidate.onclick = async function() {
     try {
         if (id) {
             // Modification
-            const res = await fetch('/kodpwomo/backend/category/super', {
+            const res = await fetch('/backend/category/super', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'same-origin',
@@ -216,7 +216,7 @@ modalValidate.onclick = async function() {
             if (!res.ok) throw new Error('Erreur serveur');
         } else {
             // Ajout
-            const res = await fetch('/kodpwomo/backend/category/super', {
+            const res = await fetch('/backend/category/super', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'same-origin',

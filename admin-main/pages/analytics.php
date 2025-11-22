@@ -223,7 +223,7 @@
 
     <script>
         // Configuration
-        const API = '/kodpwomo/backend/analytics/super';
+        const API = '/backend/analytics/super';
         const chartColors = {
             deliveries: getComputedStyle(document.documentElement).getPropertyValue('--blue').trim(),
             revenue: getComputedStyle(document.documentElement).getPropertyValue('--orange').trim()

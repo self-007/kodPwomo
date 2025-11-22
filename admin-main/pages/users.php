@@ -1,5 +1,5 @@
 <script>
-const USERS_API_URL = '/kodpwomo/backend/users/adm';
+const USERS_API_URL = '/backend/users/adm';
 function loadUsersData(cb) {
 	fetch(USERS_API_URL, {credentials:'same-origin'})
 		.then(r=>r.json())
@@ -119,8 +119,8 @@ function showToast(msg,type){
 // API pour nommer/révoquer admin
 function setUserRole(id, role){
   let url = '';
-  if(role==='admin') url = `/kodpwomo/backend/setAdm/${id}`;
-  else if(role==='client') url = `/kodpwomo/backend/setUser/${id}`;
+  if(role==='admin') url = `/backend/setAdm/${id}`;
+  else if(role==='client') url = `/backend/setUser/${id}`;
   else return;
   fetch(url, {method:'PUT'})
     .then(r=>r.json())

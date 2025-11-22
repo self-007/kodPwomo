@@ -83,7 +83,7 @@
     <script>
     (function(){
         const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-        const base = `/kodpwomo/backend/settings/adm`;
+        const base = `/backend/settings/adm`;
 
         function setValues(o){ document.getElementById('s_siteName').value = o.site_name || ''; document.getElementById('s_currency').value = o.currency || 'FC'; document.getElementById('s_contactEmail').value = o.contact_email || ''; document.getElementById('s_supportPhone').value = o.support_phone || ''; document.getElementById('s_allowGuest').value = (o.allow_guest_orders?1:0); }
 

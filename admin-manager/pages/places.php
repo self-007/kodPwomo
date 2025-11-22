@@ -302,7 +302,7 @@
     <script>
         (function(){
             const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-            const base = `/kodpwomo/backend/places/adm`;
+            const base = `/backend/places/adm`;
 
             function escape(s){ return s===null||s===undefined? '': String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -396,7 +396,7 @@
                 const name = document.getElementById('editName').value;
                 const placeId = this.dataset.placeId;
                 try {
-                    const res = await fetch(`/kodpwomo/backend/places/adm/${placeId}`, {
+                    const res = await fetch(`/backend/places/adm/${placeId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ name })
@@ -424,7 +424,7 @@
                 const formData = new FormData();
                 formData.append('image', image);
                 try {
-                    const res = await fetch(`/kodpwomo/backend/places/image-update/adm/${placeId}`, {
+                    const res = await fetch(`/backend/places/image-update/adm/${placeId}`, {
                         method: 'POST',
                         body: formData
                     });

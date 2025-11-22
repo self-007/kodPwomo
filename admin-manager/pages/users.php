@@ -152,7 +152,7 @@
     <script>
     (function(){
         const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-        const base = `/kodpwomo/backend/users/adm`;
+        const base = `/backend/users/adm`;
 
         async function fetchUsers(){
             const url = `${base}`;
@@ -209,7 +209,7 @@
                     const next = cur.toLowerCase()==='active' ? 'inactive' : 'active';
                     b.textContent = '…'; b.disabled = true;
                     try{
-                        const putUrl = `/kodpwomo/backend/users/status`;
+                        const putUrl = `/backend/users/status`;
                         const res = await fetch(putUrl, { method: 'PUT', headers: {'Content-Type':'application/json','Accept':'application/json'}, body: JSON.stringify({ id: id, status: next }) });
                         await res.text();
                         await fetchUsers();
@@ -224,7 +224,7 @@
                     const role = btn.getAttribute('data-role') || 'agent';
                     btn.textContent = '…'; btn.disabled = true;
                     try{
-                        const res = await fetch(`/kodpwomo/backend/user/role`, {
+                        const res = await fetch(`/backend/user/role`, {
                             method: 'PUT',
                             headers: {'Content-Type':'application/json','Accept':'application/json'},
                             body: JSON.stringify({ id: id, role: role })

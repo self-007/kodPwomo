@@ -182,7 +182,7 @@
     <script>
         (function(){
             const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-            const base = `/kodpwomo/backend/analytics/adm`;
+            const base = `/backend/analytics/adm`;
 
             async function fetchData(from, to){
                 const params = from && to ? `?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}` : '';

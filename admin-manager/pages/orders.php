@@ -150,7 +150,7 @@
     <script>
     (function(){
         const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-        const base = `/kodpwomo/backend/orders/adm`;
+        const base = `/backend/orders/adm`;
         let lastData = null;
 
         function escape(s){ return s===null||s===undefined? '': String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }

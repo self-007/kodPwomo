@@ -394,7 +394,7 @@
     <script>
         (function(){
             const univId = new URLSearchParams(window.location.search).get('univ') || '1';
-            const url = `/kodpwomo/backend/dashboard/adm/${univId}`;
+            const url = `/backend/dashboard/adm/${univId}`;
             let _orders = [];
 
             async function load(){

@@ -368,7 +368,7 @@
     // Initialize dashboard data fetching
     async function initDashboard() {
         try {
-            const response = await fetch('/kodpwomo/backend/dashboard/stats');
+            const response = await fetch('/backend/dashboard/stats');
             const data = await response.json();
             updateDashboardData(data);
         } catch (error) {

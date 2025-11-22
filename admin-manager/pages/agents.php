@@ -161,7 +161,7 @@
     <script>
     (function(){
         const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-        const base = `/kodpwomo/backend/agents/adm`;
+        const base = `/backend/agents/adm`;
         let lastData = null;
 
         function escape(s){ return s===null||s===undefined? '': String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -218,7 +218,7 @@
                     const next = cur.toLowerCase()==='active' ? 'inactive' : 'active';
                     b.textContent = '…'; b.disabled = true;
                     try{
-                        const putUrl = `/kodpwomo/backend/agents/availability`;
+                        const putUrl = `/backend/agents/availability`;
                         const res = await fetch(putUrl, { method: 'PUT', headers: {'Content-Type':'application/json','Accept':'application/json'}, body: JSON.stringify({ id: id, status: next }) });
                         const txt = await res.text(); const json = txt? JSON.parse(txt): {};
                         // refresh agents list for this university

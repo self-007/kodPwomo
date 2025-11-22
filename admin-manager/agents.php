@@ -403,7 +403,7 @@
     <div id="toast" class="am-toast" style="display: none;"></div>
 
     <script>
-        const AGENTS_API = '/kodpwomo/backend/agents/adm';
+        const AGENTS_API = '/backend/agents/adm';
 
         // Load agents
         async function loadAgents() {

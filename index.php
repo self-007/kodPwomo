@@ -658,7 +658,7 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-content">
-            <div class="hero-badge">🚀 Livraison d'étudiants pour étudiants</div>
+            <div class="hero-badge"> hello c du test🚀 Livraison d'étudiants pour étudiants</div>
             <h1 class="hero-title">Commandez, Livrez, Gagnez 🎲</h1>
             <p class="hero-subtitle">
                 KodPwomo est la plateforme révolutionnaire de livraison ultra-rapide sur le campus. 

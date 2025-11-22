@@ -651,7 +651,7 @@
         </ul>
         <div class="btn-group">
             <a href="login.php" class="btn btn-secondary">Se Connecter</a>
-            <a href="register.php" class="btn btn-primary">S'Inscrire</a>
+            <a href="register.php" class="btn btn-primary">S'hello</a>
         </div>
     </nav>
 

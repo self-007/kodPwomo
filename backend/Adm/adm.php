@@ -72,7 +72,7 @@ function getOrdersDataByUniversityId($universityId) {
         response(['error' => 'Invalid university ID'], 400);
     }
     global $connection;
-    $stmt = $connection->prepare("SELECT products.name as product_name, users.name as user_name, orders.order_id, orders.date, orders.status, orders.qnt, orders.price, salle.sall_name as sall_name FROM products JOIN orders ON orders.id_product = products.id JOIN users ON users.id_unique = orders.id_user JOIN salle ON salle.id = adresse_id WHERE products.id_university = :university_id AND salle.id_university = :university_id");
+    $stmt = $connection->prepare("SELECT products.name as product_name, users.name as user_name, orders.order_id, orders.date, orders.status, orders.qnt, orders.price, salle.salle_name as salle_name FROM products JOIN orders ON orders.id_product = products.id JOIN users ON users.id_unique = orders.id_user JOIN salle ON salle.id = adresse_id WHERE products.id_university = :university_id AND salle.id_university = :university_id");
     $stmt->bindParam(':university_id', $universityId);
     $stmt->execute();
     $nbrs = $stmt->rowCount();

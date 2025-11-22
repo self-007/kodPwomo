@@ -1,5 +1,12 @@
 <?php
+// 1. Afficher toutes les erreurs PHP
+error_reporting(E_ALL);
 
+// 2. Afficher les erreurs directement dans le navigateur
+ini_set('display_errors', 1);
+
+// 3. (Optionnel) Afficher les erreurs pendant le démarrage des scripts
+ini_set('display_startup_errors', 1);
 // point d'entree de l'API
 // 1. D'abord charger les autoloaders
 require_once __DIR__ . '/vendor/autoload.php';

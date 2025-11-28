@@ -625,7 +625,7 @@
                 const formData = {
                     mode: currentMode, // Ajouter le mode actuel (login ou register)
                     type: 'google',
-                    username: user.displayName || user.email.split('@')[0],
+                    username: user.displayName,
                     email: user.email,
                     firstname: nameParts[0] || '',
                     lastname: nameParts.slice(1).join(' ') || '',
@@ -693,10 +693,17 @@
                         currentUserEmail = formData.email;
                         showOtpModal();
                     } else {
+                        if(result.accessToken) {
+                            // Stocker le token d'accès dans localStorage
+                            localStorage.setItem('access_token', result.accessToken);
+                        } else {
+                            console.warn('Aucun access_token reçu du serveur');
+                            return;
+                        }
                         // Succès direct (Google)
                         showAlert('success', result.message);
                         setTimeout(() => {
-                            window.location.href = 'boutique.php';
+                            window.location.href = 'heartbeat.php';
                         }, 2000);
                     }
                 } else {
@@ -826,7 +833,7 @@
                     closeOtpModal();
                     showAlert('success', 'Compte créé avec succès ! Redirection...');
                     setTimeout(() => {
-                        window.location.href = 'dashboard.html';
+                        window.location.href = 'heartbeat.php';
                     }, 2000);
                 } else {
                     showOtpAlert('error', result.error || 'Code OTP incorrect');

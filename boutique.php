@@ -1494,8 +1494,10 @@
                 // Envoyer la commande au backend
                 const response = await fetch('backend/orders', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     },
                     body: JSON.stringify(orderData)
                 });

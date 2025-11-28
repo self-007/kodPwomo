@@ -161,7 +161,10 @@ function setRefreshTokenCookie($refreshToken) {
 }
 
 //create access token
-function createAccessToken($username, $user_id, $role) {
+function createAccessToken($username, $user_id, $role, $fingerprint) {
+
+
+    
     global $ACCESS_SECRET;
     // Création du payload pour le access token
     $accessPayload = [
@@ -169,7 +172,8 @@ function createAccessToken($username, $user_id, $role) {
         'exp' => time() + 300, // Expiration dans 5 minutes
         'username' => $username, // Informations utilisateur
         'role' => $role, // Rôle client/agent/ADM (exemple)
-        'sub' => $user_id
+        'sub' => $user_id,
+        'fingerPrint' => $fingerprint // Empreinte digitale pour sécurité supplémentaire
     ];
     return JWT::encode($accessPayload, $ACCESS_SECRET, 'HS256');
 }
@@ -188,3 +192,46 @@ function getTotalPrice($order_id) {
     }
     return 0;
 }
+
+//get access token from header
+function getBearerToken() {
+    global $ACCESS_SECRET;
+    $headers = getallheaders();
+    if (!isset($headers['Authorization'])) {
+        response(['error' => 'Unauthorized A1'], 401);
+    }
+    $matches = [];
+    $matches = explode(' ', $headers['Authorization']);
+    if (count($matches) !== 2) {
+        response(['error' => 'Unauthorized A2'], 401);
+    }
+    $token = $matches[1];
+    //decode token
+   // var_dump($token);
+   try {
+        $accessToken = JWT::decode($token, new Key($ACCESS_SECRET, 'HS256'));
+        return $accessToken;
+   } catch (\Firebase\JWT\ExpiredException $e){
+        response(['error' => 'Unauthorized', 'action' => 'out'], 401);
+   } catch (Exception $e) {
+        response(['error' => 'Unauthorized ', 'action' => 'out'], 401);
+   }
+}
+//get refreshToken
+function getRefreshToken(){
+    global $REFRESH_SECRET;
+    if(!isset($_COOKIE['refresh_token'])){
+        response(['error' => 'Unauthorized R1'], 401);
+    }
+    $refresh_Token = $_COOKIE['refresh_token'];
+    try {
+        $decodesRefresh = JWT::decode($refresh_Token, new Key($REFRESH_SECRET, 'HS256'));
+        return [ 'refreshToken' => $refresh_Token, 'refreshPlayload' => $decodesRefresh];
+    } catch (\Firebase\JWT\ExpiredException $e){
+        response(['error' => 'Unauthorized j1'], 401);
+    } catch(Exeption $e){
+        response(['error' => 'Unauthorized E1'], 401);
+    }
+
+}
+    

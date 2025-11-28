@@ -1677,7 +1677,8 @@
                 const response = await fetch('backend/notifications', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     },
                     body: JSON.stringify({
                         message: message,
@@ -1791,7 +1792,8 @@
                 const response = await fetch(`backend/delivery/status/${id}`, {
                     method: 'PUT',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     },
                     body: JSON.stringify({
                         order_id: deliveryId,
@@ -1910,7 +1912,14 @@
         async function getAgentStatusFromAPI(agentUniqueId) {
             // Utilise votre route GET via .htaccess rewrite
             try {
-                const response = await fetch(`backend/agents/availability/${agentUniqueId}`);
+                const response = await fetch(`backend/agents/availability/${agentUniqueId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Failed to get agent status');
                 }
@@ -1936,6 +1945,7 @@
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     },
                     body: JSON.stringify({
                         agentId: agentUniqueId,      // Correspond à votre backend
@@ -1961,7 +1971,14 @@
         async function getAgentTransactionsAPI(agentId) {
             // Utilise votre vraie route backend
             try {
-                const response = await fetch(`backend/deliveries/agent/${agentId}`);
+                const response = await fetch(`backend/deliveries/agent/${agentId}`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                    }
+                });
                 if (!response.ok) {
                     throw new Error('Failed to get agent transactions');
                 }
@@ -2006,7 +2023,8 @@
                 const response = await fetch('backend/orders/available', {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     }
                 });
                 
@@ -2039,7 +2057,8 @@
                 const response = await fetch('backend/orders/assign', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     },
                     body: JSON.stringify({
                         order_id: orderId,
@@ -2086,7 +2105,8 @@
                 const response = await fetch(`backend/deliveries/agent/orderProcess/${agentId}`, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     }
                 });
                 
@@ -2133,7 +2153,8 @@
                 const response = await fetch(`backend/notifications/${AGENT_UNIQUE_ID}`, {
                     method: 'GET',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
                     }
                 });
                 

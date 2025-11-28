@@ -104,9 +104,10 @@ function authenticateUser() {
     global $data;
     global $connection;
     //get data type
-    if(!isset($data['type'])) {
+    if(!isset($data['type']) || !isset($data['fingerPrint']) || $data['fingerPrint'] === '') {
         response(['error' => 'bad request'.$data], 400);
     }
+    $fingerprint = sanitizeInput($data['fingerPrint']);
     //verify type
     if($data['type'] === 'google'){
         //verify if data exist
@@ -122,7 +123,21 @@ function authenticateUser() {
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($stmt->rowCount() > 0) {
-            response(['status' => 'success', 'message' => 'Connexion réussie'], 200);
+
+            //get the user id and the user name, and the user role
+            $userId = $user['id_unique'];
+            $role = isset($user['role']) ? $user['role'] : 'user';
+            $username = $user['name'];
+            // set refresh token into coockies and set access token into response to trhe client
+            $refreshToken = createRefreshToken($userId, $role);
+            //update refresh token to database
+            $stmt = $connection->prepare("UPDATE users SET refresh_token = :refresh_token WHERE id_unique = :id_unique");
+            $stmt->bindParam(':refresh_token', $refreshToken);
+            $stmt->bindParam(':id_unique', $userId);
+            $stmt->execute();
+            $accessToken = createAccessToken($username,$userId, $role, $fingerprint);
+            setRefreshTokenCookie($refreshToken);
+            response(['status' => 'success', 'accessToken' => $accessToken, 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo'], 200);
         } else {
             response(['error' => 'Utilisateur non trouvé'], 404);
         }
@@ -139,12 +154,29 @@ function authenticateUser() {
     $stmt->bindParam(':email', $email);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    //verify if user exist 
+    if($stmt->rowCount() === 0) {
+        response(['error' => 'Utilisateur non trouvé'], 404);
+    }
     //verify if password is empty
     if (empty($user['password'])) {
         response(['error' => 'votre methode de connexion est google, veuillez vous connecter avec votre compte Google'], 400);
     }
     if ($user && password_verify($password, $user['password'])) {
-        response(['status' => 'success', 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo'], 200);
+        //get the user id and the user name, and the user role
+        $userId = $user['id_unique'];
+        $role = isset($user['role']) ? $user['role'] : 'user';
+        $username = $user['name'];
+        $refreshToken = createRefreshToken($userId, $role);
+        //update refresh token to database
+        $stmt = $connection->prepare("UPDATE users SET refresh_token = :refresh_token WHERE id_unique = :id_unique");
+        $stmt->bindParam(':refresh_token', $refreshToken);
+        $stmt->bindParam(':id_unique', $userId);
+        $stmt->execute();
+        $accessToken = createAccessToken($username,$userId, $role, $fingerprint);
+        //send refresh into cookies, and send access token to server
+        setRefreshTokenCookie($refreshToken);
+        response(['status' => 'success', 'accessToken' => $accessToken, 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo'], 200);
             
     } else {
         response(['error' => 'email ou mot de passe incorrect'], 401);
@@ -296,4 +328,67 @@ function setUserClient($id){
     $stmt = $connection->prepare('UPDATE users SET role = :role WHERE id_unique =:id');
     $stmt->execute(['role' => 'client', 'id' => $id]);
     response(['status' => 'success'], 200);
+}
+//heartbeat 
+function heartbeat(){
+    global $datas;
+    if(!isset($datas['fingerprint'])){
+        response(['error' => 'Fingerprint is required'], 400);
+    }
+    $fingerprint = sanitizeInput($datas['fingerprint']);
+    if(empty($fingerprint)){
+        response(['error' => ' Fingerprint is required'], 400);
+    }
+    //get refresh token
+    $refresh = getRefreshToken(); 
+    $refreshToken = $refresh['refreshToken'];
+    $refreshPlayload = $refresh['refreshPlayload'];
+    //verify refresh token to database
+    $stmt = 'SELECT id, name FROM users WHERE refresh_token = ?';
+    global $connection;
+    $stmt = $connection->prepare($stmt);
+    $stmt->execute([$refreshToken]);
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($stmt->rowCount() === 0) {
+        response(['error' => 'Invalid refresh token'], 401);
+    }
+
+    //get access token
+    $access = getBearerToken();
+    if(empty($access)){
+        response(['error' => 'Access token is required'], 401);
+    }
+    // get acess fingerprint
+    $realFingerprint = $access->fingerPrint;
+    // compare access fingerprint to current fingerprint
+    if($realFingerprint !== $fingerprint){
+     
+        response(['error' => 'Invalid fingerprint', 'fingerprint' => $fingerprint, 'realFingerprint' => $realFingerprint], 403);
+    }
+    try {
+         // get exp date 
+        $accessExp = $access->exp;
+        //verify il exp <  2mn
+        if($accessExp > time() + 150) {
+            response(['message' => 'Access token is still valid', 'status' => 'ok'], 200);
+        }
+        // create new access token
+    
+        global $ACCESS_SECRET;
+        $user_id = $refreshPlayload->sub;
+        $username = $user['name'];
+        $role = $refreshPlayload->role;
+        //createAccessToken($username, $user_id, $role, $fingerprint);
+        $newAccessToken = createAccessToken($username, $user_id, $role, $fingerprint);
+        response(['access_token' => $newAccessToken, 'status' => 'success'], 200);
+    } catch (\Firebase\JWT\ExpiredException $e){
+        response(['error' => 'Unauthorized A2'], 401);
+    } catch(Exeption $e){
+        response(['error' => 'Unauthorized A3'], 401);
+    }
+   
+       
+    
+    
+
 }

@@ -12,9 +12,7 @@ ini_set('display_startup_errors', 1);
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/vendor-firebase/autoload.php';
 
-// 2. Puis les classes
-use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
+
 
 // 3. Ensuite les fichiers qui utilisent ces classes
 require_once __DIR__ . '/helpers.php';

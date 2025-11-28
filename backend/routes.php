@@ -40,6 +40,7 @@ $routes =  [
         '/notifications/([\w\-\.]+)' => ['services/notifications.php', 'getNotificationsByUserId'], //get notifications by user id
     ],
     'POST' => [
+        '/heartbeat' => ['controllers/users.php', 'heartbeat'], //heartbeat to refresh access token
         '/new/product/adm' => ['Adm/adm.php', 'createProduct'], //create product
         '/orders/assign' => ['services/deliveries.php', 'createDelivery'], //assign order to agent
         '/category/adm' => ['Adm/adm.php', 'createCategory'], //create category

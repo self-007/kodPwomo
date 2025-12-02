@@ -9,27 +9,44 @@
     <title>Administration — Universités</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
+        :root{
+            --primary:#f7b642;
+            --primary-dark:#e19627;
+            --accent-green:#27ae60;
+            --accent-blue:#2563eb;
+            --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+            --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
+        }
         /* Minimal styling matching wm-* classes used elsewhere */
-        .wm-toolbar { display:flex; justify-content:flex-end; margin:12px 0; background:linear-gradient(90deg,#2563eb 60%,#1b8eb7 100%); padding:18px 0 18px 0; border-radius:10px; box-shadow:0 2px 12px #0001; }
-        .wm-btn { padding:8px 12px; border-radius:4px; border:1px solid #ccc; background:#f5f5f5; cursor:pointer; font-weight:500; }
-        .wm-btn-primary { background:#2563eb; color:#fff; border-color:#1e40af; }
-        .wm-btn-edit { background:#f59e0b; color:#fff; border-color:#b45309; }
-        .wm-btn-delete { background:#ef4444; color:#fff; border-color:#b91c1c; }
-        .table-responsive { overflow:auto; margin-top:24px; }
-        table { width:100%; border-collapse:separate; border-spacing:0; font-family:Arial,Helvetica,sans-serif; border-radius:12px; overflow:hidden; box-shadow:0 4px 24px #0002; background:#fff; }
+        .wm-toolbar { display:flex; justify-content:flex-end; margin:12px 0; background:linear-gradient(135deg, var(--primary), var(--primary-dark)); padding:18px 24px; border-radius:14px; box-shadow:var(--shadow-3d-base); transition:all .3s ease; }
+        .wm-btn { padding:10px 16px; border-radius:10px; border:none; background:#ffffff; cursor:pointer; font-weight:600; box-shadow:var(--shadow-3d-base); transition:all .3s cubic-bezier(0.4,0,0.2,1); position:relative; overflow:hidden; }
+        .wm-btn:hover { box-shadow:var(--shadow-3d-hover); transform:translateY(-2px); }
+        .wm-btn-primary { background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:#fff; }
+        .wm-btn-edit { background:linear-gradient(135deg, #f59e0b, #d97706); color:#fff; }
+        .wm-btn-delete { background:linear-gradient(135deg, #ef4444, #dc2626); color:#fff; }
+        .table-responsive { overflow:auto; margin-top:24px; background:linear-gradient(135deg,#ffffff 0%,#f6f8fb 100%); border-radius:16px; box-shadow:var(--shadow-3d-base); border:1px solid #e2e8f0; transition:all .3s ease; }
+        .table-responsive:hover { box-shadow:var(--shadow-3d-hover); transform:translateY(-3px); }
+        table { width:100%; border-collapse:separate; border-spacing:0; font-family:'Inter', Arial, Helvetica, sans-serif; border-radius:16px; overflow:hidden; background:transparent; }
         th, td { padding:10px 12px; border-bottom:1px solid #e0e7ef; text-align:left; vertical-align:middle; }
         .action-btns { display:flex; gap:0.5rem; }
         .img-modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; z-index:10000; }
         .img-modal-content { background:#fff; border-radius:10px; padding:18px; box-shadow:0 8px 32px #0005; display:flex; flex-direction:column; align-items:center; }
         .img-modal-content img { max-width:80vw; max-height:70vh; border-radius:8px; box-shadow:0 2px 12px #0003; }
         .img-modal-close { margin-top:12px; background:#ef4444; color:#fff; border:none; border-radius:4px; padding:8px 18px; font-size:1.1rem; cursor:pointer; }
-        th { background:linear-gradient(90deg,#1b8eb7 60%,#2563eb 100%); color:#fff; font-weight:700; font-size:1rem; border-bottom:2px solid #1b8eb7; }
-        tr:nth-child(even) td { background:#f3f8fc; }
-        tr:hover td { background:#eaf6fb; }
-        img.thumb { max-width:60px; max-height:40px; object-fit:cover; border-radius:4px; border:2px solid #1b8eb7; background:#fff; }
+        th { background:linear-gradient(135deg, var(--primary), var(--primary-dark)); color:#fff; font-weight:700; font-size:0.9rem; padding:1rem 1.25rem; text-transform:uppercase; letter-spacing:0.5px; box-shadow:0 2px 4px rgba(0,0,0,0.08); position:relative; border-bottom:none; }
+        thead tr::after { content:""; position:absolute; left:0; right:0; bottom:0; height:2px; background:linear-gradient(90deg, rgba(247,182,66,.35), rgba(225,150,39,.2)); }
+        tbody tr { transition:all .28s cubic-bezier(0.4,0,0.2,1); position:relative; }
+        tr:nth-child(even) td { background:rgba(248,250,252,0.5); }
+        tbody tr:hover td { background:linear-gradient(180deg, rgba(240,253,244,0.9), rgba(255,255,255,0.95)) !important; }
+        tbody tr:hover { box-shadow:8px 8px 20px rgba(0,0,0,0.08), -8px -8px 20px rgba(255,255,255,0.8); transform:translateY(-2px) scale(1.003); z-index:1; }
+        tbody td:first-child { font-weight:600; color:#1f2937; }
+        tbody td { transition:color .18s ease; padding:1rem 1.25rem; }
+        tbody tr:hover td { color:#0f172a; }
+        img.thumb { max-width:60px; max-height:40px; object-fit:cover; border-radius:8px; border:2px solid var(--primary); background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.1); transition:all .3s ease; }
+        img.thumb:hover { transform:scale(1.1); box-shadow:var(--shadow-3d-base); }
         /* simple modal */
         .modal-backdrop { position:fixed; inset:0;background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:9999; }
-        .modal { background:#fff; padding:18px; border-radius:8px; width:420px; max-width:95%; box-shadow:0 6px 22px rgba(0,0,0,0.2); }
+        .modal { background:#fff; padding:18px; border-radius:16px; width:420px; max-width:95%; box-shadow:var(--shadow-3d-hover); border:1px solid #e2e8f0; }
         .modal h2 { margin:0 0 12px 0; font-size:18px; }
         .form-row { margin-bottom:10px; display:flex; flex-direction:column; }
         .form-row label { font-size:13px; margin-bottom:6px; color:#333; }
@@ -43,7 +60,7 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(90deg,#2563eb 60%,#1b8eb7 100%);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             color: #fff;
             padding: 1.1rem 1.5rem 0.7rem 1.5rem;
             border-radius: 8px 8px 0 0;
@@ -134,7 +151,7 @@
     <script>
         // GitHub Copilot style JS: robust, defensive, minimal dependencies
         (function () {
-            const API_BASE = '/backend/university';
+            const API_BASE = '../backend/university';
             const listTable = document.getElementById('university-list');
             const tbody = listTable ? listTable.querySelector('tbody') : null;
             const btnAdd = document.getElementById('btn-add-university');

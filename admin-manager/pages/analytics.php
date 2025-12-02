@@ -3,38 +3,48 @@
 ?>
 <section aria-labelledby="analytics-title">
     <style>
-        /* KodPwomo Analytics Styles - Unified Green Palette */
+        /* KodPwomo Analytics Styles - Unified Neumorphic Palette */
+        :root{
+            --primary: #f7b642;
+            --primary-dark: #e19627;
+            --secondary: #27ae60;
+            --secondary-dark: #229954;
+            --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+            --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
+        }
         .analytics-hero{
             display:flex;align-items:center;justify-content:space-between;gap:20px;
             background:#ffffff;padding:20px 24px;border-radius:16px;border:1px solid #e2e8f0;
-            box-shadow:0 1px 3px rgba(0,0,0,0.05);margin-bottom:20px;flex-wrap:wrap;
-            border-left:4px solid var(--primary);
+            box-shadow:var(--shadow-3d-base);margin-bottom:20px;flex-wrap:wrap;
+            /*border-left:4px solid var(--primary); */transition:all .25s ease;
         }
+        .analytics-hero:hover{box-shadow:var(--shadow-3d-hover);transform:translateY(-2px);}
         .analytics-hero h2{
-            margin:0;font-weight:700;font-size:1.5rem;color:var(--primary);
+            margin:0;font-weight:700;font-size:1.5rem;color: #294e7a;
         }
         .filters{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
         .date{
             padding:10px 12px;border:2px solid #e2e8f0;border-radius:12px;
             background:#ffffff;transition:all 0.3s ease;box-sizing:border-box;min-width:140px;
+            box-shadow:var(--shadow-3d-base);
         }
-        .date:focus{border-color:var(--primary);outline:none;box-shadow:0 0 0 3px rgba(39,174,96,0.1)}
+        .date:focus{border-color:var(--primary);outline:none;box-shadow:var(--shadow-3d-hover)}
         .btn{
             padding:8px 16px;border-radius:12px;border:2px solid var(--primary);
             background:#ffffff;color:var(--primary);
             font-weight:600;cursor:pointer;transition:all 0.3s ease;white-space:nowrap;
-            box-sizing:border-box;
+            box-sizing:border-box;box-shadow:var(--shadow-3d-base);
         }
-        .btn:hover{background:var(--primary);color:#ffffff;transform:scale(1.05)}
+        .btn:hover{background:var(--primary);color:#ffffff;transform:scale(1.05);box-shadow:var(--shadow-3d-hover)}
         
         .kpi-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px}
         .kpi{
             background:#ffffff;padding:20px;border-radius:16px;
-            border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.05);
+            border:1px solid #e2e8f0;box-shadow:var(--shadow-3d-base);
             position:relative;overflow:hidden;transition:all 0.3s ease;
-            border-left:4px solid var(--primary);
+            /*border-left:4px solid var(--primary);*/
         }
-        .kpi:hover{transform:translateY(-4px);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+        .kpi:hover{transform:translateY(-4px);box-shadow:var(--shadow-3d-hover)}
         .kpi .label{font-size:12px;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:0.5px}
         .kpi .value{
             font-size:2rem;font-weight:700;margin-top:8px;color:var(--primary);
@@ -43,21 +53,25 @@
         
         .analytics-table{
             margin-top:20px;background:#ffffff;padding:20px;border-radius:16px;
-            border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.05);
-            border-left:4px solid var(--primary);
+            border:1px solid #e2e8f0;box-shadow:var(--shadow-3d-base);
+            border-left:4px solid var(--primary); transition:all .25s ease;
         }
+        .analytics-table:hover{box-shadow:var(--shadow-3d-hover);}
         .analytics-table-container{
             overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;margin-top:16px;
         }
         .analytics-table table{width:100%;border-collapse:collapse;min-width:400px}
-        .analytics-table thead{background:var(--primary)}
+        .analytics-table thead{background:var(--primary); }
         .analytics-table th{
             padding:16px 12px;text-align:left;color:#ffffff;font-weight:700;
             text-transform:uppercase;letter-spacing:0.5px;border:none;white-space:nowrap;
+            box-shadow: var(--shadow-3d-hover);
+            border-radius: 12px;
         }
         .analytics-table td{
             padding:14px 12px;border-bottom:1px solid #f1f5f9;
             color:#475569;font-weight:500;white-space:nowrap;
+            border-radius: 12px;
         }
         .analytics-table tbody tr:nth-child(odd){background:#f8fafc}
         .analytics-table tbody tr:hover{
@@ -66,11 +80,12 @@
 
         .delivery-card{
             background:#ffffff;padding:16px;border-radius:12px;
-            border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.05);
+            border:1px solid #e2e8f0;box-shadow:var(--shadow-3d-base);
             transition:all 0.3s ease;position:relative;overflow:hidden;
-            border-left:4px solid var(--primary);
+            margin-top: 10px ;
+            /*border-left:4px solid var(--primary);*/
         }
-        .delivery-card:hover{transform:translateY(-4px);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+        .delivery-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-3d-hover)}
         .delivery-meta{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
         .badge-status{
             padding:4px 10px;border-radius:16px;font-weight:600;font-size:10px;
@@ -182,7 +197,7 @@
     <script>
         (function(){
             const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-            const base = `/backend/analytics/adm`;
+            const base = `../backend/analytics/adm`;
 
             async function fetchData(from, to){
                 const params = from && to ? `?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}` : '';

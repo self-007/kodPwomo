@@ -16,8 +16,9 @@
     <style>
         /* ===== CUSTOM COLOR PALETTE ===== */
         :root {
-            --primary: #f39c12;
-            --primary-dark: #e67e22;
+            --primary: #f7b642;
+            --primary-dark: #e19627;
+
             --secondary: #27ae60;
             --secondary-dark: #229954;
             --white: #ffffff;
@@ -25,6 +26,20 @@
             --medium-gray: #666666;
             --light-gray: #F5F5F5;
             --border-color: #E0E0E0;
+            --shadow-3d-base: 
+            8px 8px 20px rgba(0, 0, 0, 0.10),
+            -8px -8px 20px rgba(255, 255, 255, 0.70);
+
+            --shadow-3d-hover:
+            16px 16px 32px rgba(0, 0, 0, 0.12),
+            -16px -16px 32px rgba(255, 255, 255, 0.80);
+
+            --shadow-3d-active:
+            6px 6px 16px rgba(0, 0, 0, 0.08),
+            -6px -6px 16px rgba(255, 255, 255, 0.65);
+
+            --depth-tilt: 9deg;
+            --depth-tilt-strong: 13deg;
         }
         
         * {
@@ -35,19 +50,23 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: #f1f3f9;
             min-height: 100vh;
             color: var(--dark-gray);
         }
         
         /* ===== HEADER ===== */
         .header {
-            background: var(--secondary);
+            background: #ffffff;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            backdrop-filter: blur(12px);
             padding: 12px 0;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-radius: 15px;
         }
         
         .header-content {
@@ -62,8 +81,19 @@
         .logo {
             font-size: 24px;
             font-weight: 800;
-            color: var(--white);
+            color: var(--primary);
             text-decoration: none;
+            display: flex;
+            align-items: center;
+            width: fit-content;
+            height: 60px;
+            
+        }
+        .logo img {
+            height: 100%;
+            width: auto;
+            max-width: clamp(140px, 25vw, 300px);
+            border-radius: 8px;
         }
         
         .agent-info {
@@ -74,7 +104,7 @@
         
         .agent-name {
             font-weight: 600;
-            color: var(--white);
+            color: var(--primary);
             font-size: 14px;
             max-width: 120px;
             overflow: hidden;
@@ -83,7 +113,7 @@
         }
         
         .logout-btn {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(230, 8, 8, 0.6);
             color: var(--white);
             border: 1px solid rgba(0, 0, 0, 0.2);
             padding: 8px 16px;
@@ -91,11 +121,90 @@
             font-size: 13px;
             cursor: pointer;
             transition: all 0.3s ease;
+
+            box-shadow:
+            3px 3px 8px rgba(0,0,0,0.18),
+           -3px -3px 8px rgba(255,255,255,0.85);
+
         }
         
         .logout-btn:hover {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(243, 11, 11, 0.9);
             transform: translateY(-1px);
+            box-shadow:
+            5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
+        }
+
+        /* ===== NAV MENU (Hamburger) ===== */
+        .nav {
+            position: relative;
+        }
+        .hamburger-btn {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.12), -3px -3px 8px rgba(255,255,255,0.85);
+        }
+        .hamburger-btn span {
+            width: 20px;
+            height: 2px;
+            background: #333;
+            margin: 2px 0;
+            border-radius: 2px;
+        }
+        .nav-menu {
+            position: absolute;
+            right: 0;
+            top: 40px;
+            min-width: 180px;
+            max-width: 90vw;
+            max-height: 60vh;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 10px;
+            box-shadow: 8px 8px 20px rgba(0,0,0,0.10), -8px -8px 20px rgba(255,255,255,0.70);
+            backdrop-filter: blur(12px);
+            display: none;
+            overflow: hidden;
+            z-index: 1200;
+        }
+        .nav-menu.show { display: block; }
+        .nav-menu a {
+            display: block;
+            padding: 10px 14px;
+            text-decoration: none;
+            color: #234777;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-menu a:last-child { border-bottom: none; }
+        .nav-menu a:hover {
+            background: #f5f7fb;
+            color: var(--primary);
+        }
+
+        /* ===== RESPONSIVE HEADER ===== */
+        @media (max-width: 768px) {
+            .header-content { gap: 12px; }
+            .logo { height: 50px; }
+            .logo img { max-width: clamp(120px, 30vw, 240px); }
+        }
+        @media (max-width: 550px) {
+            .header { padding: 10px 0; }
+            .logo { height: 44px; }
+            .logo img { max-width: clamp(100px, 40vw, 200px); }
+            .logout-btn { display: none; }
+            .header-content { gap: 12px; }
         }
         
         /* ===== MAIN CONTAINER ===== */
@@ -103,23 +212,60 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px 15px;
+            perspective: 1800px;
+            
         }
         
         /* ===== WELCOME SECTION ===== */
         .welcome-section {
-            background: var(--white);
-            border-radius: 12px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 20px;
             padding: 24px 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow:
+            12px 12px 25px rgba(0, 0, 0, 0.12),
+            -12px -12px 25px rgba(255, 255, 255, 0.95);
+
             margin-bottom: 25px;
             text-align: center;
-            border-top: 4px solid var(--primary);
+            /*border-top: 4px solid var(--primary);*/
+            position: relative;
+            overflow: hidden;
+
+                border-radius: 18px;
+    box-shadow:
+        10px 10px 22px rgba(0,0,0,0.10),
+        -10px -10px 22px rgba(255,255,255,0.95);
+        }
+        
+        .welcome-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background:
+                linear-gradient(160deg, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.05) 60%) ;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            opacity: .75;
+            transition: opacity .4s ease;
+        }
+        
+        .welcome-section::after {
+            content: '';
+            position: absolute;
+            inset: -6px;
+            border-radius: inherit;
+            border: 2px solid rgba(255,255,255,0.35);
+            box-shadow: 12px 12px 25px rgba(0, 0, 0, 0.12), -12px -12px 25px rgba(255, 255, 255, 0.95);
+            opacity: 0;
+            transition: opacity .5s ease;
+            pointer-events: none;
         }
         
         .welcome-title {
             font-size: 28px;
             font-weight: 700;
-            color: var(--dark-gray);
+            color: #234777;
             margin-bottom: 12px;
         }
         
@@ -137,6 +283,7 @@
             justify-content: center;
             gap: 15px;
             flex-wrap: wrap;
+            border-radius: 12px;
         }
         
         .status-indicator {
@@ -144,7 +291,7 @@
             align-items: center;
             gap: 8px;
             padding: 12px 20px;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 14px;
         }
@@ -152,13 +299,16 @@
         .status-available {
             background: var(--secondary);
             color: var(--white);
-            box-shadow: 0 2px 6px rgba(39, 174, 96, 0.2);
+            box-shadow:
+            12px 12px 25px rgba(0, 0, 0, 0.12),
+            -12px -12px 25px rgba(255, 255, 255, 0.95);
+
         }
         
         .status-unavailable {
             background: #e74c3c;
             color: var(--white);
-            box-shadow: 0 2px 6px rgba(231, 76, 60, 0.2);
+            box-shadow: var(--neo-shadow-base);
         }
         
         .status-icon {
@@ -179,18 +329,26 @@
             color: var(--white);
             border: none;
             padding: 12px 24px;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 600;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
             white-space: nowrap;
-            box-shadow: 0 2px 6px rgba(243, 156, 18, 0.2);
+            box-shadow: var(--neo-shadow-base);
+            box-shadow:
+            3px 3px 8px rgba(0,0,0,0.18),
+            -3px -3px 8px rgba(255,255,255,0.85);
+
         }
         
         .toggle-status-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow:
+            5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
         }
         
         /* ===== ACTION BUTTONS ===== */
@@ -199,11 +357,15 @@
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 18px;
             margin-top: 30px;
+            box-shadow:
+            
+
         }
         
         .action-btn {
-            background: var(--white);
-            border: 2px solid var(--border-color);
+            position: relative;
+            background: rgba(255,255,255,0.92);
+            border: 1px solid rgba(255,255,255,0.45);
             border-radius: 12px;
             padding: 24px 18px;
             text-align: center;
@@ -211,8 +373,12 @@
             transition: all 0.3s ease;
             text-decoration: none;
             color: var(--dark-gray);
-            position: relative;
             overflow: hidden;
+            transform-style: preserve-3d;
+            box-shadow:
+            3px 3px 8px rgba(0,0,0,0.18),
+            -3px -3px 8px rgba(255,255,255,0.85);
+            backdrop-filter: blur(14px);
         }
         
         .action-btn::before {
@@ -229,9 +395,11 @@
         }
         
         .action-btn:hover {
-            border-color: var(--primary);
-            transform: translateY(-4px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-10px) rotateX(5deg) rotateY(-4deg);
+            box-shadow:
+            5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
         }
         
         .action-btn:hover::before {
@@ -248,6 +416,8 @@
             font-weight: 700;
             margin-bottom: 8px;
             color: var(--primary);
+          
+
         }
         
         .action-btn-desc {
@@ -271,15 +441,16 @@
         }
         
         .modal-content {
-            background: var(--white);
+            background: rgba(255,255,255,0.92);
             border-radius: 12px;
             padding: 24px;
             max-width: 800px;
             margin: 20px auto;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--neo-shadow-base);
             position: relative;
             width: 100%;
             border-top: 4px solid var(--primary);
+            backdrop-filter: blur(14px);
         }
         
         .modal-close {
@@ -333,18 +504,37 @@
         }
         
         .stat-card {
-            background: var(--white);
+            background: rgba(255,255,255,0.92);
             padding: 18px;
             border-radius: 12px;
             text-align: center;
             border: 2px solid var(--border-color);
-            border-left: 4px solid var(--primary);
+            /*border-left: 4px solid var(--primary);*/
             transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
         
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-3d-hover);
+        }
+        
+        .stat-card:hover::before {
+            transform: scaleX(1);
         }
         
         .stat-number {
@@ -367,18 +557,40 @@
         }
         
         .transaction-item, .order-item {
-            background: var(--white);
+            background: rgba(255,255,255,0.92);
             border: 2px solid var(--border-color);
             border-radius: 10px;
             padding: 18px;
             margin-bottom: 12px;
             transition: all 0.3s ease;
             border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .transaction-item::before,
+        .order-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
         }
         
         .transaction-item:hover, .order-item:hover {
             border-color: var(--primary);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 10px 10px 20px #bebebe, -10px -10px 20px #ffffff;
+            transform: translateY(-10px); /* increase hover lift */
+        }
+        
+        .transaction-item:hover::before,
+        .order-item:hover::before {
+            transform: scaleX(1);
         }
         
         .transaction-header, .order-header {
@@ -477,6 +689,10 @@
         .take-order-btn:hover {
             background: var(--secondary-dark);
             transform: translateY(-2px);
+            box-shadow:
+            5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
         }
         
         /* ===== DELIVERY ===== */
@@ -487,6 +703,25 @@
             margin-bottom: 20px;
             font-size: 14px;
             border-left: 4px solid var(--primary);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .delivery-details::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .delivery-details:hover::before {
+            transform: scaleX(1);
         }
         
         .detail-row {
@@ -529,21 +764,41 @@
         .done-btn {
             background: var(--secondary);
             color: var(--white);
+            box-shadow:
+            3px 3px 8px rgba(0,0,0,0.18),
+            -3px -3px 8px rgba(255,255,255,0.85);
+            box-shadow: var(--neo-shadow-base);
+            width: 100%;
+            text-align: center;
+            font-size: 14px;
+            white-space: nowrap;
         }
         
         .done-btn:hover {
             background: var(--secondary-dark);
             transform: translateY(-2px);
+            box-shadow:
+            5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
         }
         
         .feedback-btn {
             background: var(--primary);
             color: var(--white);
+            box-shadow:
+            3px 3px 8px rgba(0,0,0,0.18),
+            -3px -3px 8px rgba(255,255,255,0.85);
+
         }
         
         .feedback-btn:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow:
+            5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
         }
         
         .feedback-section {
@@ -591,6 +846,10 @@
             font-size: 13px;
             white-space: nowrap;
             transition: all 0.3s ease;
+            box-shadow:
+            3px 3px 8px rgba(0,0,0,0.18),
+           -3px -3px 8px rgba(255,255,255,0.85);
+            box-shadow: var(--neo-shadow-base);
         }
         
         .send-feedback-btn:hover {
@@ -628,7 +887,7 @@
             background: var(--white);
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--neo-shadow-base);
             z-index: 3000;
             text-align: center;
             border-top: 4px solid var(--primary);
@@ -661,6 +920,11 @@
             transform: translateX(400px);
             transition: all 0.3s ease;
             max-width: 300px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--neo-shadow-base);
+            border: 1px solid rgba(255,255,255,0.4);
+            color: var(--dark-gray);
         }
         
         .alert.show {
@@ -668,28 +932,20 @@
         }
         
         .alert.success {
-            background: var(--secondary);
-            color: var(--white);
+            background: linear-gradient(145deg,rgba(39,174,96,0.85),rgba(39,174,96,0.65));
+            color:#fff;
         }
         
         .alert.error {
-            background: #e74c3c;
-            color: var(--white);
+            background: linear-gradient(145deg,rgba(231,76,60,0.85),rgba(231,76,60,0.65));
+            color:#fff;
         }
         
-        .alert.warning {
-            background: var(--primary);
-            color: var(--white);
-        }
-        
-        .alert.info {
-            background: var(--primary);
-            color: var(--white);
-        }
-        
+        .alert.warning,
+        .alert.info,
         .alert.taken {
-            background: var(--primary);
-            color: var(--white);
+            background: linear-gradient(145deg,rgba(243,156,18,0.88),rgba(230,126,34,0.65));
+            color:#fff;
         }
         
         /* ===== NOTIFICATIONS ===== */
@@ -707,14 +963,15 @@
         }
         
         .notification {
-            background: white;
+            background: rgba(255,255,255,0.92);
             border-radius: 12px;
             padding: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-3d-base);
             border-left: 4px solid var(--primary);
             position: relative;
             animation: slideIn 0.3s ease;
             min-width: 300px;
+            backdrop-filter: blur(14px);
         }
         
         @keyframes slideIn {
@@ -875,6 +1132,10 @@
             transition: all 0.3s ease;
             white-space: nowrap;
             text-align: center;
+            box-shadow:
+    3px 3px 8px rgba(0,0,0,0.18),
+    -3px -3px 8px rgba(255,255,255,0.85);
+
         }
         
         .take-promo-btn {
@@ -885,7 +1146,7 @@
         
         .take-promo-btn:hover {
             background: var(--primary-dark);
-            transform: translateY(-2px);
+            transform: translateY(-10px);
         }
         
         .take-order-notification-btn {
@@ -913,51 +1174,200 @@
         
         .notification-btn:active {
             transform: translateY(0);
+            box-shadow:
+            inset 3px 3px 6px rgba(0,0,0,0.25),
+            inset -3px -3px 6px rgba(255,255,255,0.70);
+
         }
         
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 480px) {
-            .notifications-container {
-                right: 10px;
-                left: 10px;
-                max-width: none;
-                top: 60px;
-            }
-            
-            .notification {
-                min-width: 100%;
-                max-width: none;
-            }
-            
-            .notification-actions {
-                flex-direction: column;
-            }
-            
-            .notification-btn {
-                width: 100%;
-                text-align: center;
-            }
+        /* ===== 3D EFFECTS ===== */
+        .depth-3d {
+            position: relative;
+            background: #f1f3f9;
+;
+            backdrop-filter: blur(14px);
+            box-shadow: var(--shadow-3d-base);
+            transform-style: preserve-3d;
+            transition: transform .5s cubic-bezier(.19,1,.22,1), box-shadow .4s ease;
+            border: 1px solid rgba(255,255,255,0.35);
         }
         
-        .notifications-container::-webkit-scrollbar {
-            width: 6px;
+        .depth-3d::after {
+            content:'';
+            position:absolute;
+            inset:0;
+            border-radius: inherit;
+            background: linear-gradient(145deg,rgba(255,255,255,0.35),rgba(255,255,255,0.05));
+            pointer-events:none;
+            mix-blend-mode:overlay;
         }
         
-        .notifications-container::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 3px;
+        .depth-3d:hover {
+            transform: translateY(-8px) rotateX(4deg) rotateY(-3deg);
+            box-shadow: var(--shadow-3d-hover);
         }
+        
+        .depth-3d:active {
+            transform: translateY(-2px) scale(.985);
+            box-shadow: var(--shadow-3d-base);
+            transition: transform .15s ease, box-shadow .25s ease;
+        }
+
+        /* Application des effets aux blocs */
+        .welcome-section,
+        .action-btn,
+        .stat-card,
+        .transaction-item,
+        .order-item,
+        .modal-content,
+        .delivery-details,
+        .product-summary,
+        .feedback-item,
+        .loading,
+        .notification { border-radius:18px; }
+        .welcome-section,
+        .action-btn,
+        .stat-card,
+        .transaction-item,
+        .order-item,
+        .modal-content,
+        .delivery-details,
+        .product-summary,
+        .feedback-item,
+        .loading,
+        .notification { background: rgba(255,255,255,0.92); box-shadow: var(--shadow-3d-base); backdrop-filter: blur(16px); }
+
+        .action-btn { /* existing overrides + 3D */
+            /* ...existing code... */
+            border: 1px solid rgba(255,255,255,0.45);
+        }
+        .action-btn:hover {
+            /* ...existing code... */
+            box-shadow: 10px 10px 20px #bebebe, -10px -10px 20px #ffffff;
+            transform: translateY(-10px) rotateX(5deg) rotateY(-4deg);
+        }
+        .stat-card:hover,
+        .transaction-item:hover,
+        .order-item:hover,
+        .modal-content:hover,
+        .delivery-details:hover,
+        .feedback-item:hover,
+        .notification:hover {
+            box-shadow: var(--shadow-3d-hover);
+            transform: translateY(-10px);
+        }
+
+        /* Boutons inchangés mais renforcer relief */
+        .toggle-status-btn,
+        .take-order-btn,
+        .done-btn,
+        .feedback-btn,
+        .send-feedback-btn,
+        .take-promo-btn,
+        .take-order-notification-btn {
+            box-shadow: 0 10px 26px rgba(0,0,0,0.08), 0 18px 50px rgba(255,255,255,0.9);
+            transition: transform .5s cubic-bezier(.19,1,.22,1), box-shadow .45s ease;
+        }
+        .toggle-status-btn:hover,
+        .take-order-btn:hover,
+        .done-btn:hover,
+        .feedback-btn:hover,
+        .send-feedback-btn:hover,
+        .take-promo-btn:hover,
+        .take-order-notification-btn:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow:
+            5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
+
+        }
+
+        /* Notifications spécifiques */
+        .notification {
+            /* ...existing code... */
+            transform: translateZ(0);
+        }
+        .notification:hover {
+            transform: translateY(-6px) scale(1.015);
+        }
+
+        /* All alerts 3D */
+        .alert {
+            background: #f1f3f9;
+
+            backdrop-filter: blur(12px);
+            box-shadow: ;
+            border: 1px solid rgba(255,255,255,0.4);
+            color: var(--dark-gray);
+        }
+        .alert.success { background: linear-gradient(145deg,rgba(39,174,96,0.85),rgba(39,174,96,0.65)); color:#fff; }
+        .alert.error { background: linear-gradient(145deg,rgba(231,76,60,0.85),rgba(231,76,60,0.65)); color:#fff; }
+        .alert.warning,
+        .alert.info,
+        .alert.taken { background: linear-gradient(145deg,rgba(243,156,18,0.88),rgba(230,126,34,0.65)); color:#fff; }
+
+        /* Scrollbar léger */
+        .transactions-list::-webkit-scrollbar,
+        .orders-list::-webkit-scrollbar,
+        .feedback-list::-webkit-scrollbar {
+            width:8px;
+        }
+        .transactions-list::-webkit-scrollbar-thumb,
+        .orders-list::-webkit-scrollbar-thumb,
+        .feedback-list::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg,#ffffff,#f0f0f0);
+            border-radius:6px;
+            border:1px solid rgba(0,0,0,0.05);
+        }
+        .transactions-list::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg,#fafafa,#eaeaea);
+        }
+
+        /* Optional: subtle tilt on pointer move */
+        .action-btn {
+            transform-style: preserve-3d;
+            transition: transform 0.2s ease;
+            will-change: transform;
+            box-shadow:
+            3px 3px 8px rgba(0,0,0,0.18),
+            -3px -3px 8px rgba(255,255,255,0.85);
+
+        }
+        .action-btn:hover { 
+            will-change: transform;
+            box-shadow:
+             5px 5px 12px rgba(0,0,0,0.20),
+            -5px -5px 12px rgba(255,255,255,0.90);
+
+        
+        }
+
+        /* JS was incorrectly placed here; moved to <script> below */
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <a href="index.html" class="logo">kodPwomo Agent</a>
-            
+            <div class="logo"> <img src="image/logo/logo1.1.jpg" alt="logo"></div>
             <div class="agent-info">
-                <span id="agentName" class="agent-name">Chargement...</span>
                 <button class="logout-btn" onclick="logout()">Déconnexion</button>
+                <nav class="nav">
+                    <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                    <div class="nav-menu" id="navMenu" role="menu">
+                        <a href="dashboard_user/dashboard.php" role="menuitem">Dashboard</a>
+                        <a href="boutique.php" role="menuitem">Boutique</a>
+                        <a href="#restaurant" role="menuitem">Restaurant</a>
+                        <a href="index.php" role="menuitem">Home</a>
+                        <a href="index.php" role="menuitem">Deconnexion</a>
+
+                    </div>
+                </nav>
             </div>
         </div>
     </header>
@@ -965,8 +1375,8 @@
     <!-- Main Container -->
     <main class="main-container">
         <!-- Welcome Section -->
-        <section class="welcome-section">
-            <h1 class="welcome-title">🚀 Bienvenue dans votre espace agent !</h1>
+        <section class="welcome-section box-3d">
+            <h1 class="welcome-title"> Bienvenue dans votre espace agent !</h1>
             <p id="welcomeMessage" class="welcome-message">
                 Chargement de votre statut...
             </p>
@@ -986,19 +1396,19 @@
 
         <!-- Action Buttons -->
         <section class="action-buttons">
-            <div class="action-btn" onclick="openTransactionsModal()">
+            <div class="action-btn box-3d" onclick="openTransactionsModal()">
                 <div class="action-btn-icon">📊</div>
                 <div class="action-btn-title">Mes Transactions</div>
                 <div class="action-btn-desc">Consultez vos livraisons effectuées et votre historique de transactions</div>
             </div>
             
-            <div class="action-btn" onclick="openOrdersModal()">
+            <div class="action-btn box-3d" onclick="openOrdersModal()">
                 <div class="action-btn-icon">📦</div>
                 <div class="action-btn-title">Commandes Disponibles</div>
                 <div class="action-btn-desc">Prenez de nouvelles commandes en attente de confirmation</div>
             </div>
             
-            <div class="action-btn" onclick="openDeliveryModal()">
+            <div class="action-btn box-3d" onclick="openDeliveryModal()">
                 <div class="action-btn-icon">🚚</div>
                 <div class="action-btn-title">Livraison en Cours</div>
                 <div class="action-btn-desc">Gérez votre livraison actuelle et communiquez avec le client</div>
@@ -1008,7 +1418,7 @@
 
     <!-- Transactions Modal -->
     <div id="transactionsModal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content box-3d">
             <button class="modal-close" onclick="closeTransactionsModal()">&times;</button>
             
             <div class="modal-header">
@@ -1043,7 +1453,7 @@
 
     <!-- Available Orders Modal -->
     <div id="ordersModal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content box-3d">
             <button class="modal-close" onclick="closeOrdersModal()">&times;</button>
             
             <div class="modal-header">
@@ -1059,7 +1469,7 @@
 
     <!-- Current Delivery Modal -->
     <div id="deliveryModal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content box-3d">
             <button class="modal-close" onclick="closeDeliveryModal()">&times;</button>
             
             <div class="modal-header">
@@ -1074,7 +1484,7 @@
     </div>
 
     <!-- Loading -->
-    <div id="loading" class="loading">
+    <div id="loading" class="loading box-3d">
         <div class="loading-spinner"></div>
         <div>Chargement...</div>
     </div>
@@ -1083,9 +1493,56 @@
     <div id="alert" class="alert"></div>
 
     <!-- Notifications Container -->
-    <div id="notificationsContainer" class="notifications-container"></div>
+    <div id="notificationsContainer" class="notifications-container">
+        <!-- Items .notification recevront la classe via JS -->
+    </div>
 
     <script>
+        // ===== NAV MENU TOGGLE =====
+        (function(){
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('navMenu');
+            if (btn && menu) {
+                btn.addEventListener('click', function(){
+                    const isOpen = menu.classList.toggle('show');
+                    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+                // Close on outside click
+                document.addEventListener('click', function(e){
+                    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                        menu.classList.remove('show');
+                        btn.setAttribute('aria-expanded','false');
+                    }
+                });
+                // Close on Escape
+                document.addEventListener('keydown', function(e){
+                    if (e.key === 'Escape') {
+                        menu.classList.remove('show');
+                        btn.setAttribute('aria-expanded','false');
+                    }
+                });
+            }
+        })();
+
+        // ===== Card tilt effect (moved from CSS) =====
+        (function(){
+            const cards = document.querySelectorAll('.action-btn');
+            cards.forEach(card => {
+                card.setAttribute('data-tilt','');
+                card.addEventListener('mousemove', e => {
+                    const r = card.getBoundingClientRect();
+                    const x = e.clientX - r.left;
+                    const y = e.clientY - r.top;
+                    const rotateY = ((x / r.width) - 0.5) * 18;
+                    const rotateX = ((y / r.height) - 0.5) * -18;
+                    card.style.transform = `translateY(-14px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+                });
+            });
+        })();
+
         // ===== GLOBAL VARIABLES =====
         let currentAgent = null;
         let agentStatus = false; // false = unavailable, true = available
@@ -1109,7 +1566,7 @@
                 currentAgent = await loadAgentFromAPI();
                 
                 if (currentAgent) {
-                    displayAgentInfo();
+                    
                     await checkAgentStatus();
                     initNotificationSystem(); // Ajouter cette ligne
                 } else {
@@ -1129,9 +1586,7 @@
             }
         }
 
-        function displayAgentInfo() {
-            document.getElementById('agentName').textContent = currentAgent.name || 'Agent';
-        }
+
 
         async function checkAgentStatus() {
             try {
@@ -1840,7 +2295,7 @@
             // Refresh data every 30 seconds - BUT NOT FOR AVAILABILITY
             refreshInterval = setInterval(() => {
                 if (!document.hidden) { // Only refresh if page is visible
-                    // checkAgentStatus(); // REMOVED - Only check on initial load and after manual toggle
+                    checkAgentStatus(); // REMOVED - Only check on initial load and after manual toggle
                 }
             }, 30000);
         }
@@ -1925,8 +2380,8 @@
                 }
                 const data = await response.json();
                 return {
-                    is_available: Boolean(data.is_available), // Convertit 1/0 en true/false
-                    last_activity: data.updated_at || new Date().toISOString()
+                    is_available: Boolean(data.success), // Convertit 1/0 en true/false
+                   
                 };
             } catch (error) {
                 console.log('Backend call failed, using simulated data:', error);
@@ -1959,10 +2414,11 @@
                 
                 return await response.json();
             } catch (error) {
+
                 console.log('Backend call failed, using simulation');
                 // Fallback simulation
                 return {
-                    success: true,
+                    success: false,
                     message: 'Status updated successfully (simulated)'
                 };
             }
@@ -2048,6 +2504,8 @@
                 return [];
             }
         }
+
+
 
         async function assignOrderToAgentAPI(orderId, agentId) {
             try {
@@ -2225,6 +2683,36 @@
                 clearInterval(notificationCheckInterval);
             }
         });
+        // Appliquer .box-3d aux listes dynamiques après rendu
+        function enhance3D() {
+            document.querySelectorAll('.transaction-item, .order-item, .feedback-item, .notification, .stat-card, .delivery-details, .product-summary')
+                .forEach(el => el.classList.add('box-3d'));
+        }
+        // Tilt dynamique sur .action-btn
+        function initTilt() {
+            document.querySelectorAll('.action-btn.box-3d').forEach(card => {
+                card.addEventListener('mousemove', e => {
+                    const r = card.getBoundingClientRect();
+                    const x = e.clientX - r.left;
+                    const y = e.clientY - r.top;
+                    const rotateY = ((x / r.width) - 0.5) * 22;
+                    const rotateX = ((y / r.height) - 0.5) * -22;
+                    card.style.transform = `translateY(-18px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+                });
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+                });
+            });
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            enhance3D();
+            initTilt();
+        });
+        // Après mises à jour dynamiques (ex: listes)
+        function afterDataRender() {
+            enhance3D();
+        }
+        // Intégrer afterDataRender dans displayTransactions / displayAvailableOrders / displayCurrentDelivery
     </script>
 </body>
 </html>

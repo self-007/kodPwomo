@@ -21,23 +21,18 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        /* Unified Green Palette */
+        /* Neumorphic White Palette */
         :root {
-            --primary: #27AE60;
-            --primary-dark: #1E8449;
-            --primary-light: #2ECC71;
             --surface: #ffffff;
             --surface-dim: #f8f9fa;
             --surface-container: #f1f5f9;
             
-            --on-surface: #1a1a2e;
+            --on-surface: #2a4f7d;
             --on-surface-variant: #475569;
             --on-surface-muted: #64748b;
             --outline: #cbd5e1;
             --outline-variant: #e2e8f0;
-            
-            --primary-50: #f0fdf4;
-            --primary-100: #dcfce7;
+            --shadow-neo: 10px 10px 22px rgba(0,0,0,0.10), -10px -10px 22px rgba(255,255,255,0.95);
             
             --spacing-1: 8px;
             --spacing-2: 16px;
@@ -62,15 +57,15 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
             -moz-osx-font-smoothing: grayscale;
         }
         
-        /* Header - Green */
+        /* Header - White with Neumorphic shadow */
         header.admin-header {
             position: fixed;
             left: 0;
             right: 0;
             top: 0;
             height: 64px;
-            background: var(--primary);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            background: #ffffff;
+            box-shadow: var(--shadow-neo);
             display: flex;
             align-items: center;
             padding: 0 var(--spacing-2);
@@ -78,17 +73,27 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         }
         
         header .brand {
-            font-size: 20px;
-            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: 800;
             letter-spacing: -0.3px;
-            color: #ffffff;
+            color: var(--on-surface);
+        }
+        
+        header .brand img.brand-logo {
+            height: 50px;
+            width: auto;
+            display: block;
+            object-fit: contain;
         }
         
         header .hamburger {
             display: none;
-            background: rgba(255, 255, 255, 0.15);
+            background: #f1f5f9;
             border: none;
-            color: #ffffff;
+            color: var(--on-surface);
             cursor: pointer;
             padding: var(--spacing-1);
             border-radius: 8px;
@@ -98,23 +103,26 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
             align-items: center;
             justify-content: center;
             transition: all 0.2s ease;
+            box-shadow: var(--shadow-neo);
         }
         
         header .hamburger:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: #eef2f7;
         }
         
         header .profile {
             display: flex;
             align-items: center;
             gap: var(--spacing-1);
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            background: #f8fafc;
+            color: var(--on-surface);
             padding: 8px 16px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 13px;
             margin-left: auto;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
         }
         
         /* Layout */
@@ -128,14 +136,13 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         nav.sidebar {
             width: 280px;
             background: #ffffff;
-            border-right: 1px solid #e2e8f0;
             padding: var(--spacing-2) 0;
             position: fixed;
             left: 0;
             top: 64px;
             height: calc(100vh - 64px);
             overflow-y: auto;
-            box-shadow: 1px 0 3px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-neo);
         }
         
         nav.sidebar::-webkit-scrollbar {
@@ -143,7 +150,7 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         }
         
         nav.sidebar::-webkit-scrollbar-thumb {
-            background: var(--primary);
+            background: #cbd5e1;
             border-radius: 3px;
         }
         
@@ -181,15 +188,15 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         
         .sidebar a:hover {
             background: #f1f5f9;
-            color: var(--primary);
-            border-left-color: var(--primary);
+            color: var(--on-surface);
+            border-left-color: #cbd5e1;
         }
         
         .sidebar a.link-active {
-            background: var(--primary-50);
-            color: var(--primary);
-            border-left-color: var(--primary);
-            font-weight: 600;
+            background: #f1f5f9;
+            color: var(--on-surface);
+            border-left-color: #94a3b8;
+            font-weight: 700;
         }
         
         /* Content Area */
@@ -203,9 +210,9 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         /* Welcome Card */
         .welcome {
             background: #ffffff;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #eef2f7;
             border-radius: 16px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            box-shadow: var(--shadow-neo);
             max-width: 1200px;
             margin: 0 auto;
             padding: var(--spacing-5);
@@ -214,13 +221,7 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         }
         
         .welcome::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: var(--primary);
+            content: none;
         }
         
         .welcome h1 {
@@ -228,14 +229,14 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
             font-weight: 800;
             letter-spacing: -0.5px;
             line-height: 1.3;
-            color: #1a1a2e;
+            color: #2a4f7d;
             margin-bottom: var(--spacing-2);
         }
         
         .welcome .subtitle-badge {
             display: inline-block;
-            background: var(--primary-50);
-            color: var(--primary);
+            background: #ffffff;
+            color: #475569;
             padding: 0.35rem 0.85rem;
             border-radius: 8px;
             font-size: 11px;
@@ -243,7 +244,8 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
             letter-spacing: 0.5px;
             text-transform: uppercase;
             margin-bottom: var(--spacing-2);
-            border: 1px solid var(--primary-100);
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-neo);
         }
         
         .welcome .lead {
@@ -265,16 +267,16 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
             display: flex;
             gap: var(--spacing-2);
             padding: var(--spacing-3);
-            background: #f8fafc;
+            background: #ffffff;
             border-radius: 12px;
-            border-left: 3px solid var(--primary);
+            box-shadow: var(--shadow-neo);
         }
         
         .feature svg {
             width: 24px;
             height: 24px;
             flex-shrink: 0;
-            stroke: var(--primary);
+            stroke: #94a3b8;
         }
         
         .feature strong {
@@ -298,19 +300,19 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         
         .quick-links a {
             padding: 0.7rem 1.5rem;
-            background: var(--primary);
-            color: white;
-            border-radius: 8px;
+            background: #ffffff;
+            color: var(--on-surface);
+            border-radius: 12px;
             text-decoration: none;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 13px;
             transition: all 0.2s ease;
-            border: none;
+            border: 1px solid #eaeef3;
             cursor: pointer;
+            box-shadow: var(--shadow-neo);
         }
         
         .quick-links a:hover {
-            background: var(--primary-dark);
             transform: translateY(-2px);
         }
         
@@ -326,6 +328,9 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         h4 { font-size: 1.1rem; line-height: 1.4; }
         h5 { font-size: 0.95rem; line-height: 1.5; }
         h6 { font-size: 0.9rem; line-height: 1.5; }
+        header .hamburger {
+            display: none;
+        }
         
         /* Responsive */
         @media (max-width: 1024px) {
@@ -363,6 +368,8 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
             .welcome h1 {
                 font-size: 1.8rem;
             }
+            header .profile { display: none; }
+            header .brand img.brand-logo { height: 40px; }
         }
         
         @media (max-width: 480px) {
@@ -386,6 +393,7 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
                 width: 100%;
                 text-align: center;
             }
+            header .brand img.brand-logo { height: 28px; }
         }
     </style>
 </head>
@@ -394,7 +402,10 @@ $page = isset($_GET['page']) ? preg_replace('/[^a-z0-9\-\_]/i', '', $_GET['page'
         <button class="hamburger" id="hamburger" aria-label="Menu">
             <span class="material-icons">menu</span>
         </button>
-        <div class="brand">KodPwomo Admin</div>
+        <div class="brand">
+            <img src="../image/logo/logo1.1.jpg" alt="KodPwomo" class="brand-logo">
+        
+        </div>
         <div class="profile" aria-label="Profil administrateur">
             <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:white;font-weight:500">A</div>
             <div class="name"><?php echo safe('Admin'); ?></div>

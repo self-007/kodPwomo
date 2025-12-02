@@ -1,5 +1,5 @@
 <script>
-const USERS_API_URL = '/backend/users/adm';
+const USERS_API_URL = '../backend/users/adm';
 function loadUsersData(cb) {
 	fetch(USERS_API_URL, {credentials:'same-origin'})
 		.then(r=>r.json())
@@ -48,30 +48,188 @@ function loadUsersData(cb) {
 <div id="wm-toast" class="wm-toast" style="display:none"></div>
 
 <style>
-.wm-users-module{font-family:'Inter', 'Poppins', 'Roboto', Arial, sans-serif;max-width:1100px;margin:auto;padding:2rem 1.5rem}
-.wm-users-title{font-size:2.2rem;font-weight:800;color:#1a1a2e;margin-bottom:.3rem;letter-spacing:-.5px}
-.wm-users-subtitle{font-size:0.95rem;color:#64748b;margin-bottom:2rem;font-weight:500;text-transform:uppercase;letter-spacing:1px}
++:root{
++    --primary:#f7b642;
++    --primary-dark:#e19627;
++    --accent-green:#27ae60;
++    --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
++    --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
++}
++
++.wm-users-module{
++    font-family:'Inter', 'Poppins', 'Roboto', Arial, sans-serif;
++    max-width:1200px;
++    margin:auto;
++    padding:2rem 1.5rem;
++}
++
++.wm-users-title{
++    font-size:2.2rem;
++    font-weight:800;
++    color:#1a1a2e;
++    margin-bottom:.5rem;
++    letter-spacing:-.5px;
++    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
++    -webkit-background-clip: text;
++    -webkit-text-fill-color: transparent;
++    background-clip: text;
++}
++
++.wm-users-subtitle{
++    font-size:1rem;
++    color:#64748b;
++    margin-bottom:2rem;
++    font-weight:600;
++    text-transform:uppercase;
++    letter-spacing:1px;
++}
 
-.wm-users-table-wrap{overflow-x:auto;background:transparent;border-radius:14px}
-.wm-users-table{width:100%;border-collapse:collapse;background:#fff;border-radius:14px;overflow:hidden;min-width:720px;box-shadow:0 4px 16px rgba(255, 107, 53, 0.08);border:1px solid rgba(255, 107, 53, 0.05)}
-.wm-users-table th{padding:1rem 1.25rem;text-align:left;border-bottom:2px solid rgba(255, 107, 53, 0.1);font-size:0.9rem;font-weight:700;color:#1a1a2e;background:linear-gradient(135deg, rgba(255, 107, 53, 0.02), rgba(0, 212, 255, 0.01));text-transform:uppercase;letter-spacing:0.5px}
-.wm-users-table td{padding:1rem 1.25rem;text-align:left;border-bottom:1px solid #f0f1f3;font-size:0.95rem;color:#2d3748}
-.wm-users-table tbody tr{transition:background .15s ease, box-shadow .15s ease}
-.wm-users-table tbody tr:hover{background:rgba(255, 107, 53, 0.02)}
++.wm-users-table-wrap{
++    overflow-x:auto;
++    background:#ffffff;
++    border-radius:16px;
++    box-shadow: var(--shadow-3d-base);
++    border:1px solid #e2e8f0;
++    transition: all 0.3s ease;
++}
++
++.wm-users-table-wrap:hover{
++    box-shadow: var(--shadow-3d-hover);
++    transform: translateY(-2px);
++}
++
++.wm-users-table{
++    width:100%;
++    border-collapse:collapse;
++    background:#fff;
++    border-radius:16px;
++    overflow:hidden;
++    min-width:720px;
++}
++
++.wm-users-table th{
++    padding:1rem 1.25rem;
++    text-align:left;
++    border-bottom:none;
++    font-size:0.9rem;
++    font-weight:700;
++    color:#ffffff;
++    background:linear-gradient(135deg, var(--primary), var(--primary-dark));
++    text-transform:uppercase;
++    letter-spacing:0.5px;
++    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
++}
++
++.wm-users-table td{
++    padding:1rem 1.25rem;
++    text-align:left;
++    border-bottom:1px solid #f1f5f9;
++    font-size:0.95rem;
++    color:#475569;
++    font-weight:500;
++}
++
++.wm-users-table tbody tr{
++    transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);
++    position: relative;
++}
++
++.wm-users-table tbody tr:hover{
++    background:#f0fdf4 !important;
++    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.15);
++    transform: translateY(-2px) scale(1.005);
++    z-index:1;
++}
 .wm-users-table tr:last-child td{border-bottom:0}
 .wm-users-table__actions{text-align:right;width:1%}
 
 .wm-skeleton{color:transparent;background:linear-gradient(90deg, #f8f9fa 25%, #fff5f0 50%, #f8f9fa 75%);background-size:200% 100%;animation:shimmer 2s infinite}
 @keyframes shimmer{0%{background-position:0%}100%{background-position:200%}}
 
-.wm-badge{display:inline-block;padding:.35em .85em;font-size:0.85em;border-radius:8px;font-weight:700;vertical-align:middle;letter-spacing:0.3px}
-.wm-badge--active{background:linear-gradient(135deg, #1ABC9C, #16A085);color:#fff;box-shadow:0 2px 8px rgba(26, 188, 156, 0.2)}
-.wm-badge--inactive{background:linear-gradient(135deg, #FF6B35, #D84315);color:#fff;box-shadow:0 2px 8px rgba(255, 107, 53, 0.2)}
-.wm-badge--adm{display:inline-block;font-size:0.75em;color:#fff;background:#FF6B35;padding:0.25em 0.6em;border-radius:6px;margin-left:0.5rem;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
++.wm-badge{
++    display:inline-block;
++    padding:.4em .9em;
++    font-size:0.85em;
++    border-radius:10px;
++    font-weight:700;
++    vertical-align:middle;
++    letter-spacing:0.3px;
++    box-shadow: var(--shadow-3d-base);
++    transition: all 0.3s ease;
++}
++
++.wm-badge:hover{
++    box-shadow: var(--shadow-3d-hover);
++    transform: scale(1.05);
++}
++
++.wm-badge--active{
++    background:linear-gradient(135deg, var(--accent-green), #1e7e41);
++    color:#fff;
++}
++
++.wm-badge--inactive{
++    background:linear-gradient(135deg, #ef4444, #dc2626);
++    color:#fff;
++}
++
++.wm-badge--adm{
++    display:inline-block;
++    font-size:0.75em;
++    color:#fff;
++    background:linear-gradient(135deg, var(--primary), var(--primary-dark));
++    padding:0.3em 0.7em;
++    border-radius:8px;
++    margin-left:0.5rem;
++    font-weight:800;
++    text-transform:uppercase;
++    letter-spacing:0.5px;
++    box-shadow: var(--shadow-3d-base);
++}
 
-.wm-btn{font:inherit;padding:.55rem 1rem;border-radius:8px;border:2px solid transparent;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.5rem;transition:all .2s ease;font-weight:600;font-size:0.95rem}
-.wm-btn--ghost{background:transparent;color:#FF6B35;border:2px solid #FF6B35}
-.wm-btn--ghost:hover{background:#FF6B35;color:#fff;box-shadow:0 4px 12px rgba(255, 107, 53, 0.3)}
++.wm-btn{
++    font:inherit;
++    padding:.6rem 1.1rem;
++    border-radius:10px;
++    border:2px solid transparent;
++    cursor:pointer;
++    display:inline-flex;
++    align-items:center;
++    justify-content:center;
++    gap:.5rem;
++    transition:all .3s cubic-bezier(0.4, 0, 0.2, 1);
++    font-weight:600;
++    font-size:0.95rem;
++    box-shadow: var(--shadow-3d-base);
++    position: relative;
++    overflow: hidden;
++}
++
++.wm-btn:before{
++    content:'';
++    position:absolute;
++    inset:0;
++    background:rgba(255,255,255,0.1);
++    transform:translateX(-100%);
++    transition:transform 0.6s ease;
++}
++
++.wm-btn:hover:before{
++    transform:translateX(100%);
++}
++
++.wm-btn--ghost{
++    background:#ffffff;
++    color:var(--primary);
++    border:2px solid var(--primary);
++}
++
++.wm-btn--ghost:hover{
++    background:var(--primary);
++    color:#fff;
++    box-shadow: var(--shadow-3d-hover);
++    transform: translateY(-2px);
++}
 .wm-btn--mini{padding:0.4rem 0.7rem;font-size:0.85em;border-radius:6px;margin-left:0.5rem}
 .wm-btn--blue{background:linear-gradient(135deg, #FF6B35, #D84315);color:#fff;border:none;box-shadow:0 4px 12px rgba(255, 107, 53, 0.25)}
 .wm-btn--blue:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(255, 107, 53, 0.35)}
@@ -103,6 +261,16 @@ function loadUsersData(cb) {
 
 @media (max-width:900px){.wm-users-table{min-width:0}.wm-users-list{display:flex}.wm-users-table-wrap{display:none}.wm-users-module{padding:1.5rem 1rem}}
 @media (max-width:600px){.wm-user-modal-dialog{padding:1.5rem 1rem;border-radius:12px}.wm-users-title{font-size:1.8rem}.wm-users-subtitle{font-size:0.85rem}}
+/* Overrides: neumorphic enhancements */
+.wm-users-table-wrap{background:linear-gradient(135deg,#ffffff 0%,#f6f8fb 100%);position:relative;overflow:hidden}
+.wm-users-table-wrap:hover{transform:translateY(-3px)}
+.wm-users-table th{box-shadow:0 2px 4px rgba(0,0,0,0.08);position:relative}
+.wm-users-table thead tr::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg, rgba(247,182,66,.35), rgba(225,150,39,.2))}
+.wm-users-table tbody tr{transition:all .28s cubic-bezier(0.4,0,0.2,1)}
+.wm-users-table tbody tr:hover{background:linear-gradient(180deg, rgba(240,253,244,0.9), rgba(255,255,255,0.95)) !important;box-shadow:8px 8px 20px rgba(0,0,0,0.08), -8px -8px 20px rgba(255,255,255,0.8);transform:translateY(-2px) scale(1.003)}
+.wm-users-table tbody td:first-child{font-weight:600;color:#1f2937}
+.wm-users-table tbody td{transition:color .18s ease}
+.wm-users-table tbody tr:hover td{color:#0f172a}
 </style>
 
 </script>
@@ -119,8 +287,8 @@ function showToast(msg,type){
 // API pour nommer/révoquer admin
 function setUserRole(id, role){
   let url = '';
-  if(role==='admin') url = `/backend/setAdm/${id}`;
-  else if(role==='client') url = `/backend/setUser/${id}`;
+  if(role==='admin') url = `../backend/setAdm/${id}`;
+  else if(role==='client') url = `../backend/setUser/${id}`;
   else return;
   fetch(url, {method:'PUT'})
     .then(r=>r.json())

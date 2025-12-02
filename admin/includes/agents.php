@@ -10,16 +10,22 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #FF8C42;
-            --primary-dark: #E67E2A;
-            --secondary: #27AE60;
-            --secondary-dark: #1E8449;
+            --primary: #f7b642;
+            --primary-dark: #e19627;
+            --secondary: #27ae60;
+            --secondary-dark: #229954;
             --success: #27AE60;
             --error: #E74C3C;
             --dark: #1a1a2e;
             --gray: #64748b;
             --light: #f8f9fa;
             --white: #ffffff;
+            --dark-gray: #1A1A1A;
+            --medium-gray: #666666;
+            --light-gray: #F5F5F5;
+            --border-color: #E0E0E0;
+            --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+            --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
         }
 
         * { box-sizing: border-box; }
@@ -39,23 +45,31 @@
         }
 
         .am-header {
-            background: var(--secondary);
+            background: var(--white);
             margin: -2rem -1.5rem 2.5rem -1.5rem;
             padding: 2rem 1.5rem;
             border-radius: 0 0 12px 12px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-3d-base);
+            transition: all 0.25s ease;
+        }
+
+        .am-header:hover {
+            box-shadow: var(--shadow-3d-hover);
+            transform: translateY(-2px);
         }
 
         .am-title {
             font-size: 2.2rem;
             font-weight: 800;
-            color: var(--white);
+            color: var(--primary);
             margin: 0 0 0.5rem 0;
             letter-spacing: -0.5px;
         }
 
         .am-subtitle {
             font-size: 0.95rem;
-            color: rgba(255, 255, 255, 0.85);
+            color: var(--gray);
             margin: 0;
             font-weight: 500;
             text-transform: uppercase;
@@ -85,32 +99,41 @@
         .am-btn--primary {
             background: var(--primary);
             color: var(--white);
+            box-shadow: var(--shadow-3d-base);
         }
 
         .am-btn--primary:hover {
             background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: var(--shadow-3d-hover);
         }
 
         .am-btn--secondary {
             background: var(--white);
             color: var(--primary);
             border: 2px solid var(--primary);
+            box-shadow: var(--shadow-3d-base);
         }
 
         .am-btn--secondary:hover {
             background: var(--primary);
             color: var(--white);
+            box-shadow: var(--shadow-3d-hover);
         }
 
         /* Table */
         .am-table-wrap {
             background: var(--white);
             border-radius: 14px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-3d-base);
             border: 1px solid #e0e0e0;
             overflow: hidden;
             margin-bottom: 2rem;
+            transition: all 0.25s ease;
+        }
+
+        .am-table-wrap:hover {
+            box-shadow: var(--shadow-3d-hover);
         }
 
         .am-table {
@@ -182,14 +205,14 @@
             background: var(--white);
             border-radius: 12px;
             padding: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-3d-base);
             border-left: 5px solid var(--primary);
             margin-bottom: 1rem;
             transition: all 0.2s ease;
         }
 
         .am-card:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: var(--shadow-3d-hover);
             transform: translateY(-2px);
         }
 
@@ -237,8 +260,8 @@
             padding: 2.5rem 2rem;
             max-width: 500px;
             width: 95vw;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-            border-top: 5px solid var(--secondary);
+            box-shadow: var(--shadow-3d-hover);
+            border-top: 5px solid var(--primary);
             animation: slideUp 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
             position: relative;
         }
@@ -294,8 +317,8 @@
 
         .am-input:focus {
             outline: none;
-            border-color: var(--secondary);
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
+            border-color: var(--primary);
+            box-shadow: var(--shadow-3d-base);
         }
 
         /* Toast */

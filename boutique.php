@@ -48,32 +48,32 @@
             color: #1a1a2e;
         }
         
-        /* ===== COLOR PALETTE (Hybrid - Optimized for KodPwomo) ===== */
+        /* ===== COLOR PALETTE (Unified with Agent page) ===== */
         :root {
-            --primary: #FF6B35;          /* Warm Orange-Red (Food delivery warmth) */
-            --primary-dark: #D84315;     /* Darker Orange */
-            --primary-light: #FF8C5A;    /* Light Orange */
-            --secondary: #004E89;        /* Deep Blue (Trust & professionalism) */
-            --accent: #00D4FF;           /* Cyan (Modern energy) */
-            --success: #1ABC9C;          /* Turquoise Mint (Fresh & clean) */
-            --success-dark: #16A085;
-            --warning: #F39C12;          /* Amber (Caution) */
-            --error: #E74C3C;            /* Red (Danger/Alert) */
-            --dark-gray: #1a1a2e;        /* Deep Navy */
-            --medium-gray: #64748b;      /* Slate Gray */
-            --light-gray: #f8f9fa;       /* Off White */
-            --gradient-primary: linear-gradient(135deg, #FF6B35 0%, #004E89 100%);
+            --primary: #f7b642;
+            --primary-dark: #e19627;
+            --secondary: #27ae60;
+            --secondary-dark: #229954;
+            --white: #ffffff;
+            --dark-gray: #1A1A1A;
+            --medium-gray: #666666;
+            --light-gray: #F5F5F5;
+            --border-color: #E0E0E0;
+            --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+            --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
         }
         
-        /* ===== HEADER ===== */
+        /* ===== HEADER (Unified + Neumorphism) ===== */
         .header {
-            background: rgba(26, 26, 46, 0.97);
+            background: #ffffff;
             backdrop-filter: blur(10px);
-            padding: 15px 0;
-            box-shadow: 0 2px 20px rgba(255, 107, 53, 0.15);
+            padding: 12px 0;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             position: sticky;
             top: 0;
             z-index: 1000;
+            border-radius: 15px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
         }
         
         .header-content {
@@ -86,14 +86,66 @@
         }
         
         .logo {
-            font-size: 28px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #FF6B35, #00D4FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-decoration: none;
+            display: flex;
+            align-items: center;
+            height: 60px;
         }
+        .logo img {
+            height: 100%;
+            width: auto;
+            max-width: clamp(140px, 25vw, 300px);
+            border-radius: 8px;
+        }
+
+        /* Hamburger menu (header) */
+        .nav { position: relative; }
+        .hamburger-btn {
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.12), -3px -3px 8px rgba(255,255,255,0.85);
+        }
+        .hamburger-btn span {
+            width: 20px;
+            height: 2px;
+            background: #333;
+            margin: 2px 0;
+            border-radius: 2px;
+        }
+        .nav-menu {
+            position: absolute;
+            right: 0;
+            top: 44px;
+            min-width: 200px;
+            max-width: 90vw;
+            max-height: 60vh;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 10px;
+            box-shadow: var(--shadow-3d-base);
+            backdrop-filter: blur(12px);
+            display: none;
+            z-index: 1200;
+        }
+        .nav-menu.show { display: block; }
+        .nav-menu a {
+            display: block;
+            padding: 10px 14px;
+            text-decoration: none;
+            color: #234777;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-menu a:last-child { border-bottom: none; }
+        .nav-menu a:hover { background: #f5f7fb; color: var(--primary); }
         
         .cart-btn {
             background: linear-gradient(135deg, #FF6B35, #D84315);
@@ -138,12 +190,13 @@
         /* ===== UNIVERSITIES SECTION ===== */
         .universities-section {
             text-align: center;
+            color: #234777;
         }
         
         .section-title {
             font-size: 32px;
             font-weight: 700;
-            color: #1f2937;
+            color: #234777;
             margin-bottom: 15px;
         }
         
@@ -159,45 +212,45 @@
         
         .universities-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-top: 20px;
         }
         
         .university-card {
-            background: white;
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.08);
+            background: rgba(255,255,255,0.92);
+            border-radius: 15px;
+            padding: 12px;
+            box-shadow: var(--shadow-3d-base);
             transition: all 0.3s ease;
             cursor: pointer;
-            border: 3px solid transparent;
+            border: 1px solid rgba(255,255,255,0.45);
         }
         
         .university-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 40px rgba(255, 107, 53, 0.15);
-            border-color: #FF6B35;
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-3d-hover);
+            border-color: var(--primary);
         }
         
         .university-image {
             width: 100%;
-            height: 200px;
+            height: 110px;
             object-fit: cover;
-            border-radius: 15px;
-            margin-bottom: 20px;
+            border-radius: 10px;
+            margin-bottom: 10px;
         }
         
         .university-name {
-            font-size: 24px;
+            font-size: 14px;
             font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 10px;
+            color: #234777;
+            margin-bottom: 6px;
         }
         
         .university-location {
             color: #6b7280;
-            font-size: 16px;
+            font-size: 10px;
         }
         
         /* ===== PRODUCTS SECTION ===== */
@@ -240,49 +293,70 @@
         
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
         }
         
         .product-card {
-            background: white;
-            border-radius: 20px;
+            background: rgba(255,255,255,0.92);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.08);
+            box-shadow: var(--shadow-3d-base);
             transition: all 0.3s ease;
             cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.45);
         }
         
         .product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 35px rgba(255, 107, 53, 0.15);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-3d-hover);
+        }
+        @media (max-width: 310px)  {
+            .product-price {
+                font-size: 12px;
+                font-weight: 600;
+                color: red;
+                margin-bottom: 6px;
+            }
+            
+            .product-image {
+                width: 100%;
+                height: 90px;
+                object-fit: cover;
+            }
+
+            .product-name {
+                font-size: 10px;
+                font-weight: 600;
+                color: #234777;
+                margin-bottom: 6px;
+            }
+        
         }
         
         .product-image {
             width: 100%;
-            height: 200px;
+            height: 110px;
             object-fit: cover;
         }
         
         .product-info {
-            padding: 20px;
+            padding: 12px;
         }
         
         .product-name {
-            font-size: 18px;
+            font-size: 12px;
             font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 8px;
+            color: #234777;
+            margin-bottom: 6px;
         }
         
         .product-price {
-            font-size: 24px;
+            font-size: 10px;
             font-weight: 800;
-            background: linear-gradient(135deg, #FF6B35, #00D4FF);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
+            color: var(--primary);
+            margin-bottom: 6px;
+            background-color: #ffebebff;
         }
         
         .product-stock {
@@ -639,11 +713,11 @@
         @media (max-width: 768px) {
             .header-content {
                 padding: 0 15px;
+                gap: 12px;
             }
             
-            .logo {
-                font-size: 24px;
-            }
+            .logo { height: 50px; }
+            .logo img { max-width: clamp(120px, 30vw, 240px); }
             
             .main-container {
                 padding: 20px 15px;
@@ -658,13 +732,13 @@
             }
             
             .universities-grid {
-                grid-template-columns: 1fr;
-                gap: 20px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
             }
             
             .products-grid {
-                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-                gap: 20px;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 14px;
             }
             
             .products-header {
@@ -699,13 +773,17 @@
             }
         }
         
+        @media (max-width: 550px) {
+            .logo { height: 44px; }
+            .logo img { max-width: clamp(100px, 40vw, 200px); }
+        }
         @media (max-width: 480px) {
             .university-card {
-                padding: 20px;
+                padding: 10px;
             }
             
             .product-card {
-                margin-bottom: 15px;
+                margin-bottom: 12px;
             }
             
             .quantity-controls {
@@ -719,6 +797,31 @@
             }
         }
         
+        @media (max-width: 410px) {
+            .header-content .cart-btn:not(.cart-btn-fixed) {
+                display: none !important;
+            }
+            #cartBtn {
+                display: none !important;
+            }
+        }
+        @media (min-width: 410px){
+            .cart-btn-fixed {
+                display: none !important;
+            }
+        }
+        /* Fixed cart button - always hidden by default, shown via JS when needed and screen < 410px */
+        .cart-btn-fixed {
+            display: none;
+            position: fixed;
+            top: 250px;
+            right: 10px;
+            z-index: 15000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+            border-radius: 50px;
+            padding: 12px 18px;
+        }
+        
         /* ===== CATEGORIES BAR ===== */
         .categories-bar {
             display: flex;
@@ -728,20 +831,21 @@
             gap: 10px;
             margin: 20px 0;
             padding: 15px;
-            background: white;
+            background: rgba(255,255,255,0.92);
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-3d-base);
         }
         
         .category-btn {
             background: white;
             color: #64748b;
             border: 2px solid #e2e8f0;
-            padding: 10px 20px;
+            padding: 10px 18px;
             border-radius: 25px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.12), -3px -3px 8px rgba(255,255,255,0.85);
         }
         
         .category-btn:hover {
@@ -751,9 +855,44 @@
         }
         
         .category-btn.active {
-            background: linear-gradient(135deg, #FF6B35, #D84315);
+            background: var(--primary);
             color: white;
-            border-color: #FF6B35;
+            border-color: var(--primary);
+        }
+
+        /* ===== CATEGORIES BURGER (Mobile/Tablet) ===== */
+        .categories-burger { margin: 10px 0; }
+        .burger-btn {
+            background: #fff;
+            color: #234777;
+            border: 1px solid rgba(0,0,0,0.15);
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 3px 3px 8px rgba(0,0,0,0.12), -3px -3px 8px rgba(255,255,255,0.85);
+        }
+        .categories-menu-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.35);
+            display: none;
+            z-index: 2000;
+        }
+        .categories-menu-overlay.show { display: block; }
+        .categories-menu-overlay .menu-content {
+            position: absolute;
+            right: 12px;
+            top: 80px;
+            background: rgba(255,255,255,0.95);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 12px;
+            padding: 10px;
+            min-width: 220px;
+            max-width: 90vw;
+            max-height: 60vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-3d-base);
         }
         
         /* ===== PRODUCT CARD ===== */
@@ -803,13 +942,30 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <a href="index.html" class="logo">kodPwomo</a>
-            
+            <div class="logo"><img src="image/logo/logo1.1.jpg" alt="kodpwomo"></div>
             <!-- Cart Button (Hidden initially) -->
             <button id="cartBtn" class="cart-btn">
-                🛒 Voir votre panier
+                🛒 
                 <span id="cartCount" class="cart-count">0</span>
             </button>
+            <!-- Fixed cart button for small screens -->
+            <button id="cartBtnFixed" class="cart-btn cart-btn-fixed" style="display:none;">
+                🛒
+                <span id="cartCountFixed" class="cart-count">0</span>
+            </button>
+            <nav class="nav">
+                <button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <div class="nav-menu" id="navMenu" role="menu">
+                    <a href="dashboard_user/dashboard.php" role="menuitem">Dashboard</a>
+                    <a href="boutique.php" role="menuitem">Boutique</a>
+                    <a href="agent.php" role="menuitem">Restaurant</a>
+                    <a href="index.php" role="menuitem">Home</a>
+                </div>
+            </nav>
         </div>
     </header>
 
@@ -817,7 +973,7 @@
     <main class="main-container">
         <!-- Universities Section -->
         <section id="universitiesSection" class="universities-section">
-            <h1 class="section-title">🎓 Choisissez votre université</h1>
+            <h1 class="section-title"> Choisissez votre université</h1>
             <p class="section-subtitle">
                 Sélectionnez votre campus pour découvrir les produits disponibles et profiter de la livraison rapide entre étudiants !
             </p>
@@ -843,7 +999,7 @@
             <!-- Menu burger (mobile/tablette) -->
             <div id="categoriesBurger" class="categories-burger" style="display:none;">
                 <button id="openCategoriesMenu" class="burger-btn">☰ Catégories</button>
-                <div id="categoriesMenu" class="categories-menu-overlay" style="display:none;"></div>
+                <div id="categoriesMenu" class="categories-menu-overlay"></div>
             </div>
             <div id="productsGrid" class="products-grid">
                 <!-- Products will be loaded here -->
@@ -941,6 +1097,30 @@
     <div id="alert" class="alert"></div>
 
     <script>
+        // ===== NAV MENU TOGGLE (Header) =====
+        (function(){
+            const btn = document.getElementById('hamburgerBtn');
+            const menu = document.getElementById('navMenu');
+            if (btn && menu) {
+                btn.addEventListener('click', function(){
+                    const isOpen = menu.classList.toggle('show');
+                    btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+                });
+                document.addEventListener('click', function(e){
+                    if (!menu.contains(e.target) && !btn.contains(e.target)) {
+                        menu.classList.remove('show');
+                        btn.setAttribute('aria-expanded','false');
+                    }
+                });
+                document.addEventListener('keydown', function(e){
+                    if (e.key === 'Escape') {
+                        menu.classList.remove('show');
+                        btn.setAttribute('aria-expanded','false');
+                    }
+                });
+            }
+        })();
+
         // ===== GLOBAL VARIABLES =====
         let currentUniversity = null;
         let currentProduct = null;
@@ -954,6 +1134,7 @@
             // Event listeners
             document.getElementById('backBtn').addEventListener('click', backToUniversities);
             document.getElementById('cartBtn').addEventListener('click', openCartModal);
+            document.getElementById('cartBtnFixed').addEventListener('click', openCartModal);
             
             // Close modals on background click
             document.getElementById('productModal').addEventListener('click', function(e) {
@@ -1112,16 +1293,18 @@
                     // Mobile/tablette : menu burger
                     bar.style.display = 'none';
                     burger.style.display = 'block';
-                    menu.innerHTML = '';
+                    menu.innerHTML = '<div class="menu-content"></div>';
+                    const content = menu.querySelector('.menu-content');
+                    content.innerHTML = '';
                     categories.forEach(cat => {
                         const btn = document.createElement('button');
                         btn.className = 'category-btn';
                         btn.textContent = cat.name;
                         btn.onclick = () => {
                             selectCategory(cat);
-                            menu.style.display = 'none';
+                            menu.classList.remove('show');
                         };
-                        menu.appendChild(btn);
+                        content.appendChild(btn);
                     });
                 }
             }
@@ -1129,8 +1312,16 @@
             window.addEventListener('resize', updateCategoriesDisplay);
             // Burger menu toggle
             document.getElementById('openCategoriesMenu').onclick = () => {
-                menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+                if (menu.classList.contains('show')) {
+                    menu.classList.remove('show');
+                } else {
+                    menu.classList.add('show');
+                }
             };
+            // Close overlay on click
+            menu.addEventListener('click', (e) => {
+                if (e.target === menu) menu.classList.remove('show');
+            });
         }
 
         // Sélection d'une catégorie : filtre les produits déjà chargés
@@ -1271,14 +1462,19 @@
         function updateCartDisplay() {
             const cartBtn = document.getElementById('cartBtn');
             const cartCount = document.getElementById('cartCount');
+            const cartBtnFixed = document.getElementById('cartBtnFixed');
+            const cartCountFixed = document.getElementById('cartCountFixed');
             
             const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
             
             if (totalItems > 0) {
                 cartBtn.style.display = 'flex';
+                cartBtnFixed.style.display = 'flex';
                 cartCount.textContent = totalItems;
+                cartCountFixed.textContent = totalItems;
             } else {
                 cartBtn.style.display = 'none';
+                cartBtnFixed.style.display = 'none';
             }
         }
 

@@ -3,11 +3,12 @@
 ?>
 <section aria-labelledby="products-title" class="md-products">
     <style>
-        /* KodPwomo Design System - Unified Green Palette */
+        /* KodPwomo Design System - Unified Neumorphic Palette */
         :root{
-            --local-primary: var(--primary, #27AE60);
+            --local-primary: #f7b642;
+            --local-primary-dark: #e19627;
             --local-secondary: #ffffff;
-            --local-accent: #27AE60;
+            --local-accent: #27ae60;
             --local-success: #27AE60;
             --local-warning: #F39C12;
             --local-danger: #E74C3C;
@@ -17,6 +18,8 @@
             --local-text: #1a1a2e;
             --local-text-muted: #64748b;
             --local-shadow: rgba(39, 174, 96, 0.15);
+            --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+            --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
         }
 
         .md-products{background:#f8fafc;padding:16px;border-radius:16px;min-height:100vh}
@@ -24,18 +27,20 @@
         .md-hero{
             display:flex;align-items:center;justify-content:space-between;gap:20px;
             background:#ffffff;padding:20px 24px;border-radius:16px;
-            box-shadow:0 1px 3px rgba(0,0,0,0.05);
-            border:1px solid #e2e8f0;border-left:4px solid var(--local-primary);
-            margin-bottom:20px
+            box-shadow:var(--shadow-3d-base);
+            border:1px solid #e2e8f0;/*border-left:4px solid var(--local-primary)*/;
+            margin-bottom:20px;transition:all .25s ease;
         }
+        .md-hero:hover{box-shadow:var(--shadow-3d-hover);transform:translateY(-2px);}
         .md-hero .left{display:flex;flex-direction:column;gap:4px}
         .md-hero h2{
-            margin:0;font-weight:700;font-size:1.5rem;color:var(--local-primary);
+            margin:0;font-weight:700;font-size:1.5rem;color: #294e7a;
         }
         .md-hero .subtitle{
             color:var(--local-text-muted);font-size:1rem;font-weight:500;
             background:#f0fdf4;padding:4px 12px;border-radius:20px;
-            display:inline-block;border:1px solid var(--local-primary)
+            display:inline-block;border:1px solid #e2e8f0;
+            box-shadow:0 2px 6px var(--local-shadow);
         }
 
         .md-controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
@@ -43,22 +48,22 @@
             padding:12px 16px;border-radius:12px;
             border:2px solid #e2e8f0;min-width:240px;
             background:#ffffff;color:var(--local-text);
-            transition:all 0.3s ease
+            transition:all 0.3s ease;box-shadow:var(--shadow-3d-base);
         }
-        .md-input:focus{border-color:var(--local-primary);outline:none;box-shadow:0 0 0 3px rgba(39,174,96,0.1)}
+        .md-input:focus{border-color:var(--local-primary);outline:none;box-shadow:var(--shadow-3d-hover)}
         
         .md-btn{
             background:var(--local-primary);color:#fff;padding:12px 18px;border-radius:12px;border:0;
             cursor:pointer;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;
-            box-shadow:0 2px 6px var(--local-shadow);
+            box-shadow:var(--shadow-3d-base);
             transition:all 0.3s ease;position:relative;overflow:hidden
         }
-        .md-btn:hover{transform:translateY(-2px);background:#1e8449;box-shadow:0 4px 12px var(--local-shadow)}
+        .md-btn:hover{transform:translateY(-2px);background:var(--local-primary-dark);box-shadow:var(--shadow-3d-hover)}
         .md-btn:before{content:'';position:absolute;inset:0;background:rgba(255,255,255,0.1);transform:translateX(-100%);transition:transform 0.6s ease}
         .md-btn:hover:before{transform:translateX(100%)}
         
         .md-btn.secondary{
-            background:#ffffff;border:2px solid var(--local-primary);color:var(--local-primary);
+            background:#ffffff;border:2px solid #e2e8f0;color:var(--local-primary);
             box-shadow:0 1px 3px rgba(0,0,0,0.05)
         }
         .md-btn.secondary:hover{background:var(--local-primary);color:#ffffff}
@@ -67,11 +72,12 @@
 
         .md-table{
             background:#ffffff;border-radius:16px;padding:20px;
-            border:1px solid #e2e8f0;overflow:auto;border-left:4px solid var(--local-primary);
-            box-shadow:0 1px 3px rgba(0,0,0,0.05)
+            border:1px solid #e2e8f0;overflow:auto;/*border-left:4px solid var(--local-primary);*/
+            box-shadow:var(--shadow-3d-base);transition:all .25s ease;
         }
+        .md-table:hover{box-shadow:var(--shadow-3d-hover);}
         table.md{width:100%;border-collapse:collapse}
-        table.md th, table.md td{padding:16px 12px;text-align:left;border-bottom:1px solid #f1f5f9}
+        table.md th, table.md td{padding:10px 8px;text-align:left;border-bottom:1px solid #f1f5f9;font-size:0.9rem}
         table.md thead{background:var(--local-primary)}
         table.md thead th{
             font-weight:700;color:#ffffff;text-transform:uppercase;letter-spacing:0.5px;
@@ -83,13 +89,19 @@
         }
         table.md tbody td{color:var(--local-text);font-weight:500}
 
+        /* Small square thumbnail for product image */
+        .md-thumb{width:40px;height:40px;border-radius:8px;object-fit:cover;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,0.06)}
+        .md-img-cell{display:flex;align-items:center;gap:8px}
+        .md-name{max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
         .chip{
             display:inline-flex;align-items:center;gap:6px;
             padding:8px 14px;border-radius:20px;font-weight:700;
             text-transform:uppercase;letter-spacing:0.3px;font-size:0.85rem;
         }
         .chip.success{
-            background:#f0fdf4;color:var(--local-primary);border:1px solid var(--local-primary)
+            background:#f0fdf4;color:var(--local-primary);border:1px solid #e2e8f0;
+            box-shadow: 0 2px 6px var(--local-shadow);
         }
         .chip.success:before{content:'✅';margin-right:4px}
         .chip.warn{
@@ -100,17 +112,18 @@
         .md-card{
             background:#ffffff;border-radius:16px;padding:16px;
             border:1px solid #e2e8f0;display:flex;gap:12px;align-items:center;
-            box-shadow:0 1px 3px rgba(0,0,0,0.05);
+            box-shadow:var(--shadow-3d-base);
             transition:all 0.3s ease;position:relative;overflow:hidden;
-            border-left:4px solid var(--local-primary);
+           /* border-left:4px solid var(--local-primary); */
         }
-        .md-card:hover{transform:translateY(-4px);box-shadow:0 4px 12px rgba(0,0,0,0.08)}
+        .md-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-3d-hover)}
         .md-card .meta{flex:1}
         .md-card .meta .title{font-weight:700;color:var(--local-text);font-size:1.1rem}
         .md-card .meta .sub{
             color:var(--local-text-muted);font-size:1rem;
             background:#f0fdf4;padding:4px 8px;border-radius:12px;
-            display:inline-block;margin-top:4px;border:1px solid var(--local-primary)
+            display:inline-block;margin-top:4px;border:1px solid #e2e8f0;
+            box-shadow:0 2px 6px var(--local-shadow);
         }
 
         .md-card .avatar{
@@ -118,12 +131,12 @@
             background:var(--local-primary);
             display:flex;align-items:center;justify-content:center;
             font-weight:900;color:#fff;font-size:1.2rem;
-            box-shadow:0 2px 6px var(--local-shadow)
+            box-shadow:0 2px 6px var(--local-shadow);
         }
 
         .pagination{display:flex;gap:10px;align-items:center;margin-top:16px;justify-content:center}
         .pagination button{
-            padding:10px 14px;border-radius:12px;border:2px solid var(--local-primary);
+            padding:10px 14px;border-radius:12px;border:2px solid #e2e8f0;
             background:#ffffff;color:var(--local-primary);cursor:pointer;font-weight:600;
             transition:all 0.3s ease
         }
@@ -174,16 +187,17 @@
                 <thead>
                     <tr>
                         <th style="width:70px">ID</th>
+                        <th style="width:60px">Image</th>
                         <th>Nom</th>
                         <th>Catégorie</th>
-                        <th style="width:110px">Prix</th>
-                        <th style="width:100px">Commandes</th>
-                        <th style="width:120px">Revenu</th>
-                        <th style="width:120px">Disponible</th>
-                        <th style="width:140px">Actions</th>
+                        <th style="width:100px">Prix</th>
+                        <th style="width:90px">Cmds</th>
+                        <th style="width:110px">Revenu</th>
+                        <th style="width:110px">Disp.</th>
+                        <th style="width:130px">Actions</th>
                     </tr>
                 </thead>
-                <tbody id="productsBody"><tr><td colspan="8" class="muted">Chargement...</td></tr></tbody>
+                <tbody id="productsBody"><tr><td colspan="9" class="muted">Chargement...</td></tr></tbody>
             </table>
             <div id="productsPagination" class="pagination" aria-hidden="true"></div>
         </div>
@@ -201,7 +215,7 @@
     <script>
     (function(){
         const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-        const base = `../backend/products/adm`;
+        const base = `../backend/`;
         let lastData = null;
 
         function escapeHtml(s){ return s===null||s===undefined? '': String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -218,8 +232,8 @@
 
         async function fetchProducts(page=null, search=''){
             let url;
-            if(page){ url = `${base}/${univ}/page/${page}` + (search? `/${encodeURIComponent(search)}` : ''); }
-            else { url = `${base}/${univ}` + (search? `/search/${encodeURIComponent(search)}` : ''); }
+            if(page){ url = `${base}products/adm/${univ}/page/${page}` + (search? `/${encodeURIComponent(search)}` : ''); }
+            else { url = `${base}products/adm/${univ}` + (search? `/search/${encodeURIComponent(search)}` : ''); }
             try{
                 const res = await fetch(url, { headers: { 'Accept': 'application/json' }});
                 const txt = await res.text(); if(!txt) throw new Error('empty response');
@@ -236,16 +250,30 @@
         function render(list, pagination){
             const body = document.getElementById('productsBody'); body.innerHTML = '';
             const cardsRoot = document.getElementById('productsCardsList'); cardsRoot.innerHTML = '';
-            if(!list || !list.length){ body.innerHTML = `<tr><td colspan="8" class="muted">Aucun produit</td></tr>`; renderPagination(null); renderPaginationMobile(null); return }
+            if(!list || !list.length){ body.innerHTML = `<tr><td colspan="9" class="muted">Aucun produit</td></tr>`; renderPagination(null); renderPaginationMobile(null); return }
 
             // Table rows
             for(const p of list){
                 const tr = document.createElement('tr');
                 const avail = Number(p.is_available) ? true : false;
                 const availClass = avail ? 'chip success' : 'chip warn';
+                const pic = p.picture || p.image_url || p.product_picture || '';
+                const imgSrc = (()=>{
+                    if(!pic) return '';
+                    const s = String(pic);
+                    if(/^https?:\/\//i.test(s)) return s;
+                    if(/^image\//i.test(s)) return `../${s}`;
+                    if(/^\.{0,2}\//.test(s)) return s;
+                    return `../${s}`;
+                })();
                 tr.innerHTML = `
                     <td>${escapeHtml(p.id)}</td>
-                    <td>${escapeHtml(p.name)}</td>
+                    <td>
+                        <div class="md-img-cell">
+                            ${imgSrc ? `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name||'')}" class="md-thumb" loading="lazy">` : ''}
+                        </div>
+                    </td>
+                    <td class="md-name" title="${escapeHtml(p.name||'')}">${escapeHtml(p.name)}</td>
                     <td>${escapeHtml(p.category_name||'')}</td>
                     <td>${fmtMoney(p.prices||p.price)}</td>
                     <td>${fmtNum(p.total_orders||0)}</td>
@@ -262,8 +290,9 @@
 
                 // Mobile card
                 const card = document.createElement('div'); card.className='md-card';
+                const cardPic = imgSrc ? `<img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(p.name||'')}" style="width:100%;height:100%;object-fit:cover;border-radius:12px" loading="lazy">` : escapeHtml(String(p.id));
                 card.innerHTML = `
-                    <div class="avatar">${escapeHtml(String(p.id))}</div>
+                    <div class="avatar">${cardPic}</div>
                     <div class="meta">
                         <div class="title">${escapeHtml(p.name)}</div>
                         <div class="sub">${escapeHtml(p.category_name||'')} — ${fmtMoney(p.prices||p.price)}</div>
@@ -565,7 +594,7 @@
                         const formData = new FormData();
                         formData.append('image', imageFile);
                         // Utiliser la bonne route backend pour update image produit
-                        await fetch(`../backend/products/image-update/adm/${productData.id}`, {
+                        await fetch(`${base}products/image-update/adm/${productData.id}`, {
                             method: 'POST',
                             body: formData
                         });

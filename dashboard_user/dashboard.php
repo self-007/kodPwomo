@@ -1,1708 +1,983 @@
+<?php
+// dashboard.php - KodPwomo User Dashboard (Vanilla PHP/HTML/CSS/JS, no external deps except Google Fonts)
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Suivi de Commandes</title>
-    
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>KodPwomo - Dashboard Utilisateur</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* ===== COLOR PALETTE ===== */
-        :root {
-            --primary-green: #27ae60;
-            --primary-green-light: #2ecc71;
-            --primary-green-dark: #229954;
-            --white: #ffffff;
-            --orange: #f39c12;
-            --orange-light: #f5b041;
-            --orange-dark: #e67e22;
-            --light-gray: #f8f9fa;
-            --medium-gray: #ecf0f1;
-            --dark-gray: #34495e;
-            --text-dark: #2c3e50;
-            --text-light: #7f8c8d;
-            --border-color: #e0e0e0;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--light-gray);
-            color: var(--text-dark);
-            line-height: 1.6;
-        }
-
-        /* ===== LAYOUT ===== */
-        .container {
-            display: flex;
-            min-height: 100vh;
-            background-color: var(--light-gray);
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            width: 260px;
-            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-green-dark) 100%);
-            color: var(--white);
-            padding: 20px 0;
-            position: fixed;
-            height: 100vh;
-            left: 0;
-            top: 0;
-            overflow-y: auto;
-            z-index: 1000;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar-header {
-            padding: 20px 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .sidebar-logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--white);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-        }
-
-        .nav-item {
-            margin: 0;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 20px;
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            background-color: rgba(255, 255, 255, 0.15);
-            color: var(--white);
-            padding-left: 24px;
-            border-right: 4px solid var(--orange);
-        }
-
-        .nav-link i {
-            width: 20px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        /* ===== MAIN CONTENT ===== */
-        .main {
-            margin-left: 260px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* ===== HEADER ===== */
-        .header {
-            background-color: var(--white);
-            padding: 16px 30px;
-            box-shadow: var(--shadow);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-left {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--primary-green);
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--orange) 0%, var(--primary-green) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--white);
-            font-weight: 700;
-            font-size: 18px;
-            box-shadow: var(--shadow);
-        }
-
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .user-name {
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 14px;
-        }
-
-        .user-status {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background-color: var(--white);
-            border-radius: 10px;
-            box-shadow: var(--shadow-hover);
-            min-width: 200px;
-            z-index: 1001;
-            overflow: hidden;
-            display: none;
-            margin-top: 10px;
-        }
-
-        .dropdown-menu.show {
-            display: block;
-        }
-
-        .dropdown-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 16px;
-            color: var(--text-dark);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 14px;
-            cursor: pointer;
-            border: none;
-            background: none;
-            width: 100%;
-            text-align: left;
-        }
-
-        .dropdown-item:hover {
-            background-color: var(--light-gray);
-            color: var(--primary-green);
-            padding-left: 20px;
-        }
-
-        .dropdown-item.logout {
-            color: #e74c3c;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .dropdown-item.logout:hover {
-            background-color: rgba(231, 76, 60, 0.1);
-        }
-
-        /* ===== PAGE CONTENT ===== */
-        .page-content {
-            flex: 1;
-            padding: 30px;
-        }
-
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-        }
-
-        .page-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-dark);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .page-title i {
-            color: var(--primary-green);
-            font-size: 32px;
-        }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ===== SECTION: HOME ===== */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background-color: var(--white);
-            padding: 24px;
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border-left: 4px solid var(--primary-green);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .stat-icon {
-            font-size: 28px;
-            color: var(--primary-green);
-            margin-bottom: 12px;
-        }
-
-        .stat-number {
-            font-size: 28px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 4px;
-        }
-
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        /* ===== SECTION: ORDERS ===== */
-        .orders-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .order-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            border-top: 4px solid var(--primary-green);
-        }
-
-        .order-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 16px;
-        }
-
-        .order-number {
-            font-weight: 700;
-            color: var(--text-dark);
-            font-size: 16px;
-        }
-
-        .order-date {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-
-        .order-status {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .status-preparation {
-            background-color: #fff3cd;
-            color: #856404;
-        }
-
-        .status-in-transit {
-            background-color: #cfe2ff;
-            color: #084298;
-        }
-
-        .status-delivered {
-            background-color: #d1e7dd;
-            color: #0f5132;
-        }
-
-        .status-cancelled {
-            background-color: #f8d7da;
-            color: #842029;
-        }
-
-        .order-details {
-            margin: 16px 0;
-            padding: 12px 0;
-            border-top: 1px solid var(--border-color);
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .order-detail-item {
-            display: flex;
-            justify-content: space-between;
-            font-size: 13px;
-            margin-bottom: 8px;
-            color: var(--text-dark);
-        }
-
-        .order-detail-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .order-detail-label {
-            color: var(--text-light);
-        }
-
-        .order-amount {
-            font-weight: 700;
-            color: var(--primary-green);
-            font-size: 18px;
-            margin-top: 12px;
-        }
-
-        .order-actions {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 16px;
-        }
-
-        .btn {
-            padding: 10px 16px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-primary {
-            background-color: var(--orange);
-            color: var(--white);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--orange-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
-        }
-
-        .btn-secondary {
-            background-color: var(--medium-gray);
-            color: var(--text-dark);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--primary-green-light);
-            color: var(--white);
-            transform: translateY(-2px);
-        }
-
-        /* ===== SECTION: PROFILE ===== */
-        .profile-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 30px;
-        }
-
-        .profile-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: var(--shadow);
-        }
-
-        .profile-section-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .profile-section-title i {
-            color: var(--primary-green);
-            font-size: 18px;
-        }
-
-        .profile-field {
-            margin-bottom: 18px;
-        }
-
-        .profile-field:last-child {
-            margin-bottom: 0;
-        }
-
-        .field-label {
-            font-size: 12px;
-            color: var(--text-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-            display: block;
-            font-weight: 600;
-        }
-
-        .field-value {
-            font-size: 14px;
-            color: var(--text-dark);
-            padding: 10px 12px;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .profile-actions {
-            display: flex;
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .btn-edit {
-            flex: 1;
-            background-color: var(--primary-green);
-            color: var(--white);
-            padding: 12px 16px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .btn-edit:hover {
-            background-color: var(--primary-green-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-        }
-
-        .address-item {
-            padding: 12px;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-        }
-
-        .address-text {
-            font-size: 13px;
-            color: var(--text-dark);
-        }
-
-        .address-type {
-            font-size: 11px;
-            background-color: var(--primary-green);
-            color: var(--white);
-            padding: 4px 8px;
-            border-radius: 4px;
-            margin-bottom: 4px;
-            display: inline-block;
-            font-weight: 600;
-        }
-
-        /* ===== SECTION: REVIEWS ===== */
-        .reviews-container {
-            max-width: 600px;
-        }
-
-        .review-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 20px;
-            box-shadow: var(--shadow);
-            margin-bottom: 20px;
-            border-left: 4px solid var(--primary-green);
-            transition: all 0.3s ease;
-        }
-
-        .review-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .review-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .review-restaurant {
-            font-weight: 700;
-            color: var(--text-dark);
-            font-size: 15px;
-        }
-
-        .review-date {
-            font-size: 12px;
-            color: var(--text-light);
-        }
-
-        .review-rating {
-            display: flex;
-            gap: 4px;
-            margin-bottom: 12px;
-        }
-
-        .star {
-            color: var(--orange);
-            font-size: 14px;
-        }
-
-        .star.empty {
-            color: var(--border-color);
-        }
-
-        .review-comment {
-            font-size: 13px;
-            color: var(--text-dark);
-            line-height: 1.6;
-            font-style: italic;
-        }
-
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: var(--text-light);
-        }
-
-        .empty-state-icon {
-            font-size: 48px;
-            margin-bottom: 16px;
-            opacity: 0.5;
-        }
-
-        .empty-state-text {
-            font-size: 14px;
-        }
-
-        /* ===== SECTION: SUPPORT ===== */
-        .support-container {
-            max-width: 600px;
-        }
-
-        .support-card {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group:last-child {
-            margin-bottom: 0;
-        }
-
-        .form-label {
-            display: block;
-            font-weight: 600;
-            font-size: 13px;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .form-input,
-        .form-textarea {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
-            color: var(--text-dark);
-            transition: all 0.3s ease;
-        }
-
-        .form-input:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary-green);
-            box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 150px;
-        }
-
-        .btn-submit {
-            background-color: var(--primary-green);
-            color: var(--white);
-            padding: 12px 24px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-submit:hover {
-            background-color: var(--primary-green-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
-        }
-
-        /* ===== MODAL ===== */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal.show {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            border-radius: 12px;
-            padding: 30px;
-            max-width: 600px;
-            width: 90%;
-            max-height: 90vh;
-            overflow-y: auto;
-            box-shadow: var(--shadow-hover);
-            animation: slideUp 0.3s ease;
-        }
-
-        @keyframes slideUp {
-            from {
-                transform: translateY(50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid var(--border-color);
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-dark);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--text-light);
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .modal-close:hover {
-            color: var(--text-dark);
-            transform: rotate(90deg);
-        }
-
-        .modal-body {
-            margin-bottom: 24px;
-        }
-
-        .order-detail {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 14px;
-        }
-
-        .order-detail:last-child {
-            border-bottom: none;
-        }
-
-        .order-detail-label {
-            color: var(--text-light);
-            font-weight: 500;
-        }
-
-        .order-detail-value {
-            color: var(--text-dark);
-            font-weight: 600;
-        }
-
-        .product-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px;
-            background-color: var(--light-gray);
-            border-radius: 8px;
-            margin-bottom: 10px;
-            font-size: 13px;
-        }
-
-        .product-name {
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-
-        .product-qty {
-            color: var(--text-light);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .orders-container {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            }
-
-            .profile-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 0;
-                transition: width 0.3s ease;
-            }
-
-            .sidebar.show {
-                width: 260px;
-            }
-
-            .main {
-                margin-left: 0;
-            }
-
-            .header {
-                padding: 12px 20px;
-            }
-
-            .page-content {
-                padding: 20px;
-            }
-
-            .page-title {
-                font-size: 22px;
-            }
-
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
-            }
-
-            .orders-container {
-                grid-template-columns: 1fr;
-            }
-
-            .order-actions {
-                grid-template-columns: 1fr;
-            }
-
-            .btn {
-                font-size: 12px;
-                padding: 8px 12px;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 20px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .sidebar {
-                width: 0;
-            }
-
-            .header-right {
-                gap: 10px;
-            }
-
-            .user-info {
-                display: none;
-            }
-
-            .page-content {
-                padding: 15px;
-            }
-
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-
-            .page-title {
-                font-size: 18px;
-            }
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 12px;
-            }
-
-            .stat-card {
-                padding: 16px;
-            }
-
-            .modal-content {
-                width: 95%;
-                padding: 16px;
-            }
+        :root{
+            --white:#ffffff;
+            --bg:#f9fafb;
+            --text:#01295b;;
+            --muted:#6b7280;
+            --green:#10b981;
+            --green-dark:#059669;
+            --indigo:#6366f1;
+            --shadow-sm:0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md:0 4px 16px rgba(0,0,0,0.06);
+            --shadow-lg:0 8px 32px rgba(0,0,0,0.10);
+            --shadow-green:0 4px 12px rgba(16,185,129,0.30);
+            --radius-sm:12px;
+            --radius-md:16px;
+            --radius-lg:20px;
+            --h-header:70px;
+            --sidebar-w:260px;
+            --hover-bg:#f0fdf4;
+            --duration:0.3s;
+            --ease:ease;
+        }
+        *{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+            margin:0;
+            font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+            color:var(--text);
+            background:var(--bg);
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+        }
+        a{color:inherit;text-decoration:none}
+        button{font-family:inherit}
+        img{display:block;max-width:100%}
+        /* Header */
+        header.app-header{
+            position:fixed; top:0; left:0; right:0; height:var(--h-header);
+            background:var(--white);
+            box-shadow:var(--shadow-sm);
+            z-index:1000;
+            display:flex; align-items:center; justify-content:space-between;
+            padding:0 16px;
+        }
+        .header-left{
+            display:flex; align-items:center; gap:12px;
+        }
+        .logo{
+            font-weight:700; letter-spacing:.2px;
+            background:linear-gradient(135deg,var(--green),var(--green-dark));
+            -webkit-background-clip:text; background-clip:text;
+            color:transparent;
+            font-size:20px;
+        }
+        .logo img{
+            width:27%; height:auto; border-radius:8px; object-fit:cover;
+        }
+        @media (max-width:600px){
+            .logo img{width:45%;}
+        }
+        @media (max-width:350px){
+            .logo img{width:60%;}
+        }
+        .header-center{
+            display:flex; align-items:center; justify-content:center; flex:1;
+        }
+        .burger{
+            display:flex; flex-direction:column; gap:5px; width:36px; height:32px;
+            align-items:center; justify-content:center; cursor:pointer;
+            transition:transform var(--duration) var(--ease);
+        }
+        .burger span{
+            display:block; width:22px; height:2px; background:var(--text);
+            border-radius:2px; transition:transform var(--duration) var(--ease),opacity var(--duration) var(--ease);
+        }
+        .burger.active{transform:rotate(180deg)}
+        .burger.active span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+        .burger.active span:nth-child(2){opacity:0}
+        .burger.active span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+        @media(min-width:600px){
+            .header-center .burger{display:none}
+        }
+        .header-right{
+            display:flex; align-items:center; gap:12px;
+        }
+        .user-menu{
+            position:relative; display:flex; align-items:center; gap:10px; cursor:pointer;
+            padding:6px 10px; border-radius:999px;
+            transition:background var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+        }
+        .user-menu:hover{background:#f3f4f6; box-shadow:var(--shadow-sm)}
+        .avatar{
+            width:34px; height:34px; border-radius:50%;
+            background:linear-gradient(135deg,#34d399,#06b6d4);
+            box-shadow:var(--shadow-sm);
+            flex:0 0 auto;
+        }
+        .user-name{font-size:14px; color:var(--text); font-weight:500}
+        .user-dropdown{
+            position:absolute; top:calc(100% + 8px); right:0; min-width:200px;
+            background:var(--white); border-radius:12px; box-shadow:var(--shadow-lg);
+            padding:8px; display:none; z-index:1200;
+        }
+        .user-dropdown.open{display:block}
+        .user-dropdown a{
+            display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:10px; color:var(--text); font-size:14px;
+            transition:background var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+        }
+        .user-dropdown a:hover{background:var(--hover-bg); box-shadow:var(--shadow-sm)}
+        /* Layout */
+        .app-body{display:block}
+        aside.sidebar{
+            position:fixed; top:var(--h-header); left:0;
+            width:var(--sidebar-w); height:calc(100vh - var(--h-header));
+            background:var(--white);
+            box-shadow:2px 0 12px rgba(0,0,0,0.04);
+            overflow-y:auto; z-index:999;
+            transform:translateX(-100%); transition:transform var(--duration) var(--ease);
+        }
+        aside.sidebar.open{transform:translateX(0)}
+        @media(min-width:600px){
+            aside.sidebar{transform:none}
+        }
+        .sidebar .nav{
+            display:flex; flex-direction:column; gap:8px; padding:16px;
+        }
+        .nav-link{
+            display:flex; align-items:center; gap:12px; padding:16px 24px; border-radius:12px; color: #01295b; font-weight:700; font-size:14px;
+            transition:background var(--duration) var(--ease), box-shadow var(--duration) var(--ease), transform var(--duration) var(--ease), color var(--duration) var(--ease);
+            will-change:transform;
+        }
+        .nav-link a{
+            color: #01295b;
+        }
+        .nav-link:hover{background:var(--hover-bg); box-shadow:0 2px 8px rgba(16,185,129,0.1)}
+        .nav-link.active{
+            background:linear-gradient(135deg,var(--green),var(--green-dark));
+            color:#fff;
+            box-shadow:0 4px 12px rgba(16,185,129,0.3);
+        }
+        
+        h2, h3{
+            color:#01295b;
+        }
+
+        .nav-link svg{width:20px; height:20px; flex:0 0 20px}
+        /* Overlay (mobile sidebar) */
+        .overlay{
+            position:fixed; inset:0; background:rgba(0,0,0,0.5);
+            z-index:998; opacity:0; pointer-events:none; transition:opacity var(--duration) var(--ease);
+        }
+        .overlay.show{opacity:1; pointer-events:auto}
+        /* Content */
+        main.content{
+            margin-top:var(--h-header);
+            padding:16px;
+            min-height:calc(100vh - var(--h-header));
+            background:var(--bg);
+        }
+        @media(min-width:600px){
+            main.content{margin-left:var(--sidebar-w); width:calc(100% - var(--sidebar-w)); padding:32px}
+        }
+        section[data-section]{display:none}
+        section[data-section].active{display:block}
+        /* Cards + grids */
+        .grid-stats{
+            display:grid; grid-template-columns:1fr; gap:16px;
+        }
+        @media(min-width:600px){ .grid-stats{grid-template-columns:repeat(2,1fr)} }
+        @media(min-width:1024px){ .grid-stats{grid-template-columns:repeat(4,1fr)} }
+        .card{
+            background:var(--white); border-radius:16px; box-shadow:var(--shadow-md);
+            padding:24px; transition:transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease);
+            will-change:transform;
+        }
+        .card:hover{transform:translateY(-4px); box-shadow:var(--shadow-lg)}
+        .card-title{font-size:18px; font-weight:600; margin:0 0 6px}
+        .card-sub{font-size:14px; color:var(--muted); margin:0}
+        .stat-value{font-size:28px; font-weight:700; margin-top:8px}
+        .stat-icon{
+            width:42px; height:42px; border-radius:12px; display:grid; place-items:center; margin-bottom:12px;
+        }
+        .stat-icon.green{background:linear-gradient(135deg,#d1fae5,#a7f3d0)}
+        .stat-icon.indigo{background:linear-gradient(135deg,#e0e7ff,#c7d2fe)}
+        .stat-icon.orange{background:linear-gradient(135deg,#ffedd5,#fed7aa)}
+        .stat-icon.blue{background:linear-gradient(135deg,#dbeafe,#bfdbfe)}
+        /* Orders */
+        .grid-orders{
+            display:grid; grid-template-columns:1fr; gap:16px;
+        }
+            /* Sidebar nav redesign */
+            .nav{display:flex; flex-direction:column; padding:8px}
+            .nav-link{display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:8px; color:var(--text); text-decoration:none}
+            .nav-link svg{width:18px; height:18px}
+            .nav-link:hover{background:#f3f4f6}
+            .nav-link.active{background: #fea500; color:#01295b; box-shadow:inset 0 0 0 2px #fed7aa}
+            .nav-link.active svg{stroke:#f59e0b}
+        @media(min-width:600px){ .grid-orders{grid-template-columns:repeat(2,1fr)} }
+        @media(min-width:1024px){ .grid-orders{grid-template-columns:repeat(3,1fr)} }
+        .order-card{position:relative; padding-top:8px}
+        .order-card::before{content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:16px 16px 0 0; background: white;}
+        .order-card .order-header{
+            display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:6px; gap:12px;
+        }
+        .order-card .order-header strong{font-size:14px; font-weight:700; color:var(--text)}
+        /* First section divider (header + date) */
+        .order-card .order-date{font-size:12px; color:var(--muted); margin:0 0 8px; padding-bottom:8px; border-bottom:1px solid #e5e7eb}
+        /* Second section divider (info) */
+        .order-info{display:grid; grid-template-columns:auto 1fr; gap:6px 16px; padding:10px 0; border-bottom:1px solid #e5e7eb}
+        .order-info .label{color:var(--muted); font-size:12px; white-space:nowrap}
+        .order-info .value{font-weight:600; font-size:13px; text-align:right}
+        .order-price{font-size:18px; font-weight:700; color:var(--green); margin:10px 0 12px}
+        .badge{
+            font-size:10px; padding:5px 10px; border-radius:6px; font-weight:700; text-transform:uppercase; letter-spacing:0.3px;
+        }
+        .badge.attente{background:#fef9c3; color:#a16207}
+        .badge.en-route{background:#dbeafe; color:#1e40af}
+        .badge.livree{background:#d1fae5; color:#047857}
+        .badge.annulee{background:#fee2e2; color:#b91c1c}
+        .order-footer{display:flex; gap:10px; flex-wrap:wrap}
+        .thumb{
+            width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#e5e7eb,#d1d5db);
+            box-shadow:var(--shadow-sm);
+        }
+        .order-footer{
+            display:flex; align-items:center; justify-content:space-between; gap:12px
+        }
+        .btn{
+            appearance:none; border:0; cursor:pointer; border-radius:8px; padding:10px 16px; font-weight:600; font-size:13px;
+            transition:transform var(--duration) var(--ease), box-shadow var(--duration) var(--ease), background var(--duration) var(--ease), opacity var(--duration) var(--ease);
+            display:inline-flex; align-items:center; justify-content:center; gap:6px;
+        }
+        .btn:active{transform:translateY(1px)}
+        .btn-primary{
+            background:#f59e0b; color:#fff; box-shadow:0 2px 8px rgba(245,158,11,0.3);
+        }
+        .btn-primary:hover{box-shadow:0 4px 16px rgba(245,158,11,0.4)}
+        .btn-outline{
+            background:#fff; box-shadow:var(--shadow-sm); color:var(--text); border:1px solid #e5e7eb;
+        }
+        .btn-danger{background:#fff; color:#374151; border:1px solid #d1d5db; box-shadow:var(--shadow-sm)}
+        .btn-danger:hover{background:#f9fafb; box-shadow:0 4px 12px rgba(0,0,0,0.1)}
+        /* Profile */
+        .grid-2{
+            display:grid; grid-template-columns:1fr; gap:16px;
+        }
+        @media(min-width:600px){ .grid-2{grid-template-columns:repeat(2,1fr)} }
+        .form-row{display:grid; grid-template-columns:1fr; gap:12px; margin-bottom:12px}
+        @media(min-width:600px){ .form-row{grid-template-columns:1fr 1fr} }
+        label{font-size:13px; color:var(--muted); margin-bottom:6px; display:block}
+        .input, .textarea, .select{
+            width:100%; padding:12px 14px; border-radius:12px; border:1px solid #e5e7eb; background:#fff; color:var(--text); font-size:16px;
+            box-shadow:var(--shadow-sm); outline:none; transition:box-shadow var(--duration) var(--ease), border-color var(--duration) var(--ease), background var(--duration) var(--ease);
+        }
+        .input:focus, .textarea:focus, .select:focus{
+            border-color:var(--green); box-shadow:0 0 0 4px rgba(16,185,129,0.15);
+        }
+        .textarea{min-height:120px; resize:vertical}
+        /* Reviews */
+        .reviews{display:flex; flex-direction:column; gap:12px}
+        .review-card{display:flex; gap:12px; align-items:flex-start}
+        .review-thumb{width:60px; height:60px; border-radius:12px; background:linear-gradient(135deg,#fde68a,#fca5a5); box-shadow:var(--shadow-sm); flex:0 0 auto}
+        .stars{display:flex; gap:2px; color:#f59e0b}
+        .review-title{margin:0 0 6px; font-size:16px; font-weight:600}
+        .review-text{margin:0; color:var(--muted); font-size:14px}
+        /* Modal */
+        .modal-overlay{
+            position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:2000; display:none; align-items:center; justify-content:center; padding:16px;
+            opacity:0; transition:opacity var(--duration) var(--ease);
+        }
+        .modal-overlay.open{display:flex; opacity:1}
+        .modal{
+            background:var(--white); border-radius:16px; box-shadow:var(--shadow-lg); width:100%; max-width:720px; padding:16px;
+            max-height:85vh; display:flex; flex-direction:column;
+        }
+        .modal-header{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px}
+        .modal-title{font-size:16px; font-weight:700; margin:0}
+        .modal-content{color:var(--text); font-size:13px; overflow-y:auto; flex:1 1 auto; min-height:0; padding-right:6px}
+        .modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:12px}
+        .close-x{width:34px; height:34px; border-radius:10px; display:grid; place-items:center; cursor:pointer; background:#f3f4f6; transition:background var(--duration) var(--ease)}
+        .close-x:hover{background:#e5e7eb}
+        /* Helpers */
+        .section-title{font-size:22px; font-weight:700; margin:8px 0 16px}
+        .muted{color:var(--muted)}
+        /* Stepper for code modal */
+        .stepper{display:flex; align-items:start; gap:0; margin-bottom:18px}
+        .stepper-step{display:flex; flex-direction:column; align-items:center; gap:6px; flex:1}
+        .stepper-step .dot{width:12px; height:12px; border-radius:50%; background:#e5e7eb; transition:background 0.3s ease}
+        .stepper-step .dot.active{background:var(--green)}
+        .stepper-step .label{font-size:11px; color:var(--muted); font-weight:600; text-align:center}
+        .stepper-step .label.active{color:var(--green)}
+        .stepper-line{flex:1; height:3px; background:#e5e7eb; margin:0 -8px; align-self:start; margin-top:6px}
+        .stepper-line.active{background:var(--green)}
+        /* Reduced motion */
+        @media (prefers-reduced-motion:reduce){
+            *{transition:none !important; animation:none !important}
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <a href="#" class="sidebar-logo">
-                    <i class="fas fa-box"></i>
-                    DeliApp
-                </a>
+    <header class="app-header" role="banner">
+        <div class="header-left">
+            <div class="logo" aria-label="KodPwomo"><img src="../image/logo/logo1.1.jpg" alt=""></div>
+        </div>
+        <div class="header-center">
+            <div class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar" role="button" tabindex="0">
+                <span></span><span></span><span></span>
             </div>
-            <nav>
-                <ul class="sidebar-nav">
-                    <li class="nav-item">
-                        <a href="#" class="nav-link active" onclick="showSection('home', event)">
-                            <i class="fas fa-home"></i>
-                            <span>Accueil</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showSection('orders', event)">
-                            <i class="fas fa-shopping-bag"></i>
-                            <span>Mes Commandes</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showSection('profile', event)">
-                            <i class="fas fa-user"></i>
-                            <span>Mon Profil</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showSection('reviews', event)">
-                            <i class="fas fa-star"></i>
-                            <span>Mes Avis</span>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link" onclick="showSection('support', event)">
-                            <i class="fas fa-headset"></i>
-                            <span>Support</span>
-                        </a>
-                    </li>
-                </ul>
+        </div>
+    </header>
+
+    <div class="app-body">
+        <aside class="sidebar" id="sidebar" aria-label="Menu latéral">
+            <div class="sidebar-header" style="padding:12px 16px; border-bottom:1px solid #e5e7eb">
+                <div class="logo" aria-label="KodPwomo" style="font-weight:800; font-size:16px">KodPwomo</div>
+                <div class="user-mini" style="display:flex; align-items:center; gap:8px; margin-top:8px">
+                    <div class="avatar" aria-hidden="true"></div>
+                    <div style="display:flex; flex-direction:column">
+                        <strong style="font-size:13px; color:#111827">Jean Dupont</strong>
+                        
+                    </div>
+                </div>
+            </div>
+            <nav class="nav" id="nav">
+                <a href="#" class="nav-link active" data-target="home">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Accueil (Statistiques)
+                </a>
+                <a href="#" class="nav-link" data-target="orders">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 7h18M3 12h18M3 17h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Mes Commandes
+                </a>
+                <a href="#" class="nav-link" data-target="profile">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-5 0-8 3-8 6v1h16v-1c0-3-3-6-8-6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Mon Profil
+                </a>
+                <a href="#" class="nav-link" data-target="reviews">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Avis & Notes
+                </a>
+                <a href="#" class="nav-link" data-target="support">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 10V7a6 6 0 1 0-12 0v3m-2 0h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Support
+                </a>
+                <a href="#" class="nav-link" data-target="notifications">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3c-3.314 0-6 2.686-6 6v3.382l-1.447 2.894A1 1 0 0 0 5.447 17h13.106a1 1 0 0 0 .894-1.447L18 12.382V9c0-3.314-2.686-6-6-6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Notifications
+                </a>
+                <a href="#" class="nav-link" data-target="logout">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 4h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Déconnexion
+                </a>
             </nav>
         </aside>
+        <div class="overlay" id="overlay" aria-hidden="true"></div>
 
-        <!-- Main Content -->
-        <div class="main">
-            <!-- Header -->
-            <header class="header">
-                <div class="header-left">
-                    <i class="fas fa-bars" id="menuToggle" style="cursor: pointer; display: none; color: var(--primary-green);"></i>
-                </div>
-                <div class="header-right">
-                    <div class="user-profile">
-                        <div class="user-avatar">JD</div>
-                        <div class="user-info">
-                            <div class="user-name">Jean Dupont</div>
-                            <div class="user-status">Client Premium</div>
+        <main class="content" id="content" role="main">
+            <!-- Section: Accueil -->
+            <section data-section="home" class="active" aria-labelledby="title-home">
+                <h2 class="section-title" id="title-home">Accueil - Mes Statistiques</h2>
+                <div class="grid-stats">
+                    <div class="card order-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M4 7h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="#10b981" stroke-width="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke="#10b981" stroke-width="2"/></svg>
                         </div>
-                        <i class="fas fa-chevron-down" style="color: var(--text-light); cursor: pointer;"></i>
-                        <div class="dropdown-menu" id="dropdownMenu">
-                            <a href="#" class="dropdown-item" onclick="showSection('profile', event)">
-                                <i class="fas fa-user"></i> Profil
-                            </a>
-                            <a href="#" class="dropdown-item" onclick="alert('Paramètres')">
-                                <i class="fas fa-cog"></i> Paramètres
-                            </a>
-                            <a href="#" class="dropdown-item logout">
-                                <i class="fas fa-sign-out-alt"></i> Déconnexion
-                            </a>
+                        <div class="stat-value">12</div>
+                        <p class="card-sub">COMMANDES TOTALES</p>
+                    </div>
+                    <div class="card order-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M3 16h18l-2-7H6L3 16Z" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><path d="M7 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" stroke="#10b981" stroke-width="2"/></svg>
                         </div>
+                        <div class="stat-value">3</div>
+                        <p class="card-sub">EN ROUTE</p>
+                    </div>
+                    <div class="card order-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M20 6 9 17l-5-5" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                        <div class="stat-value">8</div>
+                        <p class="card-sub">LIVRÉES</p>
+                    </div>
+                    <div class="card order-card">
+                        <div class="stat-icon green">
+                            <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M12 3v18M4 7h12a4 4 0 1 1 0 8H4" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg>
+                        </div>
+                        <div class="stat-value">527€</div>
+                        <p class="card-sub">TOTAL DÉPENSÉ</p>
                     </div>
                 </div>
-            </header>
+            </section>
 
-            <!-- Page Content -->
-            <main class="page-content">
-                <!-- HOME SECTION -->
-                <section id="home" class="section active">
-                    <div class="page-header">
-                        <h1 class="page-title">
-                            <i class="fas fa-home"></i> Bienvenue, Jean !
-                        </h1>
-                    </div>
-
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-icon"><i class="fas fa-box"></i></div>
-                            <div class="stat-number">12</div>
-                            <div class="stat-label">Commandes Totales</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon"><i class="fas fa-truck"></i></div>
-                            <div class="stat-number">3</div>
-                            <div class="stat-label">En Route</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                            <div class="stat-number">8</div>
-                            <div class="stat-label">Livrées</div>
-                        </div>
-                        <div class="stat-card">
-                            <div class="stat-icon"><i class="fas fa-euro-sign"></i></div>
-                            <div class="stat-number">527€</div>
-                            <div class="stat-label">Total Dépensé</div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- ORDERS SECTION -->
-                <section id="orders" class="section">
-                    <div class="page-header">
-                        <h1 class="page-title">
-                            <i class="fas fa-shopping-bag"></i> Mes Commandes
-                        </h1>
-                    </div>
-
-                    <div class="orders-container">
-                        <!-- Order Card 1 -->
-                        <div class="order-card">
+            <!-- Section: Commandes -->
+            <section data-section="orders" aria-labelledby="title-orders">
+                <h2 class="section-title" id="title-orders">🛍️ Mes Commandes</h2>
+                <div class="grid-orders" id="ordersGrid">
+                        <div class="card order-card" data-order-id="#2024001" data-status="livree" data-assigned="true" data-restaurant="Pizza Bella" data-address="123 Rue Principale" data-date="12 Janvier 2024" data-total="45.50">
                             <div class="order-header">
-                                <div>
-                                    <div class="order-number">Commande #2024001</div>
-                                    <div class="order-date">12 Janvier 2024</div>
-                                </div>
-                                <div class="order-status status-delivered">
-                                    <i class="fas fa-check-circle"></i> Livrée
-                                </div>
+                                <strong>Commande #2024001</strong>
+                                <span class="badge livree">✓ Livrée</span>
                             </div>
-                            <div class="order-details">
-                                <div class="order-detail-item">
-                                    <span class="order-detail-label">Restaurant:</span>
-                                    <span>Pizza Bella</span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="order-detail-label">Adresse:</span>
-                                    <span>123 Rue Principale</span>
-                                </div>
+                            <p class="order-date">12 Janvier 2024</p>
+                            <div class="order-info">
+                                <div class="label">Université:</div>
+                                <div class="value">Pizza Bella</div>
+                                <div class="label">Place:</div>
+                                <div class="value">123 Rue Principale</div>
                             </div>
-                            <div class="order-amount">45,50€</div>
-                            <div class="order-actions">
-                                <button class="btn btn-primary" onclick="openOrderModal(1)">
-                                    <i class="fas fa-eye"></i> Détails
+                            <div class="order-price">45,50€</div>
+                            <div class="order-footer">
+                                <button class="btn btn-primary" data-open-modal="order" data-order="#2024001">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    DÉTAILS
                                 </button>
                             </div>
                         </div>
-
-                        <!-- Order Card 2 -->
-                        <div class="order-card">
+                        <div class="card order-card" data-order-id="#2024002" data-status="en-route" data-assigned="true" data-restaurant="Burger King" data-address="456 Avenue Central" data-date="15 Janvier 2024" data-total="32.75">
                             <div class="order-header">
-                                <div>
-                                    <div class="order-number">Commande #2024002</div>
-                                    <div class="order-date">15 Janvier 2024</div>
-                                </div>
-                                <div class="order-status status-in-transit">
-                                    <i class="fas fa-car"></i> En Route
-                                </div>
+                                <strong>Commande #2024002</strong>
+                                <span class="badge en-route">🚗 En route</span>
                             </div>
-                            <div class="order-details">
-                                <div class="order-detail-item">
-                                    <span class="order-detail-label">Restaurant:</span>
-                                    <span>Burger King</span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="order-detail-label">Adresse:</span>
-                                    <span>456 Avenue Central</span>
-                                </div>
+                            <p class="order-date">15 Janvier 2024</p>
+                            <div class="order-info">
+                                <div class="label">Université:</div>
+                                <div class="value">Burger King</div>
+                                <div class="label">Place:</div>
+                                <div class="value">456 Avenue Central</div>
                             </div>
-                            <div class="order-amount">32,75€</div>
-                            <div class="order-actions">
-                                <button class="btn btn-primary" onclick="openOrderModal(2)">
-                                    <i class="fas fa-eye"></i> Détails
+                            <div class="order-price">32,75€</div>
+                            <div class="order-footer">
+                                <button class="btn btn-primary" data-open-modal="order" data-order="#2024002">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    DÉTAILS
                                 </button>
                             </div>
                         </div>
-
-                        <!-- Order Card 3 -->
-                        <div class="order-card">
+                        <div class="card order-card" data-order-id="#2024003" data-status="attente" data-assigned="false" data-restaurant="Sushi Tokyo" data-address="789 Boulevard Saint-Michel" data-date="18 Janvier 2024" data-total="68.90">
                             <div class="order-header">
-                                <div>
-                                    <div class="order-number">Commande #2024003</div>
-                                    <div class="order-date">18 Janvier 2024</div>
-                                </div>
-                                <div class="order-status status-preparation">
-                                    <i class="fas fa-hourglass-start"></i> En Préparation
-                                </div>
+                                <strong>Commande #2024003</strong>
+                                <span class="badge attente">🍽️ En préparation</span>
                             </div>
-                            <div class="order-details">
-                                <div class="order-detail-item">
-                                    <span class="order-detail-label">Restaurant:</span>
-                                    <span>Sushi Tokyo</span>
-                                </div>
-                                <div class="order-detail-item">
-                                    <span class="order-detail-label">Adresse:</span>
-                                    <span>789 Boulevard Saint-Michel</span>
-                                </div>
+                            <p class="order-date">18 Janvier 2024</p>
+                            <div class="order-info">
+                                <div class="label">Université:</div>
+                                <div class="value">Sushi Tokyo</div>
+                                <div class="label">Place:</div>
+                                <div class="value">789 Boulevard Saint-Michel</div>
                             </div>
-                            <div class="order-amount">68,90€</div>
-                            <div class="order-actions">
-                                <button class="btn btn-primary" onclick="openOrderModal(3)">
-                                    <i class="fas fa-eye"></i> Détails
+                            <div class="order-price">68,90€</div>
+                            <div class="order-footer">
+                                <button class="btn btn-primary" data-open-modal="order" data-order="#2024003">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                                    DÉTAILS
                                 </button>
-                                <button class="btn btn-secondary" onclick="toggleOrderStatus(3, 'disable')">
-                                    <i class="fas fa-ban"></i> Désactiver
+                                <button class="btn btn-danger js-cancel" data-order="#2024003">
+                                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm3.59-13L12 10.59 8.41 7 7 8.41 10.59 12 7 15.59 8.41 17 12 13.41 15.59 17 17 15.59 13.41 12 17 8.41z"/></svg>
+                                    DÉSACTIVER
                                 </button>
                             </div>
                         </div>
-                    </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- PROFILE SECTION -->
-                <section id="profile" class="section">
-                    <div class="page-header">
-                        <h1 class="page-title">
-                            <i class="fas fa-user"></i> Mon Profil
-                        </h1>
-                    </div>
-
-                    <div class="profile-container">
-                        <!-- Personal Info -->
-                        <div class="profile-card">
-                            <div class="profile-section-title">
-                                <i class="fas fa-id-card"></i> Informations Personnelles
-                            </div>
-                            <div class="profile-field">
-                                <span class="field-label">Prénom et Nom</span>
-                                <div class="field-value">
-                                    <span>Jean Dupont</span>
-                                    <i class="fas fa-edit" style="color: var(--orange); cursor: pointer;"></i>
-                                </div>
-                            </div>
-                            <div class="profile-field">
-                                <span class="field-label">Email</span>
-                                <div class="field-value">
-                                    <span>jean.dupont@email.com</span>
-                                    <i class="fas fa-edit" style="color: var(--orange); cursor: pointer;"></i>
-                                </div>
-                            </div>
-                            <div class="profile-field">
-                                <span class="field-label">Téléphone</span>
-                                <div class="field-value">
-                                    <span>+33 6 12 34 56 78</span>
-                                    <i class="fas fa-edit" style="color: var(--orange); cursor: pointer;"></i>
-                                </div>
-                            </div>
-                            <div class="profile-actions">
-                                <button class="btn-edit">
-                                    <i class="fas fa-save"></i> Enregistrer les Modifications
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- Addresses -->
-                        <div class="profile-card">
-                            <div class="profile-section-title">
-                                <i class="fas fa-map-marker-alt"></i> Mes Adresses
-                            </div>
-                            <div class="address-item">
+            <!-- Section: Profil -->
+            <section data-section="profile" aria-labelledby="title-profile">
+                <h2 class="section-title" id="title-profile">Mon Profil</h2>
+                <div class="grid-2">
+                    <div class="card">
+                        <h3 class="card-title">Informations personnelles</h3>
+                        <form id="profileForm">
+                            <div class="form-row">
                                 <div>
-                                    <span class="address-type">Domicile</span>
-                                    <div class="address-text">123 Rue Principale<br>75000 Paris, France</div>
+                                    <label for="firstName">Prénom</label>
+                                    <input id="firstName" class="input" type="text" placeholder="Jean" />
                                 </div>
-                                <i class="fas fa-edit" style="color: var(--orange); cursor: pointer;"></i>
-                            </div>
-                            <div class="address-item">
                                 <div>
-                                    <span class="address-type">Travail</span>
-                                    <div class="address-text">456 Avenue Central<br>75001 Paris, France</div>
+                                    <label for="lastName">Nom</label>
+                                    <input id="lastName" class="input" type="text" placeholder="Dupont" />
                                 </div>
-                                <i class="fas fa-edit" style="color: var(--orange); cursor: pointer;"></i>
                             </div>
-                            <div class="profile-actions">
-                                <button class="btn-edit">
-                                    <i class="fas fa-plus"></i> Ajouter une Adresse
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- REVIEWS SECTION -->
-                <section id="reviews" class="section">
-                    <div class="page-header">
-                        <h1 class="page-title">
-                            <i class="fas fa-star"></i> Mes Avis
-                        </h1>
-                    </div>
-
-                    <div class="reviews-container">
-                        <!-- Review 1 -->
-                        <div class="review-card">
-                            <div class="review-header">
+                            <div class="form-row">
                                 <div>
-                                    <div class="review-restaurant">Pizza Bella</div>
-                                    <div class="review-date">12 Janvier 2024</div>
+                                    <label for="email">Email</label>
+                                    <input id="email" class="input" type="email" placeholder="jean.dupont@example.com" />
                                 </div>
-                            </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                            </div>
-                            <div class="review-comment">
-                                "Excellente pizza, livraison rapide et livreur très courtois. Je recommande vivement !"
-                            </div>
-                        </div>
-
-                        <!-- Review 2 -->
-                        <div class="review-card">
-                            <div class="review-header">
                                 <div>
-                                    <div class="review-restaurant">Burger King</div>
-                                    <div class="review-date">10 Janvier 2024</div>
+                                    <label for="phone">Téléphone</label>
+                                    <input id="phone" class="input" type="tel" placeholder="+33 6 12 34 56 78" />
                                 </div>
                             </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star empty"></i>
-                            </div>
-                            <div class="review-comment">
-                                "Bon repas mais les frites étaient froides à la livraison. Sinon c'est correct."
-                            </div>
-                        </div>
-
-                        <!-- Review 3 -->
-                        <div class="review-card">
-                            <div class="review-header">
+                            <div class="form-row">
                                 <div>
-                                    <div class="review-restaurant">Sushi Tokyo</div>
-                                    <div class="review-date">8 Janvier 2024</div>
-                                </div>
-                            </div>
-                            <div class="review-rating">
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                                <i class="fas fa-star star"></i>
-                            </div>
-                            <div class="review-comment">
-                                "Délicieux sushi frais et présentation magnifique. Équipe très professionnelle !"
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SUPPORT SECTION -->
-                <section id="support" class="section">
-                    <div class="page-header">
-                        <h1 class="page-title">
-                            <i class="fas fa-headset"></i> Support Client
-                        </h1>
-                    </div>
-
-                    <div class="support-container">
-                        <div class="support-card">
-                            <form onsubmit="handleSupportForm(event)">
-                                <div class="form-group">
-                                    <label class="form-label">Sujet</label>
-                                    <select class="form-input" required>
-                                        <option value="">Choisir un sujet...</option>
-                                        <option value="livraison">Problème de livraison</option>
-                                        <option value="commande">Problème de commande</option>
-                                        <option value="produit">Produit manquant</option>
-                                        <option value="qualite">Problème de qualité</option>
-                                        <option value="autre">Autre</option>
+                                    <label for="country">Pays</label>
+                                    <select id="country" class="select">
+                                        <option>France</option>
+                                        <option>Belgique</option>
+                                        <option>Canada</option>
+                                        <option>Suisse</option>
                                     </select>
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Adresse Email</label>
-                                    <input type="email" class="form-input" placeholder="jean.dupont@email.com" required>
+                                <div>
+                                    <label for="city">Ville</label>
+                                    <input id="city" class="input" type="text" placeholder="Paris" />
                                 </div>
-
-                                <div class="form-group">
-                                    <label class="form-label">Message</label>
-                                    <textarea class="form-textarea" placeholder="Décrivez votre problème en détail..." required></textarea>
+                            </div>
+                            <button type="button" class="btn btn-primary">Enregistrer</button>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <h3 class="card-title">Sécurité</h3>
+                        <form id="securityForm">
+                            <div>
+                                <label for="currentPass">Mot de passe actuel</label>
+                                <input id="currentPass" class="input" type="password" placeholder="••••••••" />
+                            </div>
+                            <div class="form-row" style="margin-top:12px">
+                                <div>
+                                    <label for="newPass">Nouveau mot de passe</label>
+                                    <input id="newPass" class="input" type="password" placeholder="••••••••" />
                                 </div>
+                                <div>
+                                    <label for="confirmPass">Confirmer</label>
+                                    <input id="confirmPass" class="input" type="password" placeholder="••••••••" />
+                                </div>
+                            </div>
+                            <div style="margin-top:12px; display:flex; gap:10px">
+                                <button type="button" class="btn btn-primary">Mettre à jour</button>
+                                <button type="button" class="btn btn-outline">Se déconnecter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
 
-                                <button type="submit" class="btn-submit">
-                                    <i class="fas fa-paper-plane"></i> Envoyer mon Message
-                                </button>
-                            </form>
+            <!-- Section: Avis & Notes -->
+            <section data-section="reviews" aria-labelledby="title-reviews">
+                <h2 class="section-title" id="title-reviews">Avis & Notes</h2>
+                <div class="reviews">
+                    <div class="card review-card">
+                        <div class="review-thumb" aria-hidden="true"></div>
+                        <div>
+                            <h4 class="review-title">Produit Alpha</h4>
+                            <div class="stars" aria-label="4 étoiles">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="#d1d5db"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                            </div>
+                            <p class="review-text">Très bon produit, livraison rapide et service client réactif.</p>
                         </div>
                     </div>
-                </section>
-            </main>
+                    <div class="card review-card">
+                        <div class="review-thumb" aria-hidden="true"></div>
+                        <div>
+                            <h4 class="review-title">Produit Beta</h4>
+                            <div class="stars" aria-label="5 étoiles">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                            </div>
+                            <p class="review-text">Qualité exceptionnelle, je recommande.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section: Support -->
+            <section data-section="support" aria-labelledby="title-support">
+                <h2 class="section-title" id="title-support">Support</h2>
+                <div class="card">
+                    <form id="supportForm">
+                        <div class="form-row">
+                            <div>
+                                <label for="subject">Sujet</label>
+                                <input id="subject" class="input" type="text" placeholder="Décrivez brièvement votre problème" />
+                            </div>
+                            <div>
+                                <label for="category">Catégorie</label>
+                                <select id="category" class="select">
+                                    <option>Commande</option>
+                                    <option>Paiement</option>
+                                    <option>Compte</option>
+                                    <option>Autre</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label for="message">Message</label>
+                            <textarea id="message" class="textarea" placeholder="Expliquez votre demande..."></textarea>
+                        </div>
+                        <div style="margin-top:12px; display:flex; gap:10px">
+                            <button type="button" class="btn btn-primary">Envoyer</button>
+                            <button type="reset" class="btn btn-outline">Réinitialiser</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Détails Commande -->
+    <div class="modal-overlay" id="modalOverlay" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal" role="document">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Détails commande</h3>
+                <div class="close-x" id="modalClose" aria-label="Fermer">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="#111827" stroke-width="2" stroke-linecap="round"/></svg>
+                </div>
+            </div>
+            <div class="modal-content" id="modalContent">
+                <!-- Rempli dynamiquement -->
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="modalCancel">Fermer</button>
+                <button class="btn btn-primary">Télécharger la facture</button>
+            </div>
         </div>
     </div>
 
-    <!-- Order Details Modal -->
-    <div id="orderModal" class="modal">
-        <div class="modal-content">
+    <!-- Modal Code Agent -->
+    <div class="modal-overlay" id="codeModal" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="modal" role="document" style="max-width:480px">
             <div class="modal-header">
-                <h2 class="modal-title" id="modalOrderNumber">Commande #2024001</h2>
-                <button class="modal-close" onclick="closeOrderModal()">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="order-detail">
-                    <span class="order-detail-label">Date:</span>
-                    <span class="order-detail-value">12 Janvier 2024 à 14:30</span>
-                </div>
-                <div class="order-detail">
-                    <span class="order-detail-label">Statut:</span>
-                    <span class="order-detail-value">
-                        <span class="order-status status-delivered">
-                            <i class="fas fa-check-circle"></i> Livrée
-                        </span>
-                    </span>
-                </div>
-                <div class="order-detail">
-                    <span class="order-detail-label">Restaurant:</span>
-                    <span class="order-detail-value">Pizza Bella</span>
-                </div>
-                <div class="order-detail">
-                    <span class="order-detail-label">Adresse de Livraison:</span>
-                    <span class="order-detail-value">123 Rue Principale, 75000 Paris</span>
-                </div>
-
-                <div style="margin: 20px 0; padding: 16px 0; border-top: 2px solid var(--border-color); border-bottom: 2px solid var(--border-color);">
-                    <div style="font-weight: 700; margin-bottom: 12px; color: var(--text-dark);">Articles</div>
-                    <div class="product-item">
-                        <div class="product-name">Pizza Margherita</div>
-                        <div class="product-qty">x1 - 15,90€</div>
-                    </div>
-                    <div class="product-item">
-                        <div class="product-name">Pizza Quattro Formaggi</div>
-                        <div class="product-qty">x1 - 16,90€</div>
-                    </div>
-                    <div class="product-item">
-                        <div class="product-name">Coca-Cola 1.5L</div>
-                        <div class="product-qty">x1 - 3,00€</div>
-                    </div>
-                </div>
-
-                <div class="order-detail">
-                    <span class="order-detail-label">Sous-total:</span>
-                    <span class="order-detail-value">35,80€</span>
-                </div>
-                <div class="order-detail">
-                    <span class="order-detail-label">Frais de livraison:</span>
-                    <span class="order-detail-value">5,00€</span>
-                </div>
-                <div class="order-detail">
-                    <span class="order-detail-label">Frais de service:</span>
-                    <span class="order-detail-value">4,70€</span>
-                </div>
-                <div class="order-detail" style="border-top: 2px solid var(--primary-green); margin-top: 12px; padding-top: 12px;">
-                    <span class="order-detail-label" style="font-weight: 700; font-size: 15px;">Total:</span>
-                    <span class="order-detail-value" style="font-weight: 700; font-size: 15px; color: var(--primary-green);">45,50€</span>
-                </div>
-
-                <!-- Rating Section (only show if order status is 'Livrée') -->
-                <div id="ratingSection" style="margin-top: 24px; padding-top: 24px; border-top: 2px solid var(--border-color); display: none;">
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 700; margin-bottom: 12px; color: var(--text-dark);">
-                            <i class="fas fa-star" style="color: var(--orange); margin-right: 8px;"></i>
-                            Évaluez la livraison
-                        </label>
-                        <div class="rating-stars" style="display: flex; gap: 12px; margin-bottom: 16px;">
-                            <i class="fas fa-star rating-star" data-rating="1" style="font-size: 28px; color: #ddd; cursor: pointer; transition: all 0.2s;"></i>
-                            <i class="fas fa-star rating-star" data-rating="2" style="font-size: 28px; color: #ddd; cursor: pointer; transition: all 0.2s;"></i>
-                            <i class="fas fa-star rating-star" data-rating="3" style="font-size: 28px; color: #ddd; cursor: pointer; transition: all 0.2s;"></i>
-                            <i class="fas fa-star rating-star" data-rating="4" style="font-size: 28px; color: #ddd; cursor: pointer; transition: all 0.2s;"></i>
-                            <i class="fas fa-star rating-star" data-rating="5" style="font-size: 28px; color: #ddd; cursor: pointer; transition: all 0.2s;"></i>
-                        </div>
-                        <div id="ratingValue" style="font-weight: 600; color: var(--primary-green); font-size: 14px;">Aucune note sélectionnée</div>
-                    </div>
-
-                    <div style="margin-bottom: 20px;">
-                        <label style="display: block; font-weight: 700; margin-bottom: 12px; color: var(--text-dark);">
-                            <i class="fas fa-comment" style="color: var(--orange); margin-right: 8px;"></i>
-                            Votre impression sur le livreur
-                        </label>
-                        <textarea id="deliveryFeedback" class="form-textarea" placeholder="Partagez votre expérience avec le livreur..." style="width: 100%; padding: 12px 14px; border: 1px solid var(--border-color); border-radius: 8px; font-family: 'Inter', sans-serif; font-size: 13px; min-height: 100px; resize: vertical;"></textarea>
-                    </div>
-
-                    <button class="btn btn-primary" onclick="openCompleteDeliveryModal()" style="width: 100%;">
-                        <i class="fas fa-check-circle"></i> Terminer la Livraison
-                    </button>
+                <h3 class="modal-title">Validation de livraison</h3>
+                <div class="close-x" id="codeModalClose" aria-label="Fermer">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="#111827" stroke-width="2" stroke-linecap="round"/></svg>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- Complete Delivery Confirmation Modal -->
-    <div id="completeDeliveryModal" class="modal">
-        <div class="modal-content" style="max-width: 500px;">
-            <div class="modal-header">
-                <h2 class="modal-title">Confirmer la Livraison</h2>
-                <button class="modal-close" onclick="closeCompleteDeliveryModal()">
-                    <i class="fas fa-times"></i>
-                </button>
+            <div class="modal-content">
+                <div class="stepper" id="deliveryStepper">
+                    <div class="stepper-step" data-step="attente">
+                        <div class="dot"></div>
+                        <div class="label">Attente</div>
+                    </div>
+                    <div class="stepper-line"></div>
+                    <div class="stepper-step" data-step="en-route">
+                        <div class="dot"></div>
+                        <div class="label">En route</div>
+                    </div>
+                    <div class="stepper-line"></div>
+                    <div class="stepper-step" data-step="livree">
+                        <div class="dot"></div>
+                        <div class="label">Terminé</div>
+                    </div>
+                </div>
+                <p class="muted" style="margin-bottom:12px">Entrez le code de l'agent pour confirmer la livraison.</p>
+                <input id="agentCodeInput" class="input" placeholder="Code agent (ex: 6 chiffres)" />
             </div>
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 24px;">
-                    <div style="font-size: 48px; color: var(--orange); margin-bottom: 12px;">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <p style="color: var(--text-dark); font-weight: 600; margin-bottom: 8px;">Confirmation de Sécurité</p>
-                    <p style="color: var(--text-light); font-size: 14px;">Veuillez entrer le code de l'agent pour confirmer la fin de livraison</p>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Code de l'Agent</label>
-                    <input type="text" id="agentCodeInput" class="form-input" placeholder="Entrez le code à 4 chiffres" maxlength="4" style="text-align: center; font-size: 18px; letter-spacing: 8px; font-weight: 700;">
-                    <div id="codeError" style="color: #e74c3c; font-size: 12px; margin-top: 8px; display: none;">
-                        <i class="fas fa-exclamation-circle"></i> Code incorrect
-                    </div>
-                </div>
-
-                <div style="background: var(--light-gray); padding: 16px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                    <div style="font-size: 12px; color: var(--text-light); margin-bottom: 4px;">Code Agent</div>
-                    <div style="font-size: 24px; font-weight: 700; color: var(--primary-green); letter-spacing: 4px;">4821</div>
-                </div>
-
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <button class="btn btn-secondary" onclick="closeCompleteDeliveryModal()" style="width: 100%;">
-                        <i class="fas fa-times"></i> Annuler
-                    </button>
-                    <button class="btn btn-primary" onclick="confirmDeliveryWithCode()" style="width: 100%;">
-                        <i class="fas fa-check"></i> Confirmer
-                    </button>
-                </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" id="codeModalCancel">Annuler</button>
+                <button class="btn btn-primary" id="codeModalConfirm">Confirmer</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Toggle User Dropdown Menu
-        document.querySelector('.user-profile').addEventListener('click', function(e) {
-            e.stopPropagation();
-            const menu = document.getElementById('dropdownMenu');
-            menu.classList.toggle('show');
-        });
+        (function(){
+            const qs = (sel, ctx=document) => ctx.querySelector(sel);
+            const qsa = (sel, ctx=document) => Array.from(ctx.querySelectorAll(sel));
+            const sidebar = qs('#sidebar');
+            const overlay = qs('#overlay');
+            const burger = qs('#burger');
+            const nav = qs('#nav');
+            const sections = qsa('section[data-section]');
+            const btnNotifications = qs('a.nav-link[data-target="notifications"]');
+            const btnLogout = qs('a.nav-link[data-target="logout"]');
+            const modalOverlay = qs('#modalOverlay');
+            const modalContent = qs('#modalContent');
+            const modalTitle = qs('#modalTitle');
+            const modalClose = qs('#modalClose');
+            const modalCancel = qs('#modalCancel');
+            const codeModal = qs('#codeModal');
+            const codeModalClose = qs('#codeModalClose');
+            const codeModalCancel = qs('#codeModalCancel');
+            const codeModalConfirm = qs('#codeModalConfirm');
+            const deliveryStepper = qs('#deliveryStepper');
+            const agentCodeInput = qs('#agentCodeInput');
 
-        document.addEventListener('click', function() {
-            const menu = document.getElementById('dropdownMenu');
-            menu.classList.remove('show');
-        });
+            const state = { current: 'home' };
 
-        // Show/Hide Sections
-        function showSection(sectionId, event) {
-            if (event) event.preventDefault();
+            function isMobile(){ return window.innerWidth < 600; }
 
-            // Hide all sections
-            document.querySelectorAll('.section').forEach(section => {
-                section.classList.remove('active');
+            function openSidebar(){
+                sidebar.classList.add('open');
+                overlay.classList.add('show');
+                burger.classList.add('active');
+                burger.setAttribute('aria-expanded','true');
+            }
+            function closeSidebar(){
+                sidebar.classList.remove('open');
+                overlay.classList.remove('show');
+                burger.classList.remove('active');
+                burger.setAttribute('aria-expanded','false');
+            }
+            function toggleSidebar(){ (sidebar.classList.contains('open') ? closeSidebar : openSidebar)(); }
+
+            burger.addEventListener('click', toggleSidebar);
+            burger.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); toggleSidebar(); }});
+            overlay.addEventListener('click', closeSidebar);
+
+            function setActiveSection(target){
+                state.current = target;
+                // links
+                qsa('.nav-link').forEach(a=>{
+                    const active = a.getAttribute('data-target')===target;
+                    a.classList.toggle('active', active);
+                });
+                // sections
+                sections.forEach(sec=>{ sec.classList.toggle('active', sec.getAttribute('data-section')===target); });
+                if(isMobile()) closeSidebar();
+                // scroll to top smoothly
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            nav.addEventListener('click', (e)=>{
+                const link = e.target.closest('.nav-link');
+                if(!link) return;
+                e.preventDefault();
+                const target = link.getAttribute('data-target');
+                if(target) setActiveSection(target);
             });
 
-            // Remove active class from all nav links
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-            });
-
-            // Show selected section
-            const targetSection = document.getElementById(sectionId);
-            if (targetSection) {
-                targetSection.classList.add('active');
-            }
-
-            // Add active class to clicked nav link (safely)
-            if (event && event.target) {
-                const navLink = event.target.closest('.nav-link');
-                if (navLink) {
-                    navLink.classList.add('active');
-                }
-            }
-
-            // Close sidebar on mobile
-            const sidebar = document.getElementById('sidebar');
-            if (sidebar && window.innerWidth <= 768) {
-                sidebar.classList.remove('show');
-            }
-        }
-
-        let currentRating = 0;
-
-        // Rating Stars Interaction
-        document.addEventListener('click', function(e) {
-            if (e.target.classList.contains('rating-star')) {
-                currentRating = parseInt(e.target.getAttribute('data-rating'));
-                updateRatingDisplay();
-            }
-        });
-
-        function updateRatingDisplay() {
-            const stars = document.querySelectorAll('.rating-star');
-            const ratingValue = document.getElementById('ratingValue');
-            
-            stars.forEach((star, index) => {
-                if (index < currentRating) {
-                    star.style.color = 'var(--orange)';
-                } else {
-                    star.style.color = '#ddd';
+            // Keyboard access
+            document.addEventListener('keydown', (e)=>{
+                if(e.key==='Escape'){
+                    closeSidebar();
+                    closeModal();
                 }
             });
 
-            if (currentRating > 0) {
-                const labels = ['Très mauvais', 'Mauvais', 'Acceptable', 'Très bien', 'Excellent'];
-                ratingValue.textContent = currentRating + '/5 - ' + labels[currentRating - 1];
-            } else {
-                ratingValue.textContent = 'Aucune note sélectionnée';
+            // Notifications and Logout actions
+            if(btnNotifications){
+                btnNotifications.addEventListener('click', (e)=>{
+                    e.preventDefault();
+                    setActiveSection('support');
+                });
             }
-        }
-
-        // Open Order Details Modal
-        function openOrderModal(orderId) {
-            const modal = document.getElementById('orderModal');
-            if (!modal) return;
-            
-            const ratingSection = document.getElementById('ratingSection');
-            
-            // Show rating section only for delivered orders
-            const orderStatus = document.querySelectorAll('.order-status')[orderId - 1];
-            if (orderStatus && orderStatus.textContent.includes('Livrée')) {
-                if (ratingSection) {
-                    ratingSection.style.display = 'block';
-                }
-                currentRating = 0;
-                const feedbackElement = document.getElementById('deliveryFeedback');
-                if (feedbackElement) {
-                    feedbackElement.value = '';
-                }
-                updateRatingDisplay();
-            } else {
-                if (ratingSection) {
-                    ratingSection.style.display = 'none';
-                }
-            }
-            
-            modal.classList.add('show');
-        }
-
-        // Close Order Details Modal
-        function closeOrderModal() {
-            const modal = document.getElementById('orderModal');
-            if (modal) {
-                modal.classList.remove('show');
-            }
-        }
-
-        // Open Complete Delivery Confirmation Modal
-        function openCompleteDeliveryModal() {
-            if (currentRating === 0) {
-                alert('Veuillez évaluer la livraison avec au moins une étoile.');
-                return;
+            if(btnLogout){
+                btnLogout.addEventListener('click', (e)=>{
+                    e.preventDefault();
+                    // Minimal logout handler placeholder
+                    alert('Déconnexion...');
+                });
             }
 
-            const feedbackElement = document.getElementById('deliveryFeedback');
-            const feedback = feedbackElement ? feedbackElement.value.trim() : '';
-            
-            if (!feedback) {
-                alert('Veuillez donner votre impression sur le livreur.');
-                return;
+            // Modal (Orders)
+            function openModal(orderId, detailsHtml){
+                modalTitle.textContent = `Détails ${orderId || ''}`.trim();
+                modalContent.innerHTML = detailsHtml || '<p class="muted">Chargement...</p>';
+                modalOverlay.classList.add('open');
+                modalOverlay.removeAttribute('aria-hidden');
             }
+            function closeModal(){
+                modalOverlay.classList.remove('open');
+                modalOverlay.setAttribute('aria-hidden','true');
+            }
+            modalClose.addEventListener('click', closeModal);
+            modalCancel.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) closeModal(); });
 
-            const codeInput = document.getElementById('agentCodeInput');
-            const codeError = document.getElementById('codeError');
-            
-            if (codeInput) codeInput.value = '';
-            if (codeError) codeError.style.display = 'none';
-            
-            const completeModal = document.getElementById('completeDeliveryModal');
-            if (completeModal) {
-                completeModal.classList.add('show');
+            // Event delegation for "Voir détails"
+            qs('#content').addEventListener('click', (e)=>{
+                const btn = e.target.closest('[data-open-modal="order"]');
+                if(!btn) return;
+                e.preventDefault();
+                const card = btn.closest('.order-card');
+                const orderId = card?.getAttribute('data-order-id') || btn.getAttribute('data-order') || '';
+                const status = card?.getAttribute('data-status') || 'attente';
+                const date = card?.getAttribute('data-date') || '';
+                const restaurant = card?.getAttribute('data-restaurant') || '';
+                const address = card?.getAttribute('data-address') || '';
+                const totalAttr = card?.getAttribute('data-total') || '0';
                 
-                // Focus on input
-                setTimeout(() => {
-                    if (codeInput) codeInput.focus();
-                }, 300);
-            }
-        }
+                // Articles demo
+                const items = [
+                    { name:'Pizza Margherita', qty:1, price:15.90 },
+                    { name:'Pizza Quattro Formaggi', qty:1, price:16.90 },
+                    { name:'Coca-Cola 1.5L', qty:1, price:3.00 }
+                ];
+                
+                const subTotal = items.reduce((a,b)=>a+(b.price*b.qty),0);
+                const delivery = 5.00;
+                const service = 4.70;
+                const total = subTotal + delivery + service;
+                
+                const articleRows = items.map(i=>`
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f3f4f6">
+                        <div>
+                            <div style="font-weight:600">${i.name}</div>
+                            <div style="font-size:13px; color:var(--muted)">x${i.qty}</div>
+                        </div>
+                        <div style="font-weight:600">${i.price.toFixed(2)}€</div>
+                    </div>
+                `).join('');
+                
+                let statusBadge = '';
+                if(status === 'livree') statusBadge = '<span class="badge livree">✓ Livrée</span>';
+                else if(status === 'en-route') statusBadge = '<span class="badge en-route">🚗 En route</span>';
+                else if(status === 'attente') statusBadge = '<span class="badge attente">⏳ En préparation</span>';
+                else if(status === 'annulee') statusBadge = '<span class="badge annulee">✕ Annulée</span>';
+                
+                const html = `
+                    <div style="margin-bottom:16px">
+                        <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px">
+                            <div>
+                                <div style="font-size:13px; color:var(--muted)">Date:</div>
+                                <div style="font-weight:600">${date} à 14:30</div>
+                            </div>
+                            <div style="text-align:right">${statusBadge}</div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px">
+                            <div>
+                                <div style="font-size:13px; color:var(--muted)">Université:</div>
+                                <div style="font-weight:600">${restaurant}</div>
+                            </div>
+                            <div>
+                                <div style="font-size:13px; color:var(--muted)">Places:</div>
+                                <div style="font-weight:600">${address}</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="border-top:2px solid #e5e7eb; padding-top:16px; margin-top:16px">
+                        <h4 style="margin:0 0 12px; font-size:16px; font-weight:700">Articles</h4>
+                        ${articleRows}
+                        <div style="margin-top:16px; padding-top:12px; border-top:2px solid #e5e7eb">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px">
+                                <span>Sous-total:</span>
+                                <span style="font-weight:600">${subTotal.toFixed(2)}€</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px">
+                                <span>Frais de livraison:</span>
+                                <span style="font-weight:600">${delivery.toFixed(2)}€</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:12px">
+                                <span>Frais de service:</span>
+                                <span style="font-weight:600">${service.toFixed(2)}€</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; padding-top:12px; border-top:2px solid var(--green); font-size:18px">
+                                <span style="font-weight:700">Total:</span>
+                                <span style="font-weight:700; color:var(--green)">${total.toFixed(2)}€</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    ${status==='livree' ? `
+                    <div style="margin-top:20px; padding-top:20px; border-top:2px solid #e5e7eb">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px">
+                            <svg viewBox="0 0 24 24" width="20" height="20" fill="#f59e0b"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                            <h4 style="margin:0; font-size:16px; font-weight:700">Évaluez la livraison</h4>
+                        </div>
+                        <div id="ratingStars" style="display:flex; gap:8px; font-size:28px; cursor:pointer; margin-bottom:8px" aria-label="Note sur 5">
+                            <span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span>
+                        </div>
+                        <p class="muted" id="ratingHint" style="margin:0 0 14px; font-size:13px">Aucune note sélectionnée</p>
+                        
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="#f59e0b"><path d="M12 22c4.97 0 9-4.03 9-9S16.97 4 12 4 3 8.03 3 13c0 1.84.55 3.55 1.49 4.97L4 22l4.2-1.32A8.96 8.96 0 0 0 12 22Z"/></svg>
+                            <h4 style="margin:0; font-weight:700">Votre impression sur le livreur</h4>
+                        </div>
+                        <textarea id="deliveryReview" class="textarea" placeholder="Partagez votre expérience avec le livreur..." style="min-height:100px"></textarea>
+                        
+                        <div style="margin-top:16px">
+                            <button class="btn btn-primary" id="finishDeliveryBtn" style="width:100%">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                TERMINER LA LIVRAISON
+                            </button>
+                        </div>
+                    </div>` : ''}
+                `;
+                
+                openModal(orderId, html);
 
-        // Close Complete Delivery Modal
-        function closeCompleteDeliveryModal() {
-            const modal = document.getElementById('completeDeliveryModal');
-            if (modal) {
-                modal.classList.remove('show');
-            }
-            
-            const codeInput = document.getElementById('agentCodeInput');
-            const codeError = document.getElementById('codeError');
-            
-            if (codeInput) codeInput.value = '';
-            if (codeError) codeError.style.display = 'none';
-        }
+                // rating stars (if present)
+                const starsWrap = qs('#ratingStars');
+                if(starsWrap){
+                    let rating = 0;
+                    starsWrap.addEventListener('click',(ev)=>{
+                        const el = ev.target.closest('[data-v]');
+                        if(!el) return;
+                        rating = Number(el.getAttribute('data-v'))||0;
+                        Array.from(starsWrap.children).forEach((s,idx)=>{ s.textContent = (idx<rating?'★':'☆'); });
+                        const hint = qs('#ratingHint');
+                        if(hint) hint.textContent = rating? `${rating}/5` : 'Aucune note sélectionnée';
+                    });
+                }
 
-        // Confirm Delivery with Code
-        function confirmDeliveryWithCode() {
-            const codeInput = document.getElementById('agentCodeInput');
-            const enteredCode = codeInput ? codeInput.value : '';
-            const correctCode = '4821'; // Agent code (should come from backend)
-            const codeError = document.getElementById('codeError');
+                // finish delivery -> open code modal
+                const finishBtn = qs('#finishDeliveryBtn');
+                if(finishBtn){
+                    finishBtn.addEventListener('click', ()=>{
+                        closeModal();
+                        openCodeModal(status);
+                    });
+                }
+            });
 
-            if (enteredCode === correctCode) {
-                if (codeError) codeError.style.display = 'none';
-                alert('✅ Livraison confirmée avec succès !\nNote: ' + currentRating + '/5\nMerci pour votre feedback !');
-                closeCompleteDeliveryModal();
-                closeOrderModal();
-                // Here you would typically update the database with the rating and feedback
-            } else {
-                if (codeError) codeError.style.display = 'block';
-                if (codeInput) {
-                    codeInput.value = '';
-                    codeInput.focus();
+            // Responsive adjustments
+            function onResize(){
+                if(!isMobile()){
+                    overlay.classList.remove('show');
+                    burger.classList.remove('active');
+                    burger.setAttribute('aria-expanded','false');
                 }
             }
-        }
+            window.addEventListener('resize', onResize);
 
-        // Allow Enter key to submit code
-        document.addEventListener('keydown', function(e) {
-            const completeModal = document.getElementById('completeDeliveryModal');
-            if (e.key === 'Enter' && completeModal && completeModal.classList.contains('show')) {
-                confirmDeliveryWithCode();
-            }
-        });
+            // Cancel button (only if not assigned)
+            qsa('.order-card').forEach(card=>{
+                const canCancel = card.getAttribute('data-status')==='attente' && card.getAttribute('data-assigned')==='false';
+                const cancelBtn = card.querySelector('.js-cancel');
+                if(cancelBtn){
+                    if(!canCancel){ cancelBtn.style.display='none'; }
+                    cancelBtn.addEventListener('click', ()=>{
+                        if(!confirm('Annuler cette commande ?')) return;
+                        card.setAttribute('data-status','annulee');
+                        const badge = card.querySelector('.badge');
+                        if(badge){ badge.className='badge annulee'; badge.textContent='✕ Annulée'; }
+                        cancelBtn.remove();
+                    });
+                }
+            });
 
-        // Toggle Order Status (Disable/Enable)
-        function toggleOrderStatus(orderId, action) {
-            if (action === 'disable') {
-                if (confirm('Êtes-vous sûr de vouloir désactiver cette commande ?')) {
-                    alert('Commande #' + (2000 + orderId) + ' désactivée');
-                    // Update UI - change button from "Désactiver" to "Activer"
-                    // This would typically call a backend API
-                }
-            } else if (action === 'enable') {
-                if (confirm('Êtes-vous sûr de vouloir réactiver cette commande ?')) {
-                    alert('Commande #' + (2000 + orderId) + ' réactivée');
-                    // Update UI
-                }
+            // Code modal helpers
+            function setStepper(status){
+                if(!deliveryStepper) return;
+                const map = ['attente','en-route','livree'];
+                const idx = Math.max(0, map.indexOf(status));
+                const steps = Array.from(deliveryStepper.querySelectorAll('.stepper-step'));
+                const lines = Array.from(deliveryStepper.querySelectorAll('.stepper-line'));
+                steps.forEach((step,i)=>{
+                    const dot = step.querySelector('.dot');
+                    const label = step.querySelector('.label');
+                    const isActive = i<=idx;
+                    if(dot) dot.classList.toggle('active', isActive);
+                    if(label) label.classList.toggle('active', isActive);
+                });
+                lines.forEach((l,i)=> l.classList.toggle('active', i<idx));
             }
-        }
+            function openCodeModal(status){
+                setStepper(status);
+                agentCodeInput.value='';
+                codeModal.classList.add('open');
+                codeModal.removeAttribute('aria-hidden');
+                agentCodeInput.focus({preventScroll:true});
+            }
+            function closeCodeModal(){
+                codeModal.classList.remove('open');
+                codeModal.setAttribute('aria-hidden','true');
+            }
+            codeModalClose.addEventListener('click', closeCodeModal);
+            codeModalCancel.addEventListener('click', closeCodeModal);
+            codeModal.addEventListener('click', (e)=>{ if(e.target===codeModal) closeCodeModal(); });
+            codeModalConfirm.addEventListener('click', ()=>{
+                const code = agentCodeInput.value.trim();
+                if(!code){ alert('Veuillez saisir le code agent.'); return; }
+                // Placeholder success
+                alert('Livraison confirmée. Merci !');
+                closeCodeModal();
+            });
+
+            // Initialize default section
+            setActiveSection(state.current);
+        })();
     </script>
 </body>
 </html>

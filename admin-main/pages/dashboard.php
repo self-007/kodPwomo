@@ -104,69 +104,227 @@
 
 <style>
 /* Styles locaux au composant (préfixés .wm-dashboard) */
-/* Palette: bleu (#2563eb), vert (#10b981), orange (#ff7a18), gris clair (#f7fafc), gris foncé (#0f172a) */
-.wm-dashboard { font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; color: #0f172a; width:100%; padding:1rem; box-sizing:border-box; }
-.wm-sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); border:0; white-space:nowrap; }
+/* KodPwomo Design System - Unified Neumorphic Palette */
+:root{
+    --primary:#f7b642;
+    --primary-dark:#e19627;
+    --accent-green:#27ae60;
+    --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+    --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
+}
+
+.wm-dashboard { 
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; 
+    color: #1a1a2e; 
+    width:100%; 
+    padding:1.5rem; 
+    box-sizing:border-box;
+}
+
+.wm-sr-only{ 
+    position:absolute !important; 
+    width:1px; 
+    height:1px; 
+    padding:0; 
+    margin:-1px; 
+    overflow:hidden; 
+    clip:rect(0,0,0,0); 
+    border:0; 
+    white-space:nowrap; 
+}
 
 /* Grid responsive */
 .wm-stats-grid {
     display:grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap:0.75rem;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap:1.25rem;
     width:100%;
-    margin-bottom:1rem;
+    margin-bottom:1.5rem;
 }
 
-/* Card base */
-.wm-card { border-radius:10px; color: #fff; padding:0.75rem; box-sizing:border-box; min-height:88px; display:flex; align-items:center; }
-.wm-card:focus { outline:3px solid rgba(37,99,235,0.25); outline-offset:2px; }
+/* Card base with 3D effect */
+.wm-card { 
+    border-radius:16px; 
+    color: #fff; 
+    padding:1.25rem; 
+    box-sizing:border-box; 
+    min-height:120px; 
+    display:flex; 
+    align-items:center;
+    box-shadow: var(--shadow-3d-base);
+    border:1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.wm-card:before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:rgba(255,255,255,0.05);
+    transform:translateX(-100%);
+    transition:transform 0.6s ease;
+}
+
+.wm-card:hover {
+    box-shadow: var(--shadow-3d-hover);
+    transform: translateY(-6px) scale(1.02);
+}
+
+.wm-card:hover:before{
+    transform:translateX(100%);
+}
+
+.wm-card:focus { 
+    outline:3px solid rgba(247,182,66,0.4); 
+    outline-offset:2px; 
+}
 
 /* Card body layout */
-.wm-card-body { width:100%; display:flex; flex-direction:column; gap:0.5rem; }
-.wm-card-title { font-size:0.9rem; margin:0; opacity:0.95; }
-.wm-card-value { font-size:1.35rem; font-weight:700; margin:0; }
+.wm-card-body { 
+    width:100%; 
+    display:flex; 
+    flex-direction:column; 
+    gap:0.75rem;
+    position: relative;
+    z-index:1;
+}
+
+.wm-card-title { 
+    font-size:0.95rem; 
+    margin:0; 
+    opacity:0.95;
+    font-weight:600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.wm-card-value { 
+    font-size:2rem; 
+    font-weight:700; 
+    margin:0;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
 /* Card actions */
-.wm-card-actions { display:flex; gap:0.5rem; margin-top:auto; }
-.wm-btn { background:none; border:0; color:inherit; padding:0.25rem 0.5rem; border-radius:6px; cursor:pointer; font-size:0.85rem; }
-.wm-btn:focus { outline:2px solid rgba(255,255,255,0.35); }
-.wm-btn-ghost { background: rgba(255,255,255,0.08); }
-.wm-btn-primary { background:#0f172a; color:#f7fafc; border-radius:8px; padding:0.5rem 0.75rem; }
-.wm-btn-outline { background: transparent; border:1px solid rgba(15,23,42,0.08); padding:0.4rem 0.6rem; border-radius:8px; }
+.wm-card-actions { 
+    display:flex; 
+    gap:0.5rem; 
+    margin-top:auto; 
+}
 
-/* Panel / table */
-.wm-panel { background:transparent; width:100%; }
-.wm-panel-header { display:flex; align-items:center; justify-content:space-between; gap:0.5rem; margin-bottom:0.5rem; }
-.wm-panel-header h3 { margin:0; font-size:1.05rem; color:#0f172a; }
-.wm-panel-actions { display:flex; gap:0.5rem; }
+.wm-btn { 
+    background:rgba(255,255,255,0.15); 
+    border:1px solid rgba(255,255,255,0.2); 
+    color:inherit; 
+    padding:0.5rem 0.75rem; 
+    border-radius:10px; 
+    cursor:pointer; 
+    font-size:0.85rem;
+    font-weight:600;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
 
-.wm-panel-body { background: #f7fafc; border-radius:10px; padding:0.5rem; box-sizing:border-box; color:#0f172a; }
-.wm-table-wrap { overflow:auto; width:100%; }
-.wm-table { width:100%; border-collapse:collapse; min-width:600px; }
-.wm-table thead th { text-align:left; padding:0.6rem 0.5rem; font-weight:600; font-size:0.85rem; color:#0f172a; }
-.wm-table tbody td { padding:0.55rem 0.5rem; border-top:1px solid rgba(15,23,42,0.05); font-size:0.9rem; color:#0f172a; }
+.wm-btn:hover{
+    background:rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
 
-/* Placeholder row */
-.wm-placeholder-row td { text-align:center; color:rgba(15,23,42,0.6); padding:1rem 0; }
+.wm-btn:active{
+    transform: translateY(0) scale(0.98);
+}
+
+.wm-btn:focus { 
+    outline:2px solid rgba(255,255,255,0.5);
+    outline-offset:2px;
+}
+
+/* Month stats cards */
+.wm-month-stats-cards{
+    display:flex;
+    gap:1.25rem;
+    margin-top:1.25rem;
+    flex-wrap:wrap;
+    width:100%;
+}
+
+.wm-month-stats-cards .wm-card{
+    min-width:200px;
+    flex:1;
+}
+
+/* Card colors with gradients */
+.wm-card[data-key="users"] { 
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+}
+.wm-card[data-key="universities"] { 
+    background: linear-gradient(135deg, var(--accent-green) 0%, #1e7e41 100%);
+}
+.wm-card[data-key="products"] { 
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+}
+.wm-card[data-key="orders"] { 
+    background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+}
+.wm-card[data-key="revenue"] { 
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+.wm-card[data-key="notifications"] { 
+    background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+}
+.wm-card[data-key="seats"] { 
+    background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+}
+
+#wm-month-orders-card{
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%) !important;
+}
+
+#wm-month-gains-card{
+    background: linear-gradient(135deg, var(--accent-green) 0%, #1e7e41 100%) !important;
+}
 
 /* Status area */
-.wm-status { margin-top:0.6rem; font-size:0.9rem; color:#0f172a; }
+.wm-status { 
+    margin-top:1rem; 
+    font-size:0.95rem; 
+    color:#64748b;
+    font-weight:500;
+    padding:0.75rem 1rem;
+    background:#f0fdf4;
+    border-radius:12px;
+    border:1px solid var(--primary);
+    box-shadow: var(--shadow-3d-base);
+}
 
-/* Card colors */
-.wm-card[data-key="users"] { background: linear-gradient(135deg,#2563eb 0%, #1e40af 100%); }
-.wm-card[data-key="universities"] { background: linear-gradient(135deg,#10b981 0%, #059669 100%); }
-.wm-card[data-key="products"] { background: linear-gradient(135deg,#ff7a18 0%, #ff5500 100%); }
-.wm-card[data-key="orders"] { background: linear-gradient(135deg,#2563eb 0%, #1e40af 100%); }
-.wm-card[data-key="deliveries_month"] { background: linear-gradient(135deg,#10b981 0%, #059669 100%); }
-.wm-card[data-key="revenue"] { background: linear-gradient(135deg,#ff7a18 0%, #d35400 100%); }
-.wm-card[data-key="notifications"] { background: linear-gradient(135deg,#2563eb 0%, #1e40af 100%); }
-.wm-card[data-key="seats"] { background: linear-gradient(135deg,#10b981 0%, #059669 100%); }
-
-/* Responsive tweaks: stack vertically on narrow widths */
+/* Responsive tweaks */
 @media (max-width:720px){
-    .wm-dashboard { padding:0.75rem; }
-    .wm-card { min-height:84px; }
-    .wm-table { min-width:100%; }
+    .wm-dashboard { 
+        padding:1rem; 
+    }
+    .wm-stats-grid {
+        grid-template-columns: 1fr;
+        gap:1rem;
+    }
+    .wm-card { 
+        min-height:100px;
+        padding:1rem;
+    }
+    .wm-card-value{
+        font-size:1.75rem;
+    }
+}
+
+@media (max-width:480px){
+    .wm-card-value{
+        font-size:1.5rem;
+    }
+    .wm-card-title{
+        font-size:0.85rem;
+    }
 }
 </style>
 
@@ -180,7 +338,7 @@
     const cards = Array.from(document.querySelectorAll('.wm-card'));
 
     // Construire URL relative
-    const API_URL = '/backend/dashboard/super';
+    const API_URL = '../backend/dashboard/super';
 
     // Fetch et rendu
     async function loadData(){

@@ -3,7 +3,15 @@
 ?>
 <section aria-labelledby="dashboard-title">
     <style>
-        /* KodPwomo Dashboard Styles - Unified Green Palette */
+        /* KodPwomo Dashboard Styles - Unified Neumorphic Palette */
+        :root{
+            --primary: #f7b642;
+            --primary-dark: #e19627;
+            --secondary: #27ae60;
+            --secondary-dark: #229954;
+            --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+            --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
+        }
         .dash-hero {
             display: flex;
             align-items: center;
@@ -14,15 +22,17 @@
             padding: 20px 24px;
             border-radius: 16px;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow-3d-base);
+           /* border-left: 4px solid var(--primary); */
+            transition: all .25s ease;
         }
+        .dash-hero:hover{box-shadow:var(--shadow-3d-hover);transform:translateY(-2px);}
         
         .dash-hero h2 {
             margin: 0;
             font-size: 2rem;
             font-weight: 700;
-            color: var(--primary);
+            color: #294e7a;
         }
         
         .dash-hero .univ {
@@ -32,7 +42,8 @@
             font-weight: 600;
             padding: 4px 12px;
             border-radius: 20px;
-            border: 1px solid var(--primary);
+            border: 1px solid #f7f8f9ff;
+            box-shadow: var(--shadow-3d-base);
         }
 
         .kpi-grid {
@@ -47,17 +58,17 @@
             padding: var(--spacing-3, 24px);
             border-radius: 16px;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-3d-base);
             display: flex;
             flex-direction: column;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
-            border-left: 4px solid var(--primary);
+            /* border-left: 4px solid var(--primary); */
         }
         
         .kpi:hover {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            box-shadow: var(--shadow-3d-hover);
             transform: translateY(-4px);
         }
         
@@ -85,7 +96,8 @@
             padding: 4px 8px;
             border-radius: 12px;
             display: inline-block;
-            border: 1px solid var(--primary);
+            border: 1px solid #d1fae5;
+            box-shadow: var(--shadow-3d-base);
         }
 
         .orders-card {
@@ -93,15 +105,26 @@
             border-radius: 24px;
             padding: var(--spacing-3, 24px);
             border: 1px solid #e2e8f0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            box-shadow: var(--shadow-3d-base);
             border-left: 4px solid var(--primary);
+            transition: all .25s ease;
         }
+        .orders-card:hover{box-shadow:var(--shadow-3d-hover);}
         
         .orders-table-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
             border-radius: 12px;
             margin-top: 16px;
+            background: #ffffff;
+            box-shadow: var(--shadow-3d-base);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+        
+        .orders-table-container:hover {
+            box-shadow: var(--shadow-3d-hover);
+            transform: translateY(-2px);
         }
         
         .orders-table {
@@ -109,40 +132,88 @@
             border-collapse: separate;
             border-spacing: 0;
             min-width: 800px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
         }
         
         .orders-table thead th {
             position: sticky;
             top: 0;
-            background: var(--primary);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: #ffffff;
             z-index: 2;
-            padding: var(--spacing-2, 16px);
+            padding: 8px 10px;
             text-align: left;
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
             border-bottom: none;
             text-transform: uppercase;
-            letter-spacing: 0.8px;
+            letter-spacing: 0.5px;
             white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .orders-table thead th:first-child {
+            border-top-left-radius: 12px;
+        }
+        
+        .orders-table thead th:last-child {
+            border-top-right-radius: 12px;
         }
         
         .orders-table tbody tr {
-            transition: all 0.3s ease;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
         
         .orders-table tbody tr:hover {
-            background: #f0fdf4;
+            background: #f0fdf4 !important;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.2),
+                        0 2px 4px rgba(0, 0, 0, 0.1),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            transform: translateY(-2px) scale(1.005);
+            z-index: 1;
         }
         
         .orders-table td {
-            padding: var(--spacing-2, 16px);
+            padding: 8px 10px;
             border-bottom: 1px solid #f1f5f9;
             vertical-align: middle;
             color: #475569;
             font-weight: 500;
             white-space: nowrap;
-            min-width: 80px;
+            min-width: 60px;
+            background: inherit;
+            position: relative;
+            font-size: 12px;
+        }
+        
+        .orders-table .product-img {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            object-fit: cover;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1),
+                        inset 0 1px 2px rgba(255,255,255,0.3);
+            border: 2px solid #ffffff;
+            transition: all 0.3s ease;
+        }
+        
+        .orders-table .product-img:hover {
+            transform: scale(1.8);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+        
+        .orders-table .img-placeholder {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
         }
         
         .orders-table .status-col {
@@ -205,12 +276,13 @@
             font-size: 14px;
             font-weight: 500;
             box-sizing: border-box;
+            box-shadow: var(--shadow-3d-base);
         }
         
         .search:focus, .filter:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(39,174,96,0.1);
+            box-shadow: var(--shadow-3d-hover);
         }
         
         .search {
@@ -249,7 +321,18 @@
             }
             
             .orders-table {
-                min-width: 700px;
+                min-width: 750px;
+                font-size: 11px;
+            }
+            
+            .orders-table th, .orders-table td {
+                padding: 6px 8px;
+            }
+            
+            .orders-table .product-img,
+            .orders-table .img-placeholder {
+                width: 32px;
+                height: 32px;
             }
         }
 
@@ -286,12 +369,18 @@
             }
             
             .orders-table {
-                font-size: 12px;
-                min-width: 600px;
+                font-size: 10px;
+                min-width: 650px;
             }
             
             .orders-table th, .orders-table td {
-                padding: 8px 6px;
+                padding: 6px 4px;
+            }
+            
+            .orders-table .product-img,
+            .orders-table .img-placeholder {
+                width: 28px;
+                height: 28px;
             }
             
             .badge {
@@ -325,12 +414,18 @@
             }
             
             .orders-table {
-                font-size: 11px;
-                min-width: 500px;
+                font-size: 9px;
+                min-width: 550px;
             }
             
             .orders-table th, .orders-table td {
-                padding: 6px 4px;
+                padding: 4px 3px;
+            }
+            
+            .orders-table .product-img,
+            .orders-table .img-placeholder {
+                width: 24px;
+                height: 24px;
             }
             
             .status-col {
@@ -373,6 +468,7 @@
                 <table class="orders-table" aria-describedby="dashboard-title">
                     <thead>
                         <tr>
+                            <th style="width:50px">Image</th>
                             <th>Produit</th>
                             <th>Client</th>
                             <th>Commande</th>
@@ -384,7 +480,7 @@
                         </tr>
                     </thead>
                     <tbody id="ordersBody">
-                        <tr><td colspan="8"><div class="skeleton" style="height:60px;width:100%"></div></td></tr>
+                        <tr><td colspan="9"><div class="skeleton" style="height:60px;width:100%"></div></td></tr>
                     </tbody>
                 </table>
             </div>
@@ -394,7 +490,7 @@
     <script>
         (function(){
             const univId = new URLSearchParams(window.location.search).get('univ') || '1';
-            const url = `/backend/dashboard/adm/${univId}`;
+            const url = `../backend/dashboard/adm/${univId}`;
             let _orders = [];
 
             async function load(){
@@ -448,12 +544,17 @@
                     if (status && ((o.status||'').toLowerCase() !== status)) return false;
                     return true;
                 });
-                if (filtered.length === 0) { body.innerHTML = '<tr><td colspan="8" style="padding:12px;color:var(--muted)">Aucun résultat</td></tr>'; return; }
+                if (filtered.length === 0) { body.innerHTML = '<tr><td colspan="9" style="padding:12px;color:var(--muted)">Aucun résultat</td></tr>'; return; }
                 for (const o of filtered){
                     const tr = document.createElement('tr');
                     const status = (o.status||'').toLowerCase();
                     const badgeClass = status==='completed' ? 'badge completed' : 'badge pending';
+                    const imgSrc = o.product_picture ? escape(o.product_picture) : '';
+                    const imgCell = imgSrc ? 
+                        `<td><img src="${imgSrc}" alt="Product" class="product-img" loading="lazy"></td>` :
+                        `<td><div class="img-placeholder">📦</div></td>`;
                     tr.innerHTML = `
+                        ${imgCell}
                         <td>${escape(o.product_name)}</td>
                         <td>${escape(o.user_name)}</td>
                         <td>${escape(o.order_id)}</td>

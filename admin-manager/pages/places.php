@@ -1,5 +1,14 @@
 <section aria-labelledby="places-title">
     <style>
+        /* Neumorphic Unified Palette */
+        :root{
+            --primary: #f7b642;
+            --primary-dark: #e19627;
+            --secondary: #27ae60;
+            --secondary-dark: #229954;
+            --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+            --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
+        }
         /* Responsive design for mobile, tablet, and PC */
         .places-container {
             padding: 20px;
@@ -11,31 +20,48 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--shadow-3d-base);
+            /*border-left: 4px solid var(--primary);*/
+            transition: all .25s ease;
         }
+        .places-header:hover{box-shadow:var(--shadow-3d-hover);transform:translateY(-2px);}
 
         .places-header h2 {
             font-size: 1.8rem;
-            color: #1d4ed8; /* Primary blue */
+            color: #294e7a;
         }
 
         .places-header button {
-            background-color: #3b82f6; /* Button blue */
+            background-color: var(--primary);
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
+            box-shadow: var(--shadow-3d-base);
+            transition: all .3s ease;
         }
 
         .places-header button:hover {
-            background-color: #2563eb; /* Darker blue */
+            background-color: var(--primary-dark);
+            box-shadow: var(--shadow-3d-hover);
+            transform: translateY(-2px);
         }
 
         .places-table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: var(--shadow-3d-base);
+            border: 1px solid #e2e8f0;
         }
 
         .places-table th, .places-table td {
@@ -45,7 +71,7 @@
         }
 
         .places-table th {
-            background-color: #1d4ed8; /* Header blue */
+            background-color: var(--primary);
             color: white;
         }
 
@@ -89,6 +115,7 @@
             .places-header button {
                 font-size: 0.9rem;
                 padding: 8px 16px;
+                border-radius: 4px;
             }
 
             .places-table {
@@ -159,7 +186,7 @@
         }
 
         .modal-header {
-            background-color: #1d4ed8; /* Blue header */
+            background-color: var(--primary);
             color: #ffffff;
             padding: 15px;
             border-top-left-radius: 10px;
@@ -170,14 +197,14 @@
 
         .modal-body {
             padding: 20px;
-            background-color: #f8fafc; /* Light gray body */
+            background-color: #f8fafc;
         }
 
         .modal-footer {
             display: flex;
             justify-content: space-between;
             padding: 15px;
-            background-color: #3b82f6; /* Blue footer */
+            background-color: var(--primary);
             border-bottom-left-radius: 10px;
             border-bottom-right-radius: 10px;
         }
@@ -188,20 +215,25 @@
             border-radius: 5px;
             cursor: pointer;
             font-size: 1rem;
+            box-shadow: var(--shadow-3d-base);
+            transition: all .3s ease;
         }
 
         .btn-primary {
-            background-color: #4caf50; /* Green button */
+            background-color: var(--secondary);
             color: #ffffff;
         }
 
         .btn-secondary {
-            background-color: #f44336; /* Red button */
-            color: #ffffff;
+            background-color: #ffffff;
+            border: 2px solid #E74C3C;
+            color: #E74C3C;
         }
 
         .btn-primary:hover {
-            background-color: #388e3c; /* Darker green */
+            background-color: var(--secondary-dark);
+            box-shadow: var(--shadow-3d-hover);
+            transform: translateY(-2px);
         }
 
         .btn-secondary:hover {
@@ -215,29 +247,35 @@
             gap: 18px;
         }
         .modal-body label {
-            font-weight: 600;
-            color: #1d4ed8;
+            font-weight: 700;
+            color: #294e7a;
             margin-bottom: 6px;
         }
         .modal-body input[type="text"],
         .modal-body input[type="file"] {
             padding: 10px 12px;
-            border: 1.5px solid #3b82f6;
+            border: 1.5px solid #e0e7ef;
             border-radius: 6px;
             font-size: 1rem;
             background: #f1f5f9;
             color: #0f172a;
             transition: border-color 0.2s;
+            box-shadow: var(--shadow-3d-base);
         }
         .modal-body input[type="text"]:focus,
         .modal-body input[type="file"]:focus {
-            border-color: #1d4ed8;
+            border-color: #e0e7ef;
             outline: none;
             background: #e0e7ef;
+            box-shadow: var(--shadow-3d-hover);
         }
         .modal-body input[type="file"] {
             padding: 8px 0;
             background: #f8fafc;
+        }
+        #addPlaceBtn {
+            border-radius: 14px;
+            box-shadow: var(--shadow-3d-base);
         }
     </style>
 
@@ -269,7 +307,7 @@
         <div class="modal-body">
             <form id="addForm">
                 <label for="addName">Nom:</label>
-                <input type="text" id="addName" name="name" required>
+                <input type="text" id="addName" name="name" placeholder="Nom de la place" required>
 
                 <label for="addImage">Image:</label>
                 <input type="file" id="addImage" name="image" accept="image/*">
@@ -302,7 +340,7 @@
     <script>
         (function(){
             const univ = new URLSearchParams(window.location.search).get('univ') || '1';
-            const base = `/backend/places/adm`;
+            const base = `../backend/places/adm`;
 
             function escape(s){ return s===null||s===undefined? '': String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 

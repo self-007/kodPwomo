@@ -14,6 +14,7 @@
 
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Suppression Font Awesome : utilisation d'icônes SVG inline pour fiabilité -->
 
     <style>
         :root{
@@ -65,36 +66,58 @@
         @media (max-width:520px) { .grid-cards { grid-template-columns:1fr; } }
 
         .card {
-            background:var(--card);
+            position:relative;
+            background:linear-gradient(135deg, #ffffff 0%, #f5f7fa 100%);
             border-radius:var(--radius);
-            padding:16px;
-            box-shadow:var(--shadow);
+            padding:18px 18px 18px 20px;
+            box-shadow:var(--shadow), inset 0 0 0 1px rgba(0,0,0,0.04);
             display:flex;
-            gap:12px;
+            gap:14px;
             align-items:center;
-            transition:transform .18s ease, box-shadow .18s ease;
+            transition:transform .22s cubic-bezier(.22,.9,.3,1), box-shadow .22s ease, background .4s ease;
             cursor:default;
-            min-height:72px;
+            min-height:78px;
+            overflow:hidden;
+        }
+        .card::after {
+            content:""; position:absolute; inset:0; pointer-events:none;
+            background:radial-gradient(circle at 25% 20%, rgba(255,255,255,0.65), rgba(255,255,255,0) 60%);
+            opacity:.55; mix-blend-mode:overlay;
+            transition:opacity .4s ease;
         }
         .card:focus-within, .card:hover {
-            transform:translateY(-4px);
-            box-shadow: 0 10px 30px rgba(255, 107, 53, 0.12);
+            transform:translateY(-6px);
+            box-shadow:0 14px 34px -6px rgba(255,107,53,0.28);
             outline:none;
+            background:linear-gradient(135deg, #ffffff 0%, #eef2f6 100%);
         }
+        .card:hover::after { opacity:.8; }
 
         .card .icon {
-            width:48px; height:48px; border-radius:10px; display:flex; align-items:center; justify-content:center;
-            font-size:20px; color:#fff;
-            flex-shrink:0;
+            width:50px; height:50px; border-radius:14px; display:flex; align-items:center; justify-content:center;
+            font-size:22px; color:#fff;
+            flex-shrink:0; position:relative;
+            box-shadow:0 4px 14px -2px rgba(0,0,0,0.15);
         }
+        .card .icon svg { width:24px; height:24px; filter:drop-shadow(0 2px 2px rgba(0,0,0,0.15)); }
+        .card .icon svg path { fill:#fff; }
         .card .meta { flex:1; min-width:0; }
         .card .label { color:var(--muted); font-size:13px; margin-bottom:6px; }
         .card .value { font-weight:700; font-size:18px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 
-        .c-blue { background:linear-gradient(135deg, #FF6B35, #D84315); }
-        .c-orange { background:linear-gradient(135deg, #004E89, #003566); }
-        .c-green { background:linear-gradient(135deg, #1ABC9C, #16A085); }
-        .c-violet { background:linear-gradient(135deg, #00D4FF, #0099cc); }
+        .c-blue { background:linear-gradient(135deg, #FF6B35 0%, #D84315 100%); }
+        .c-orange { background:linear-gradient(135deg, #004E89 0%, #003566 100%); }
+        .c-green { background:linear-gradient(135deg, #1ABC9C 0%, #16A085 100%); }
+        .c-violet { background:linear-gradient(135deg, #00D4FF 0%, #0099cc 100%); }
+
+        /* Table enhancements */
+        thead th { position:relative; }
+        thead th::after { content:""; position:absolute; left:0; bottom:0; height:1px; width:100%; background:linear-gradient(90deg, rgba(255,107,53,.25), rgba(0,212,255,.25)); }
+        tbody tr { backdrop-filter:saturate(140%); }
+        tbody tr:hover { box-shadow:inset 0 0 0 999px rgba(255,255,255,0.5); }
+        tbody td:first-child { font-weight:500; }
+        tbody td { transition:color .18s ease; }
+        tbody tr:hover td { color:#0f172a; }
 
         .panel {
             background:var(--card);
@@ -121,21 +144,6 @@
         tbody tr:hover { background:linear-gradient(90deg, rgba(255, 107, 53, 0.03), rgba(0, 212, 255, 0.02)); }
         td { padding:10px 12px; border-top:1px solid rgba(26, 26, 46, 0.04); font-size:14px; }
 
-        .assistant { margin-top:20px; display:flex; gap:8px; align-items:flex-start; flex-direction:column; }
-        .assistant .row { display:flex; gap:8px; width:100%; }
-        .assistant input[type="text"] {
-            flex:1; padding:12px; border-radius:10px; border:1px solid rgba(26, 26, 46, 0.08);
-            font-size:14px; outline:none; background:transparent;
-        }
-        .assistant button {
-            background:linear-gradient(135deg, #FF6B35, #D84315); color:#fff; border:0; padding:10px 14px; border-radius:10px; font-weight:600; cursor:pointer;
-            transition:transform .12s ease, opacity .12s ease;
-        }
-        .assistant button:active { transform:translateY(1px); }
-        .assistant .result {
-            margin-top:8px; padding:12px; border-radius:10px; background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(250,250,255,0.95));
-            box-shadow:var(--shadow); min-height:44px; color:#1a1a2e;
-        }
 
         .skeleton { animation:shimmer 1.2s linear infinite; background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.4), rgba(255,255,255,0)); background-size:200% 100%; }
         .skeleton-box { background:linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02)); border-radius:8px; }
@@ -210,20 +218,11 @@
             </div>
         </section>
 
-        <!-- Assistant -->
-        <section class="panel assistant fade-in" aria-label="Assistant d'analyse">
-            <strong>Assistant d'analyse</strong>
-            <div class="row" role="search">
-                <input id="assistantInput" type="text" placeholder="Posez une question ou demandez un rapport (ex: 'Livraisons hier')" aria-label="Question pour l'assistant" />
-                <button id="assistantBtn">Envoyer</button>
-            </div>
-            <div id="assistantResult" class="result" aria-live="polite">Entrez une question pour obtenir un résumé.</div>
-        </section>
     </main>
 
     <script>
         // Configuration
-        const API = '/backend/analytics/super';
+        const API = '../backend/analytics/super';
         const chartColors = {
             deliveries: getComputedStyle(document.documentElement).getPropertyValue('--blue').trim(),
             revenue: getComputedStyle(document.documentElement).getPropertyValue('--orange').trim()
@@ -232,9 +231,6 @@
         const statCardsEl = document.getElementById('statCards');
         const refreshBtn = document.getElementById('refreshBtn');
         const darkToggle = document.getElementById('darkToggle');
-        const assistantInput = document.getElementById('assistantInput');
-        const assistantBtn = document.getElementById('assistantBtn');
-        const assistantResult = document.getElementById('assistantResult');
         const agentsTable = document.getElementById('agentsTable').querySelector('tbody');
         const clientsTable = document.getElementById('clientsTable').querySelector('tbody');
         const chartCanvas = document.getElementById('mainChart');
@@ -253,10 +249,10 @@
 
         function renderCards(data){
             const cards = [
-                { key:'deliveries', label:'Livraisons', icon:'🚚', color:'c-blue', value: data.deliveries ?? null },
-                { key:'revenue', label:'Chiffre d\'affaires', icon:'💶', color:'c-orange', value: data.revenue ?? null, prefix: '€' },
-                { key:'agents', label:'Agents', icon:'🧑‍💼', color:'c-green', value: data.agents ?? null },
-                { key:'clients', label:'Clients', icon:'👤', color:'c-violet', value: data.clients ?? null },
+                { key:'deliveries', label:'Livraisons', icon:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 7h11v9H3V7zm13 0h3.586L22 10.414V16h-6V7zm-9.5 11a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm11 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zM14 9H5v5h9V9z"/></svg>`, color:'c-blue', value: data.deliveries ?? null },
+                { key:'revenue', label:'Chiffre d\'affaires', icon:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10a9.96 9.96 0 0 0 8.94-5.986l-1.838-.79A8.001 8.001 0 1 1 20 12h2c0 5.514-4.486 10-10 10zm.5-15h-1v2.05A3.501 3.501 0 0 0 8 12a3.5 3.5 0 0 0 3.5 3.5V17h1v-1.45A3.5 3.5 0 0 0 16 12a3.501 3.501 0 0 0-3.5-3.95V4z"/></svg>`, color:'c-orange', value: data.revenue ?? null, prefix: '€' },
+                { key:'agents', label:'Agents', icon:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/></svg>`, color:'c-green', value: data.agents ?? null },
+                { key:'clients', label:'Clients', icon:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 11c1.654 0 3-1.346 3-3S17.654 5 16 5s-3 1.346-3 3 1.346 3 3 3zm-8 0c1.654 0 3-1.346 3-3S9.654 5 8 5 5 6.346 5 8s1.346 3 3 3zm0 2c-2.673 0-8 1.337-8 4v2h10v-2c0-2.663-5.327-4-8-4zm8 0c-.29 0-.618.018-.974.046 1.236.86 1.974 2.037 1.974 3.454v2H24v-2c0-2.663-5.327-4-8-4z"/></svg>`, color:'c-violet', value: data.clients ?? null },
             ];
 
             statCardsEl.innerHTML = '';
@@ -288,14 +284,6 @@
                 const email = it.email || it.name || '-';
                 const id = it.id ?? '-';
                 tr.innerHTML = `<td style="max-width:230px;overflow:hidden;text-overflow:ellipsis">${email}</td><td>${id}</td>`;
-                tr.tabIndex = 0;
-                tr.setAttribute('role','button');
-                tr.addEventListener('keydown', e => { if(e.key==='Enter') tr.click(); });
-                tr.addEventListener('click', () => {
-                    // Example action: focus assistant with context
-                    assistantInput.value = `Détails pour ${email} (ID: ${id})`;
-                    assistantInput.focus();
-                });
                 tbodyEl.appendChild(tr);
             }
         }
@@ -368,62 +356,74 @@
         }
 
         // Fetch and update UI
-        async function fetchData(query=null){
+        async function fetchData(){
             try {
                 // show skeletons
-                if (!query){
-                    statCardsEl.querySelectorAll('.card').forEach(c=>c.classList.add('skeleton'));
-                    agentsTable.innerHTML = '<tr><td colspan="2" class="skeleton-box" style="height:48px"></td></tr>';
-                    clientsTable.innerHTML = '<tr><td colspan="2" class="skeleton-box" style="height:48px"></td></tr>';
-                    assistantResult.textContent = query ? 'Chargement...' : assistantResult.textContent;
-                }
+                statCardsEl.querySelectorAll('.card').forEach(c=>c.classList.add('skeleton'));
+                agentsTable.innerHTML = '<tr><td colspan="2" class="skeleton-box" style="height:48px"></td></tr>';
+                clientsTable.innerHTML = '<tr><td colspan="2" class="skeleton-box" style="height:48px"></td></tr>';
 
                 const opts = {
-                    method: query ? 'POST' : 'GET',
-                    headers: { 'Accept':'application/json', 'Content-Type':'application/json' }
+                    method: 'GET',
+                    headers: { 'Accept':'application/json' }
                 };
-                if (query) opts.body = JSON.stringify({ query });
 
                 const resp = await fetch(API, opts);
                 if (!resp.ok) throw new Error('Erreur réseau: ' + resp.status);
                 const json = await resp.json();
 
-                // Example expected structure:
-                // { deliveries: 123, revenue: 4567.89, agents: 12, clients: 345,
-                //   series: { labels:['2025-10-21',...], deliveries:[...], revenue:[...] },
-                //   top_agents: [{email,id},...], top_clients:[...] }..] }
-                const data = json ?? {};
+                // Nouvelle structure attendue (exemple fourni):
+                // {
+                //   overview: { nbrs: 1, deliveries: [ { total_amount: null }, ... ] },
+                //   dailyOrders: { nbrs: 0, orders: [ { date: "2025-11-06", total_amount: 123 }, ... ] },
+                //   topAgents: { nbrs: 1, agents: [ { id_unique, email, name, total_earned, ... } ] },
+                //   topCustomers: { nbrs: 1, customers: [ { id, name, email, total_spent, ... } ] }
+                // }
+                const overview = json.overview || {};
+                const dailyOrders = json.dailyOrders || {};
+                const topAgentsData = json.topAgents || json.top_agents || {};
+                const topCustomersData = json.topCustomers || json.top_clients || {};
+
+                // Calcul du chiffre d'affaires: somme des total_amount (ignorer null)
+                const revenueSum = Array.isArray(overview.deliveries)
+                    ? overview.deliveries.reduce((acc, d) => acc + (Number(d.total_amount) || 0), 0)
+                    : 0;
 
                 renderCards({
-                    deliveries: data.deliveries ?? data.count_deliveries ?? null,
-                    revenue: data.revenue ?? data.chiffre_affaires ?? null,
-                    agents: data.agents ?? null,
-                    clients: data.clients ?? null
+                    deliveries: typeof overview.nbrs === 'number' ? overview.nbrs : null,
+                    revenue: revenueSum,
+                    agents: typeof topAgentsData.nbrs === 'number' ? topAgentsData.nbrs : (Array.isArray(topAgentsData.agents) ? topAgentsData.agents.length : null),
+                    clients: typeof topCustomersData.nbrs === 'number' ? topCustomersData.nbrs : (Array.isArray(topCustomersData.customers) ? topCustomersData.customers.length : null)
                 });
 
-                // chart
-                if (data.series && Array.isArray(data.series.labels)){
-                    const labels = data.series.labels.map(isoDateLabel);
-                    const seriesObj = {
-                        deliveries: data.series.deliveries || [],
-                        revenue: data.series.revenue || []
-                    };
-                    renderChart(labels, seriesObj);
+                // Construction du graphique
+                let chartLabels = [];
+                let deliveriesSeries = [];
+                let revenueSeries = [];
+
+                if (Array.isArray(dailyOrders.orders) && dailyOrders.orders.length) {
+                    // Si la structure contient des objets avec date et total_amount
+                    chartLabels = dailyOrders.orders.map(o => isoDateLabel(o.date || '')); // fallback date vide
+                    deliveriesSeries = dailyOrders.orders.map(o => (o.qnt || 1)); // Nombre de livraisons ou quantité
+                    revenueSeries = dailyOrders.orders.map(o => Number(o.total_amount) || 0);
+                } else if (Array.isArray(overview.deliveries) && overview.deliveries.length) {
+                    // Fallback: utiliser overview comme source unique (un seul point ou agrégation)
+                    chartLabels = ['Total'];
+                    deliveriesSeries = [overview.nbrs || overview.deliveries.length];
+                    revenueSeries = [revenueSum];
+                }
+
+                if (chartLabels.length) {
+                    renderChart(chartLabels, { deliveries: deliveriesSeries, revenue: revenueSeries });
                 } else {
-                    // no timeseries, clear chart
                     if (mainChart) mainChart.destroy();
                     chartCanvas.getContext('2d').clearRect(0,0,chartCanvas.width, chartCanvas.height);
                 }
 
-                renderTopList(agentsTable, data.top_agents || data.topAgents || []);
-                renderTopList(clientsTable, data.top_clients || data.topClients || []);
+                // Listes Top
+                renderTopList(agentsTable, topAgentsData.agents || []);
+                renderTopList(clientsTable, topCustomersData.customers || []);
 
-                // Assistant: if server returned a quick analysistant: if server returned a quick analysis
-                if (query){
-                    if (json.result) assistantResult.textContent = json.result;
-                    else if (json.summary) assistantResult.textContent = json.summary;
-                    else assistantResult.textContent = 'Aucune réponse textuelle fournie par l\'API.';
-                }
 
             } catch (err){
                 console.error(err);
@@ -431,7 +431,6 @@
                 statCardsEl.innerHTML = `<div style="grid-column:1/-1" class="panel" role="alert">Impossible de charger les données. ${err.message}</div>`;
                 agentsTable.innerHTML = `<tr><td colspan="2" style="color:var(--muted)">Erreur lors du chargement</td></tr>`;
                 clientsTable.innerHTML = `<tr><td colspan="2" style="color:var(--muted)">Erreur lors du chargement</td></tr>`;
-                assistantResult.textContent = 'Erreur : ' + (err.message || 'Impossible de contacter l\'API.');
             } finally {
                 // remove skeletons
                 statCardsEl.querySelectorAll('.card.skeleton').forEach(c=>c.classList.remove('skeleton'));
@@ -441,21 +440,6 @@
         // Events
         refreshBtn.addEventListener('click', () => fetchData());
 
-        assistantBtn.addEventListener('click', async () => {
-            const q = assistantInput.value.trim();
-            if (!q) { assistantResult.textContent = 'Veuillez entrer une question.'; assistantInput.focus(); return; }
-            assistantResult.textContent = 'Génération du rapport…';
-            assistantBtn.disabled = true;
-            try {
-                await fetchData(q);
-            } finally {
-                assistantBtn.disabled = false;
-            }
-        });
-
-        assistantInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') assistantBtn.click();
-        });
 
         darkToggle.addEventListener('click', () => {
             const isDark = document.documentElement.style.getPropertyValue('--bg') === '#0f172a';

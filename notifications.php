@@ -1,125 +1,296 @@
-<?php
-// Simple Notifications page using the same design language (green accents, orange actions)
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Notifications - KodPwomo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <style>
-        :root{
-            --bg:#f9fafb; --white:#ffffff; --text:#111827; --muted:#6b7280;
-            --green:#10b981; --orange:#f59e0b; --border:#e5e7eb;
-            --shadow-sm:0 1px 2px rgba(0,0,0,0.06); --shadow-lg:0 10px 25px rgba(0,0,0,0.10);
-            --radius:16px; --ease:cubic-bezier(0.25,0.1,0.25,1);
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Notifications | kodPwomo</title>
+	<link rel="stylesheet" href="assets/css/kodpwomo-colors.css">
+	<style>
+		:root{
+			--primary:#f7b642;
+			--primary-dark:#e19627;
+			--secondary:#27ae60;
+			--secondary-dark:#229954;
+			--text:#234777;
+			--muted:#6b7280;
+			--white:#ffffff;
+			--white-95:rgba(255,255,255,0.95);
+			--white-92:rgba(255,255,255,0.92);
+			--panel-border:1px solid rgba(0,0,0,0.06);
+			--panel-shadow:0 6px 20px rgba(0,0,0,0.08);
+			--row-shadow:0 10px 30px rgba(255, 107, 53, 0.08);
+		}
+		*{box-sizing:border-box;margin:0;padding:0}
+		body{
+			background: #fafafa; /* blanc pâle */
+			color: var(--text);
+			font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+			min-height:100vh;
+		}
+		.container{max-width:1100px;margin:0 auto;padding:24px}
+		/* Header (same pattern as boutique) */
+		.header{background:#ffffff; backdrop-filter:blur(10px); padding:12px 0; box-shadow:0 6px 20px rgba(0,0,0,0.08); position:sticky; top:0; z-index:100; border-radius:15px; border-bottom:1px solid rgba(0,0,0,0.05); }
+		.header-content{width:100%;margin:0;padding:0 16px;display:flex;justify-content:space-between;align-items:center}
+		.logo{display:flex;align-items:center;height:40px}
+		.logo img{height:100%;width:auto;max-width:160px;border-radius:8px}
+		.nav{position:relative}
+		.hamburger-btn{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;width:44px;height:44px;border:1px solid rgba(0,0,0,0.15);border-radius:6px;background:#fff;cursor:pointer;box-shadow:3px 3px 8px rgba(0,0,0,0.12), -3px -3px 8px rgba(255,255,255,0.85)}
+		.hamburger-btn span{width:20px;height:2px;background:#333;margin:2px 0;border-radius:2px}
+		.nav-menu{position:absolute;right:0;top:44px;min-width:200px;max-width:90vw;max-height:60vh;overflow-y:auto;background:rgba(255,255,255,0.95);border:1px solid rgba(0,0,0,0.06);border-radius:10px;box-shadow:var(--panel-shadow);backdrop-filter:blur(12px);display:none;z-index:1200}
+		.nav-menu.show{display:block}
+		.nav-menu a{display:block;padding:10px 14px;text-decoration:none;color:#234777;font-weight:600;border-bottom:1px solid rgba(0,0,0,0.05)}
+		.nav-menu a:last-child{border-bottom:none}
+		.nav-menu a:hover{background:#f5f7fb;color:var(--primary)}
+		/* Header */
+		.header{
+			display:flex;align-items:center;gap:12px;margin-bottom:16px
+		}
+        .header-content{
+            width:100%;
+            
         }
-        *{box-sizing:border-box}
-        html,body{height:100%}
-        body{margin:0; font-family:Poppins,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text)}
-        .header{position:sticky; top:0; z-index:100; background:var(--white); border-bottom:1px solid var(--border)}
-        .header-inner{display:flex; align-items:center; gap:12px; padding:12px 16px}
-        .logo{font-weight:800; color:var(--text)}
-        .container{max-width:1100px; margin:24px auto; padding:0 16px}
-        h1{margin:0 0 16px; font-size:22px}
-        .grid{display:grid; grid-template-columns:1fr; gap:16px}
-        @media(min-width:768px){.grid{grid-template-columns:repeat(2,1fr)}}
-        @media(min-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}}
-        .card{background:var(--white); border-radius:var(--radius); box-shadow:var(--shadow-sm); padding:16px; position:relative}
-        .card::before{content:''; position:absolute; top:0; left:0; right:0; height:4px; border-radius:var(--radius) var(--radius) 0 0; background:var(--green)}
-        .notif{display:flex; gap:12px; align-items:flex-start}
-        .icon{width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,#e5e7eb,#d1d5db); display:grid; place-items:center}
-        .title{margin:0; font-weight:700; font-size:16px}
-        .meta{font-size:12px; color:var(--muted)}
-        .desc{margin:8px 0 0; font-size:13px; color:var(--text)}
-        .badge{display:inline-block; font-size:10px; font-weight:700; letter-spacing:.3px; text-transform:uppercase; padding:5px 10px; border-radius:6px}
-        .badge.info{background:#d1fae5; color:#047857}
-        .badge.alert{background:#fee2e2; color:#b91c1c}
-        .badge.update{background:#dbeafe; color:#1e40af}
-        .actions{margin-top:12px; display:flex; gap:10px}
-        .btn{appearance:none; border:0; cursor:pointer; border-radius:8px; padding:10px 16px; font-weight:600; font-size:13px; display:inline-flex; align-items:center; gap:6px}
-        .btn-outline{background:var(--white); box-shadow:inset 0 0 0 1px var(--border)}
-        .btn-primary{background:var(--orange); color:#fff}
-        .btn:hover{opacity:.95}
-        .empty{display:grid; place-items:center; height:200px; color:var(--muted)}
-    </style>
+		
+		img{width:30%;height:auto;}
+        @media (max-width:600px){
+            img{width:40%;height:auto;}
+        }
+         @media (max-width:400px){
+            img{width:55%;height:auto;}
+        }
+		.title-wrap{display:flex;flex-direction:column}
+		.site{font-weight:800;letter-spacing:0.2px}
+		.subtitle{color:var(--muted);font-weight:600;font-size:13px}
+		/* Search + Filters */
+		.toolbar{display:flex;gap:12px;align-items:center;margin:16px 0;flex-wrap:wrap}
+		.search{flex:1;min-width:220px;background:var(--white-95);backdrop-filter:blur(8px);border:var(--panel-border);border-radius:12px;padding:10px 12px;color:var(--text);box-shadow:var(--panel-shadow)}
+		.chips{display:flex;gap:8px;flex-wrap:wrap}
+		.chip{padding:8px 12px;border-radius:999px;background:#fff;color:var(--text);border:2px solid #e2e8f0;cursor:pointer;user-select:none;box-shadow:3px 3px 8px rgba(0,0,0,0.12), -3px -3px 8px rgba(255,255,255,0.85)}
+		.chip.active{background:var(--primary); color:#fff;border-color:var(--primary)}
+		.chip:hover{filter:brightness(1.1)}
+		/* Layout */
+		.grid{display:grid;grid-template-columns:1fr 280px;gap:16px}
+		@media (max-width:900px){.grid{grid-template-columns:1fr}}
+		/* Panel */
+		.panel{background:var(--white-92);backdrop-filter:blur(8px);border:var(--panel-border);border-radius:16px;box-shadow:var(--panel-shadow)}
+		.panel .content{padding:16px}
+		/* Row */
+		.row{display:flex;gap:12px;padding:14px 16px;border-radius:14px;background:#fff;border:1px solid rgba(0,0,0,0.06);align-items:flex-start;box-shadow:var(--row-shadow)}
+		.row + .row{margin-top:10px}
+		.avatar{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg, var(--primary), var(--secondary));display:flex;align-items:center;justify-content:center;font-weight:800;color:#ffffff}
+		.meta{flex:1}
+		.title{font-weight:700}
+		.desc{color:var(--muted);margin-top:4px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+		.time{color:#6b7280;margin-top:6px;font-size:12px}
+		.actions{display:flex;flex-direction:column;gap:8px;min-width:120px}
+		.more{margin-top:6px;color:var(--primary);cursor:pointer;font-weight:600}
+		.btn{padding:8px 12px;border-radius:999px;background:#fff;color:var(--text);border:2px solid #e2e8f0;cursor:pointer;text-align:center;box-shadow:3px 3px 8px rgba(0,0,0,0.12), -3px -3px 8px rgba(255,255,255,0.85)}
+		.btn.primary{background:var(--primary); border:none;color:#fff}
+		.btn.warn{background:linear-gradient(135deg, #FF6B35, #D84315); border:none;color:#ffffff}
+		.badge-pill{padding:6px 10px;border-radius:999px;background:#fff;border:2px solid #e2e8f0;color:var(--text);font-weight:700;min-width:72px;text-align:center}
+		/* Sidebar stats */
+		.stats{padding:16px}
+		.stat-title{color:var(--text);font-weight:700;margin-bottom:12px}
+		.stat-item{display:flex;justify-content:space-between;color:var(--text);padding:8px 0;border-bottom:1px dashed rgba(0,0,0,0.08)}
+		.stat-item:last-child{border-bottom:none}
+		/* Top row filters inside panel header */
+		.panel-header{display:flex;gap:8px;align-items:center;padding:12px 16px;border-bottom:1px solid rgba(0,0,0,0.06)}
+	</style>
 </head>
-<body>
-    <header class="header">
-        <div class="header-inner">
-            <div class="logo">KodPwomo</div>
-        </div>
-    </header>
+	<body>
+	<header class="header" style="z-index:1000">
+		<div class="header-content">
+			<img src="image/logo/logo1.1.jpg" alt="kodPwomo">
+			<nav class="nav">
+				<button class="hamburger-btn" id="hamburgerBtn" aria-label="Menu" aria-expanded="false" aria-controls="navMenu">
+					<span></span><span></span><span></span>
+				</button>
+				<div class="nav-menu" id="navMenu" role="menu">
+					<a href="dashboard_user/dashboard.php" role="menuitem">Dashboard</a>
+					<a href="boutique.php" role="menuitem">Boutique</a>
+					<a href="agent.php" role="menuitem">Restaurant</a>
+					<a href="index.php" role="menuitem">Home</a>
+				</div>
+			</nav>
+		</div>
+	</header>
+	<div class="container">
+		<div class="header" style="background:transparent;box-shadow:none;padding:0">
+			<div class="title-wrap">
+				<div class="site">Notifications</div>
+				<div class="subtitle">Votre activité récente</div>
+			</div>
+		</div>
 
-    <main class="container">
-        <h1>Notifications</h1>
-        <div class="grid">
-            <div class="card">
-                <div class="notif">
-                    <div class="icon">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M12 2 2 7l10 5 10-5-10-5Zm0 7-10 5 10 5 10-5-10-5Z" stroke="#10b981" stroke-width="2"/></svg>
-                    </div>
-                    <div style="flex:1">
-                        <div style="display:flex; justify-content:space-between; align-items:center">
-                            <h3 class="title">Commande #2024012 confirmée</h3>
-                            <span class="badge info">Info</span>
-                        </div>
-                        <div class="meta">12 Janvier 2025 • 14:32</div>
-                        <p class="desc">Votre commande a été acceptée par l'agent. Suivi disponible dans Mes Commandes.</p>
-                        <div class="actions">
-                            <button class="btn btn-outline" onclick="location.href='../dashboard_user/dashboard.php'">Voir la commande</button>
-                            <button class="btn btn-primary">Marquer comme lue</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		<div class="toolbar">
+			<input id="searchInput" class="search" type="text" placeholder="Rechercher…" />
+			<div class="chips">
+				<div class="chip active" data-filter="all">Tout <span id="countAll" style="margin-left:6px;opacity:.8">0</span></div>
+				<div class="chip" data-filter="unread">Non lus <span id="countUnread" style="margin-left:6px;opacity:.8">0</span></div>
+				<div class="chip" data-filter="read">Lus <span id="countRead" style="margin-left:6px;opacity:.8">0</span></div>
+				<div class="chip" id="markAllRead">Tout marquer lu</div>
+				<div class="chip" id="refreshBtn">Actualiser</div>
+			</div>
+		</div>
 
-            <div class="card">
-                <div class="notif">
-                    <div class="icon">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M3 16h18l-2-7H6L3 16Z" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><path d="M7 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" stroke="#10b981" stroke-width="2"/></svg>
-                    </div>
-                    <div style="flex:1">
-                        <div style="display:flex; justify-content:space-between; align-items:center">
-                            <h3 class="title">Commande en route</h3>
-                            <span class="badge update">Mise à jour</span>
-                        </div>
-                        <div class="meta">12 Janvier 2025 • 15:05</div>
-                        <p class="desc">L'agent est en route vers votre place de livraison à Université Joseph Ki-Zerbo.</p>
-                        <div class="actions">
-                            <button class="btn btn-outline" onclick="location.href='../dashboard_user/dashboard.php#orders'">Suivre</button>
-                            <button class="btn btn-primary">Marquer comme lue</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+		<div class="grid">
+			<div class="panel" id="listPanel">
+				<div class="panel-header">
+					<span class="badge-pill">Filtré</span>
+					<span id="activeFilterLabel" style="color:#bcd0ff">Tout</span>
+				</div>
+				<div class="content" id="rows"></div>
+			</div>
+			<div class="panel">
+				<div class="stats">
+					<div class="stat-title">Résumé</div>
+					<div class="stat-item"><span>Total</span><strong id="statTotal">0</strong></div>
+					<div class="stat-item"><span>Non lus</span><strong id="statUnread">0</strong></div>
+					<div class="stat-item"><span>Lus</span><strong id="statRead">0</strong></div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-            <div class="card">
-                <div class="notif">
-                    <div class="icon">
-                        <svg viewBox="0 0 24 24" width="20" height="20" fill="none"><path d="M20 6 9 17l-5-5" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    </div>
-                    <div style="flex:1">
-                        <div style="display:flex; justify-content:space-between; align-items:center">
-                            <h3 class="title">Livraison terminée</h3>
-                            <span class="badge info">Succès</span>
-                        </div>
-                        <div class="meta">12 Janvier 2025 • 16:40</div>
-                        <p class="desc">Votre commande a été livrée. Donnez une note et un avis dans Mes Avis.</p>
-                        <div class="actions">
-                            <button class="btn btn-outline" onclick="location.href='../dashboard_user/dashboard.php#reviews'">Donner un avis</button>
-                            <button class="btn btn-primary">Marquer comme lue</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+	<script>
+		// Demo dataset
+		const demoNotifications = [
+			{id:1, type:'topup', title:'commande de top-up', desc:"L'utilisateur Voltaire Bill James-sky a commandé un top-up de 500 coins.", ts:'2025-09-25T18:02:02Z', unread:true},
+			{id:2, type:'topup', title:'commande de top-up', desc:"L'utilisateur Haïti Edu a commandé un top-up de 500 coins.", ts:'2025-09-25T13:08:18Z', unread:true},
+			{id:3, type:'order', title:'Nouvelle commande', desc:"Votre commande #KP-2025-223 a été prise en charge.", ts:'2025-09-24T10:12:00Z', unread:false},
+			{id:4, type:'delivery', title:'Livraison en route', desc:"Votre commande #KP-2025-223 est en route.", ts:'2025-09-24T11:05:00Z', unread:true},
+		];
 
-        <!-- Empty state example -->
-        <!-- <div class="card empty">Aucune notification pour l'instant</div> -->
-    </main>
+		let state = { filter:'all', search:'', items:[...demoNotifications] };
+
+		const rowsEl = document.getElementById('rows');
+		const chips = Array.from(document.querySelectorAll('.chip[data-filter]'));
+		const searchInput = document.getElementById('searchInput');
+		const statTotal = document.getElementById('statTotal');
+		const statUnread = document.getElementById('statUnread');
+		const statRead = document.getElementById('statRead');
+		const countAll = document.getElementById('countAll');
+		const countUnread = document.getElementById('countUnread');
+		const countRead = document.getElementById('countRead');
+		const activeFilterLabel = document.getElementById('activeFilterLabel');
+
+		// Event wiring
+		chips.forEach(ch => ch.addEventListener('click', () => {
+			chips.forEach(x => x.classList.remove('active'));
+			ch.classList.add('active');
+			const f = ch.getAttribute('data-filter');
+			if (f) state.filter = f;
+			activeFilterLabel.textContent = f === 'all' ? 'Tout' : (f === 'unread' ? 'Non lus' : 'Lus');
+			render();
+		}));
+
+		document.getElementById('markAllRead').addEventListener('click', () => {
+			state.items = state.items.map(n => ({...n, unread:false}));
+			render();
+		});
+		document.getElementById('refreshBtn').addEventListener('click', () => {
+			// In a real app, refetch from backend
+			render();
+		});
+		searchInput.addEventListener('input', e => { state.search = e.target.value.trim().toLowerCase(); render(); });
+
+		function timeAgo(ts){
+			const d = new Date(ts);
+			const diff = (Date.now() - d.getTime())/1000;
+			if (diff < 60) return `${Math.floor(diff)}s`;
+			if (diff < 3600) return `${Math.floor(diff/60)}m`;
+			if (diff < 86400) return `${Math.floor(diff/3600)}h`;
+			return d.toLocaleString();
+		}
+
+		function filtered(){
+			let arr = [...state.items];
+			if (state.filter === 'unread') arr = arr.filter(n => n.unread);
+			if (state.filter === 'read') arr = arr.filter(n => !n.unread);
+			if (state.search) arr = arr.filter(n =>
+				n.title.toLowerCase().includes(state.search) ||
+				n.desc.toLowerCase().includes(state.search)
+			);
+			return arr;
+		}
+
+		function render(){
+			const arr = filtered();
+			statTotal.textContent = state.items.length;
+			statUnread.textContent = state.items.filter(n => n.unread).length;
+			statRead.textContent = state.items.filter(n => !n.unread).length;
+			countAll.textContent = state.items.length;
+			countUnread.textContent = state.items.filter(n => n.unread).length;
+			countRead.textContent = state.items.filter(n => !n.unread).length;
+
+			rowsEl.innerHTML = '';
+			if (!arr.length){
+				rowsEl.innerHTML = '<div style="padding:16px;color:#9bb2d9">Aucune notification</div>';
+				return;
+			}
+			arr.forEach(n => rowsEl.appendChild(rowEl(n)));
+		}
+
+		function rowEl(n){
+			const wrap = document.createElement('div');
+			wrap.className = 'row';
+			wrap.innerHTML = `
+				<div class="avatar">${(n.title||'W').charAt(0).toUpperCase()}</div>
+				<div class="meta">
+					<div class="title">${n.title}</div>
+					<div class="desc">${n.desc}</div>
+					<div class="time">${timeAgo(n.ts)}</div>
+					<div class="more">Voir plus</div>
+				</div>
+				<div class="actions">
+					<div class="badge-pill">${n.unread ? 'Non lu' : 'Lu'}</div>
+					<button class="btn primary">${n.unread ? 'Marquer lu' : 'Marquer non lu'}</button>
+					<button class="btn">Supprimer</button>
+				</div>
+			`;
+			// Actions
+			const buttons = wrap.querySelectorAll('.btn');
+			buttons[0].addEventListener('click', () => { n.unread = !n.unread; render(); });
+			buttons[1].addEventListener('click', () => { state.items = state.items.filter(x => x.id !== n.id); render(); });
+			// Voir plus: toggle clamp
+			const more = wrap.querySelector('.more');
+			const desc = wrap.querySelector('.desc');
+			more.addEventListener('click', () => {
+				const expanded = desc.style.webkitLineClamp === 'unset';
+				if (expanded){
+					desc.style.webkitLineClamp = '2';
+					more.textContent = 'Voir plus';
+				} else {
+					desc.style.webkitLineClamp = 'unset';
+					more.textContent = 'Voir moins';
+				}
+			});
+			return wrap;
+		}
+
+		// Header nav toggle
+		(function(){
+			const btn = document.getElementById('hamburgerBtn');
+			const menu = document.getElementById('navMenu');
+			if (btn && menu){
+				btn.addEventListener('click', function(){
+					const isOpen = menu.classList.toggle('show');
+					btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+				});
+				document.addEventListener('click', function(e){
+					if (!menu.contains(e.target) && !btn.contains(e.target)){
+						menu.classList.remove('show');
+						btn.setAttribute('aria-expanded','false');
+					}
+				});
+				document.addEventListener('keydown', function(e){
+					if (e.key === 'Escape'){
+						menu.classList.remove('show');
+						btn.setAttribute('aria-expanded','false');
+					}
+				});
+			}
+		})();
+		render();
+	</script>
 </body>
 </html>

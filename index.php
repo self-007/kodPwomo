@@ -1,975 +1,1276 @@
+<?php
+// kodPwomo - Version améliorée basée sur wireframes
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KodPwomo - Livraison d'Étudiants pour Étudiants 🎲</title>
+    <title>kodPwomo - Livraison Campus | Commande, On livre, Tu étudies 🎓</title>
+    <link rel="icon" type="image/png" href="image/logo/logo1.1.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #FF8C00;
+            --primary: #FFD700;
             --primary-dark: #E67E00;
-            --primary-light: #FFB347;
             --secondary: #27AE60;
             --secondary-dark: #1E8449;
-            --secondary-light: #52BE80;
-            --accent: #FFFFFF;
-            --success: #27AE60;
-            --warning: #E67E22;
-            --error: #E74C3C;
-            --info: #3498DB;
-            --bg-primary: #F8F9FA;
-            --bg-secondary: #FFFFFF;
-            --bg-tertiary: #ECF0F1;
-            --text-primary: #2C3E50;
-            --text-secondary: #34495E;
+            --bg: #F8F9FA;
+            --text: #1c1a63ff;
             --text-muted: #7F8C8D;
-            --glass-bg: rgba(255, 255, 255, 0.95);
-            --glass-border: rgba(39, 174, 96, 0.2);
-            --glass-blur: blur(10px);
-            --radius-xl: 1.5rem;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --shadow-xl: 0 25px 50px -12px rgb(255, 140, 0 / 0.25);
+            --card: #FFFFFF;
+            --radius: 16px;
+            --shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --shadow-hover: 0 15px 40px rgba(0,0,0,0.12);
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #F5F7FA;
-            color: var(--text-primary);
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
-            overflow-x: hidden;
         }
-
-        /* Navigation */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.2rem 5%;
-            background: var(--primary);
-            backdrop-filter: blur(10px);
-            border-bottom: none;
+        
+        .container { max-width: 1200px; margin: 0 auto; padding: 0; }
+        
+        /* Header Sticky */
+        header {
+            background: rgba(255,255,255,0.92);
+            backdrop-filter: blur(12px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
             position: sticky;
             top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 12px rgba(255, 140, 0, 0.15);
+            z-index: 100;
         }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #FFFFFF;
+        
+        .header-content {
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: space-between;
+            padding: 10px;
+            max-width: 1200px;
+            margin: 0 auto;
         }
-
-        .nav-links {
+        
+        .logo {
             display: flex;
-            gap: 2rem;
-            list-style: none;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            font-size: 24px;
+            color: var(--primary);
         }
-
-        .nav-links a {
-            color: #FFFFFF;
-            text-decoration: none;
-            transition: var(--transition);
-            font-weight: 500;
-        }
-
-        .nav-links a:hover {
-            color: #FFE5CC;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 1rem;
-        }
-
+        
+        .logo img { height: 40px; border-radius: 8px; }
+        
+        nav { display: none; }
+        
         .btn {
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.75rem;
-            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: var(--transition);
+            border: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
             display: inline-block;
-            text-align: center;
-            font-size: 0.95rem;
+            font-size: 13px;
         }
-
+        
         .btn-primary {
             background: var(--primary);
             color: white;
         }
-
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(255, 140, 0, 0.3);
             background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
         }
-
-        .btn-secondary {
+        
+        .btn-outline {
             background: white;
-            color: var(--primary);
-            border: 2px solid white;
-            font-weight: 600;
+            color: var(--text);
+            border: 1px solid #e5e7eb;
         }
-
-        .btn-secondary:hover {
-            background: transparent;
+        .btn-outline:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .btn-secondary {
+            background: var(--secondary);
             color: white;
-            border-color: white;
         }
-
-        /* Hero Section */
+        .btn-secondary:hover {
+            background: var(--secondary-dark);
+        }
+        
+        /* Hero Section - FORT & IMPACTANT */
         .hero {
-            min-height: 90vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem 5%;
+            background: white;
+            padding: 50px 10px 40px;
+            margin-top: 0;
             position: relative;
             overflow: hidden;
-            background: #FFFFFF;
         }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
-            opacity: 0.15;
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -50%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, var(--secondary) 0%, transparent 70%);
-            opacity: 0.15;
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite reverse;
-        }
-
+        
         @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(30px); }
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, -30px) scale(1.1); }
         }
-
+        
         .hero-content {
-            position: relative;
-            z-index: 10;
-            max-width: 900px;
-        }
-
-        .hero-badge {
-            display: inline-block;
-            background: var(--glass-bg);
-            border: 2px solid var(--primary);
-            padding: 0.75rem 1.5rem;
-            border-radius: 2rem;
-            color: var(--primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            backdrop-filter: var(--glass-blur);
-        }
-
-        .hero-title {
-            font-size: 5rem;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            line-height: 1.1;
-        }
-
-        .hero-subtitle {
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-            line-height: 1.7;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 5rem 5%;
-            background: #F5F7FA;
-        }
-
-        .section-title {
-            font-size: 3rem;
-            font-weight: 900;
-            text-align: center;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            margin-bottom: 3rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 3rem;
-        }
-
-        .feature-card {
-            background: #FFFFFF;
-            backdrop-filter: var(--glass-blur);
-            border: 2px solid #E8E8E8;
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            transition: var(--transition);
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: 0 12px 30px rgba(255, 140, 0, 0.15);
-        }
-
-        .feature-icon {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            display: block;
-        }
-
-        .feature-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .feature-description {
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
-        /* How It Works */
-        .how-it-works {
-            padding: 5rem 5%;
-            background: #FFFFFF;
-        }
-
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .step {
-            position: relative;
-            padding: 2rem;
-            background: #FFFFFF;
-            backdrop-filter: var(--glass-blur);
-            border: 2px solid #E8E8E8;
-            border-radius: var(--radius-xl);
-            text-align: center;
-            transition: var(--transition);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .step:hover {
-            border-color: var(--secondary);
-            box-shadow: 0 12px 30px rgba(39, 174, 96, 0.12);
-        }
-
-        .step-number {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 4rem;
-            height: 4rem;
-            background: var(--secondary);
-            border-radius: 50%;
-            font-size: 1.8rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-        }
-
-        .step-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-        }
-
-        .step-description {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        /* Lottery Section */
-        .lottery {
-            padding: 5rem 5%;
-            background: var(--secondary);
-            border-top: 3px solid var(--secondary-dark);
-            border-bottom: 3px solid var(--secondary-dark);
-        }
-
-        .lottery-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
             max-width: 1200px;
             margin: 0 auto;
-        }
-
-        .lottery-wheel {
-            perspective: 1000px;
-        }
-
-        .wheel {
-            width: 300px;
-            height: 300px;
-            margin: 0 auto;
-            background: conic-gradient(
-                from 0deg,
-                #27AE60 0deg 60deg,
-                #52BE80 60deg 120deg,
-                #FF8C00 120deg 180deg,
-                #E67E00 180deg 240deg,
-                #FFFFFF 240deg 300deg,
-                #FFB347 300deg 360deg
-            );
-            border-radius: 50%;
-            box-shadow: 0 0 40px rgba(255, 140, 0, 0.4);
-            animation: spin 3s linear infinite;
-            border: 8px solid var(--bg-primary);
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 40px;
+            align-items: center;
             position: relative;
+            z-index: 1;
         }
-
-        @keyframes spin {
+        
+        .hero h1 {
+            font-size: 36px;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 12px;
+            color: var(--text);
+        }
+        
+        .hero p {
+            font-size: 16px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+        
+        .hero-cta {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .hero-visual {
+            background: rgba(248,249,250,0.5);
+            border-radius: 16px;
+            padding: 20px;
+            height: 240px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+            .hero h1 {
+                font-size: 28px;
+            }
+            .hero-visual {
+                height: 180px;
+            }
+        }
+        
+        @keyframes rotate {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-
-        .wheel::after {
-            content: '';
-            position: absolute;
-            top: -30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 0;
-            height: 0;
-            border-left: 15px solid transparent;
-            border-right: 15px solid transparent;
-            border-top: 30px solid var(--primary);
-            z-index: 10;
-        }
-
-        .lottery-content h3 {
-            font-size: 2.5rem;
-            font-weight: 900;
-            margin-bottom: 1.5rem;
-            color: #FFFFFF;
-        }
-
-        .lottery-content p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
-            line-height: 1.8;
-        }
-
-        .reward-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .reward-item {
-            background: rgba(255, 255, 255, 0.15);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 1.5rem;
-            border-radius: 1rem;
+        
+        /* Badge Section */
+        .badge-strip {
+            background: rgba(255,255,255,0.6);
+            backdrop-filter: blur(8px);
+            padding: 16px;
             text-align: center;
-            transition: var(--transition);
+            border-radius: 12px;
+            margin: -20px auto 30px;
+            max-width: 1200px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 16px;
         }
-
-        .reward-item:hover {
-            border-color: #FFFFFF;
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.2);
-            background: rgba(255, 255, 255, 0.25);
+        
+        .badge-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-
-        .reward-percent {
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #FFFFFF;
-            margin-bottom: 0.5rem;
+        
+        .badge-item .icon {
+            font-size: 24px;
         }
-
-        .reward-label {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.9rem;
-        }
-
-        /* Pricing Section */
-        .pricing {
-            padding: 5rem 5%;
-            background: #F5F7FA;
-        }
-
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .pricing-card {
-            background: #FFFFFF;
-            backdrop-filter: var(--glass-blur);
-            border: 2px solid #E8E8E8;
-            border-radius: var(--radius-xl);
-            padding: 2.5rem;
-            text-align: center;
-            transition: var(--transition);
-            position: relative;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-
-        .pricing-card:hover {
-            border-color: var(--primary);
-            transform: translateY(-8px);
-            box-shadow: 0 12px 30px rgba(255, 140, 0, 0.15);
-        }
-
-        .pricing-card.featured {
-            border-color: var(--primary);
-            background: #FFF8E8;
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(255, 140, 0, 0.2);
-        }
-
-        .pricing-badge {
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 2rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .pricing-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 1rem 0;
-        }
-
-        .pricing-price {
-            font-size: 3rem;
-            font-weight: 900;
+        
+        .badge-item strong {
+            font-size: 18px;
             color: var(--primary);
-            margin-bottom: 0.5rem;
         }
-
-        .pricing-period {
+        
+        .badge-item span {
             color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 2rem;
+            font-size: 14px;
         }
-
-        .pricing-features {
-            list-style: none;
-            text-align: left;
-            margin-bottom: 2rem;
+        
+        @media (max-width: 768px) {
+            .badge-strip {
+                flex-direction: column;
+                gap: 12px;
+            }
         }
-
-        .pricing-features li {
-            color: var(--text-secondary);
-            padding: 0.75rem 0;
-            border-bottom: 1px solid #E8E8E8;
-            font-size: 0.95rem;
-            position: relative;
-            padding-left: 1.5rem;
+        
+        /* Section Title */
+        .section {
+            padding: 60px 10px;
         }
-
-        .pricing-features li::before {
-            content: '✓';
-            position: absolute;
-            left: 0;
-            color: var(--secondary);
-            font-weight: bold;
-        }
-
-        /* CTA Section */
-        .cta {
-            padding: 5rem 5%;
+        
+        .section-header {
             text-align: center;
-            background: var(--primary);
-            border-top: none;
+            max-width: 700px;
+            margin: 0 auto 30px;
         }
-
-        .cta-title {
-            font-size: 3rem;
+        
+        .section-header h2 {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+        
+        /* Problème / Solution */
+        .problem-solution {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .problem-solution {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        
+        .ps-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            text-align: center;
+        }
+        
+        .ps-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+        }
+        
+        .ps-card .icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+        
+        .ps-card h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--primary);
+        }
+        
+        .ps-card .problem {
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .ps-card .solution {
+            background: linear-gradient(135deg, rgba(39,174,96,0.1), rgba(39,174,96,0.05));
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--secondary-dark);
+        }
+        
+        /* Carousel Produits */
+        .product-section {
+            background: rgba(248,249,250,0.4);
+        }
+        
+        .product-carousel-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto 20px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+        
+        .product-carousel {
+            display: flex;
+            gap: 16px;
+            overflow: hidden;
+            padding: 10px 0;
+            position: relative;
+        }
+        
+        .product-carousel-track {
+            display: flex;
+            gap: 16px;
+            animation: scroll 30s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .product-carousel:hover .product-carousel-track {
+            animation-play-state: paused;
+        }
+        
+        .product-carousel-item {
+            min-width: 200px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+        }
+        
+        .product-carousel-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        
+        .product-carousel-image {
+            width: 100%;
+            height: 150px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            position: relative;
+        }
+        
+        .product-badge {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: var(--secondary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+        
+        .product-carousel-info {
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .product-carousel-info h4 {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+        
+        .product-carousel-info .price {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+        
+        .product-cta-section {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        /* Témoignages + Stats */
+        .trust-section {
+            background: rgba(248,249,250,0.5);
+        }
+        
+        .testimonials {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto 40px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .testimonials-track {
+            display: flex;
+            gap: 20px;
+            animation: scrollTestimonials 25s linear infinite;
+        }
+        
+        @keyframes scrollTestimonials {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        
+        .testimonials:hover .testimonials-track {
+            animation-play-state: paused;
+        }
+        
+        .testimonial-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+            min-width: 350px;
+            flex-shrink: 0;
+        }
+        
+        .testimonial-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 800;
+            font-size: 18px;
+        }
+        
+        .testimonial-info h5 {
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+        
+        .stars {
+            color: #FFD700;
+            font-size: 14px;
+        }
+        
+        .testimonial-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-style: italic;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+        }
+        
+        .stat-card .number {
+            font-size: 36px;
             font-weight: 900;
-            margin-bottom: 1.5rem;
-            color: #FFFFFF;
+            color: #FFD700;
+            display: block;
+            margin-bottom: 6px;
         }
-
-        .cta-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.2rem;
-            margin-bottom: 2.5rem;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-            font-weight: 400;
+        
+        .stat-card .label {
+            color: var(--text-muted);
+            font-size: 14px;
         }
-
+        
+        /* Comment ça marche */
+        .how-it-works {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 992px) {
+            .how-it-works {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .how-it-works {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .step-card {
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .step-number {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: transparent;
+            color: #FFD700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0 auto 16px;
+            box-shadow: 0 6px 20px rgba(0, 5, 7, 0.39);
+        }
+        
+        .step-card h4 {
+            margin-bottom: 8px;
+        }
+        
+        .step-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+        
+        /* CTA Final */
+        .final-cta {
+            background: #1f3065ff;
+            padding: 40px 10px;
+            text-align: center;
+            color: white;
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.58);
+            border-radius: 12px;
+		}
+        
+        .final-cta h2 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        
+        .final-cta p {
+            font-size: 18px;
+            margin-bottom: 24px;
+            opacity: 0.95;
+        }
+        
+        .final-cta .btn {
+            background: transparent;
+            color: var(--primary);
+            font-size: 18px;
+            padding: 14px 32px;
+			box-shadow: 0 6px 20px rgba(229, 233, 234, 0.39);
+        }
+        
+        .final-cta .btn:hover {
+            transform: scale(1.05);
+        }
+        
         /* Footer */
         footer {
-            background: var(--secondary);
-            border-top: none;
-            padding: 3rem 5%;
-            text-align: center;
-            color: #FFFFFF;
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -4px 16px rgba(96, 96, 96, 0.42);
+            color: #162867ff;
+            padding: 60px 10px 0;
+            margin-top: 10px;
+            position: relative;
+			border-radius: 12px;
         }
-
+        
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            
+            box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .footer-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+        
         .footer-section h4 {
-            color: #FFFFFF;
-            margin-bottom: 1rem;
+            margin-bottom: 16px;
+            font-size: 16px;
             font-weight: 700;
-            font-size: 1rem;
+            color: #1c1d64ff;
+            text-shadow: 0 2px 8px rgba(30, 144, 255, 0.4), 0 0 12px rgba(30, 144, 255, 0.2);
+            letter-spacing: 0.5px;
         }
-
+        
+        .footer-section p {
+            font-size: 14px;
+            line-height: 1.6;
+			color: rgba(34, 26, 118, 0.8);
+        }
+        
         .footer-section ul {
             list-style: none;
         }
-
+        
+        .footer-section li {
+            margin-bottom: 8px;
+        }
+        
         .footer-section a {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(34, 26, 118, 0.8);
             text-decoration: none;
-            transition: var(--transition);
-            display: block;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
         }
-
+        
         .footer-section a:hover {
-            color: #FFFFFF;
+            color: #FFD700;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.6), 0 0 16px rgba(255, 215, 0, 0.3);
+            transform: translateX(4px);
         }
-
+        
+        .social-links {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(30, 144, 255, 0.1);
+            border: 1.5px solid rgba(30, 144, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 18px;
+            box-shadow: 0 0 8px rgba(30, 144, 255, 0.2);
+        }
+        
+        .social-links a:hover {
+            background: #FFD700;
+            border-color: #FFD700;
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 24px rgba(255, 215, 0, 0.5), 0 0 16px rgba(255, 215, 0, 0.3);
+        }
+        
         .footer-bottom {
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            padding-top: 2rem;
             text-align: center;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
+            padding: 30px 0 20px;
+            
+            color: rgba(44, 26, 143, 1);
+            font-size: 13px;
+            background: rgba(23, 61, 98, 0.03) !important;
+            margin-top: 40px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
-
+        
+        /* Animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.6s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
         /* Responsive */
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2.5rem;
-            }
-
-            .section-title {
-                font-size: 2rem;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .lottery-container {
+        @media (max-width: 968px) {
+            .hero-content {
                 grid-template-columns: 1fr;
             }
-
-            .pricing-card.featured {
-                transform: scale(1);
+            
+            .hero h1 {
+                font-size: 36px;
             }
-
-            .hero-buttons {
-                flex-direction: column;
+        
+        @media (min-width: 768px) and (max-width: 968px) {
+            .products-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
-
-            .btn {
-                width: 100%;
+            
+            .testimonials,
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
 </head>
 <body>
-    <!-- Navigation -->
-    <nav>
-        <div class="logo">🎲 KodPwomo</div>
-        <ul class="nav-links">
-            <li><a href="#features">Fonctionnalités</a></li>
-            <li><a href="#how">Fonctionnement</a></li>
-            <li><a href="#lottery">Loterie</a></li>
-            <li><a href="#pricing">Tarifs</a></li>
-        </ul>
-        <div class="btn-group">
-            <a href="login.php" class="btn btn-secondary">Se Connecter</a>
-            <a href="register.php" class="btn btn-primary">S'hello</a>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-badge"> hello c du test🚀 Livraison d'étudiants pour étudiants</div>
-            <h1 class="hero-title">Commandez, Livrez, Gagnez 🎲</h1>
-            <p class="hero-subtitle">
-                KodPwomo est la plateforme révolutionnaire de livraison ultra-rapide sur le campus. 
-                Étudiants: commandez ce que vous voulez. Livreurs: gagnez de l'argent flexible. 
-                Et à chaque commande, tirez votre chance pour des réductions aléatoires!
-            </p>
-            <div class="hero-buttons">
-                <a href="register.php?role=client" class="btn btn-primary">Je veux commander 🛒</a>
-                <a href="register.php?role=livreur" class="btn btn-secondary">Je veux livrer 📦</a>
-                <a href="admin/control.php" class="btn btn-secondary">Admin Hub 👑</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Features Section -->
-    <section class="features" id="features">
-        <h2 class="section-title">Pourquoi KodPwomo?</h2>
-        <p class="section-subtitle">
-            Une expérience de livraison pensée pour les étudiants, par les étudiants
-        </p>
-        
-        <div class="features-grid">
-            <div class="feature-card">
-                <span class="feature-icon">⚡</span>
-                <h3 class="feature-title">Ultra-Rapide</h3>
-                <p class="feature-description">
-                    Livraison en 15-30 minutes sur tout le campus. Tes produits arrivent frais et chauds!
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">🎲</span>
-                <h3 class="feature-title">Loterie Exclusive</h3>
-                <p class="feature-description">
-                    À chaque commande, tire une boule et gagne des rabais aléatoires de -5% à -50%!
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">💰</span>
-                <h3 class="feature-title">Emploi Flexible</h3>
-                <p class="feature-description">
-                    Livreurs étudiants gagnent 6-8 HTG par livraison. Travaillez quand vous voulez!
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">🏪</span>
-                <h3 class="feature-title">Tout en Un</h3>
-                <p class="feature-description">
-                    Nourriture, fournitures, événements - trouvez tout ce que vous cherchez ici.
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">🎓</span>
-                <h3 class="feature-title">Pour le Campus</h3>
-                <p class="feature-description">
-                    Livraison exclusivement sur votre université. Pas de déplacement, c'est livré à votre salle!
-                </p>
-            </div>
-
-            <div class="feature-card">
-                <span class="feature-icon">📱</span>
-                <h3 class="feature-title">App Simple</h3>
-                <p class="feature-description">
-                    Interface intuitive. 3 clics pour commander. Suivi GPS en temps réel du livreur.
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="how-it-works" id="how">
-        <h2 class="section-title">Comment ça marche?</h2>
-        <p class="section-subtitle">Trois étapes simples pour transformer ta vie d'étudiant</p>
-        
-        <div class="steps-grid">
-            <div class="step">
-                <div class="step-number">1️⃣</div>
-                <h3 class="step-title">Sélectionne & Commande</h3>
-                <p class="step-description">
-                    Choisir ton université, ta boutique, tes produits. Spécifie ta salle. C'est tout!
-                </p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">2️⃣</div>
-                <h3 class="step-title">Tire ta Boule!</h3>
-                <p class="step-description">
-                    Avant de payer, fais tourner la roue. Gagne un rabais aléatoire de -5% à -50%!
-                </p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">3️⃣</div>
-                <h3 class="step-title">Reçois ta Commande</h3>
-                <p class="step-description">
-                    Un étudiant livreur la récupère. Tu reçois une notif. Elle arrive en 15-30 min!
-                </p>
-            </div>
-
-            <div class="step">
-                <div class="step-number">4️⃣</div>
-                <h3 class="step-title">Confirme & Évalue</h3>
-                <p class="step-description">
-                    Tu reçois le colis. Confirme sa réception. Note le livreur. Done!
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Lottery Section -->
-    <section class="lottery" id="lottery">
-        <div class="lottery-container">
-            <div class="lottery-wheel">
-                <div class="wheel"></div>
-            </div>
-            <div class="lottery-content">
-                <h3>La Magie du KodPwomo 🎰</h3>
-                <p>
-                    À chaque commande, tu tournes la roue mystérieuse et tu gagnes un rabais surprise! 
-                    C'est comme les machines à sous, mais avec des résultats GAGNANTS pour toi!
-                </p>
-                <p>
-                    Pas de rabais fixe ennuyeux. À chaque fois, tu as une chance de gagner gros. 
-                    70% de chance d'économiser 10%+. Et vous pourriez être celui qui gagne -50% ou même GRATUIT!
-                </p>
+    <!-- Header Sticky -->
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <img src="image/logo/logo1.1.jpg" alt="kodPwomo">
                 
-                <div class="reward-list">
-                    <div class="reward-item">
-                        <div class="reward-percent">-5%</div>
-                        <div class="reward-label">Décent</div>
-                    </div>
-                    <div class="reward-item">
-                        <div class="reward-percent">-10%</div>
-                        <div class="reward-label">Bon</div>
-                    </div>
-                    <div class="reward-item">
-                        <div class="reward-percent">-15%</div>
-                        <div class="reward-label">Très Bon</div>
-                    </div>
-                    <div class="reward-item">
-                        <div class="reward-percent">-20%</div>
-                        <div class="reward-label">Excellent</div>
-                    </div>
-                    <div class="reward-item">
-                        <div class="reward-percent">-50%</div>
-                        <div class="reward-label">WOW! 🎉</div>
-                    </div>
-                    <div class="reward-item">
-                        <div class="reward-percent">GRATUIT</div>
-                        <div class="reward-label">JACKPOT! 🏆</div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="login.php" class="btn btn-outline">Connexion</a>
+                <a href="login.php" class="btn btn-primary">Inscription</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section - FORT -->
+    <section id="accueil" class="hero">
+        <div class="hero-content">
+            <div>
+                <h1>Commande depuis ta salle de classe.<br>Et nous On s'occupe du reste. </h1>
+                <p>Bienvenue sur kodPwomo, la premiere platforme de livraison sur les campus universitaire d'haiti Dis nous sur quel campus vous etes et nous vous apporterons ce que vous voudrez.</p>
+                <div class="hero-cta">
+                    <a href="boutique.php" class="btn btn-primary" style="font-size: 14px; padding: 8px 18px;">
+                        a propros
+                    </a>
+                    <a href="#comment" class="btn btn-outline" style="font-size: 13px; padding: 8px 18px;">Comment ça marche</a>
+                </div>
+                <div style="margin-top: 20px; display: flex; gap: 20px; color: var(--text-muted); font-size: 13px;">
+                    <span>✅ Livraison en 15 min</span>
+                    <span>✅ Agents certifiés</span>
+                    <span>✅ Paiement sécurisé</span>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div style="text-align: center;">
+                    <div style="font-size: 80px; margin-bottom: 10px;">📦🎒</div>
+                    <div style="font-weight: 700; color: var(--text);">Livraison Campus</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Badge Strip -->
+    <div class="container">
+        <div class="badge-strip fade-in">
+            <div class="badge-item">
+                <span class="icon">👥</span>
+                <div>
+                    <strong>5 000+</strong><br>
+                    <span>Étudiants actifs</span>
+                </div>
+            </div>
+            <div class="badge-item">
+                <span class="icon">⚡</span>
+                <div>
+                    <strong>15 min</strong><br>
+                    <span>Livraison moyenne</span>
+                </div>
+            </div>
+            <div class="badge-item">
+                <span class="icon">🏫</span>
+                <div>
+                    <strong>6 Campus</strong><br>
+                    <span>Partenaires</span>
+                </div>
+            </div>
+            <div class="badge-item">
+                <span class="icon">⭐</span>
+                <div>
+                    <strong>4.8/5</strong><br>
+                    <span>Satisfaction</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Problème / Solution -->
+    <section id="services" class="section">
+        <div class="section-header fade-in">
+            <h2>On résout tes vrais problèmes d'étudiant</h2>
+            <p>Tu connais ces galères ? Voici comment on les règle.</p>
+        </div>
+        <div class="problem-solution">
+            <div class="ps-card fade-in">
+                <div class="icon">⏱️</div>
+                <h3>Plus de temps perdu</h3>
+                <p class="problem">❌ Faire la queue, traverser le campus, perdre 1h par jour</p>
+                <div class="solution">✅ Commande en 30 sec, livraison interne rapide</div>
+            </div>
+            <div class="ps-card fade-in">
+                <div class="icon">❓</div>
+                <h3>Disponibilité garantie</h3>
+                <p class="problem">❌ Tu te déplaces et le produit n'est plus disponible</p>
+                <div class="solution">✅ Catalogue en temps réel par campus</div>
+            </div>
+            <div class="ps-card fade-in">
+                <div class="icon">🔒</div>
+                <h3>Confiance & Sécurité</h3>
+                <p class="problem">❌ Tu ne sais pas qui livre, pas de suivi</p>
+                <div class="solution">✅ Agents certifiés + tracking en direct</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Carousel Produits -->
+    <section class="section product-section">
+        <div class="section-header fade-in">
+            <h2>Nos produits populaires</h2>
+            <p>Découvre ce que nos étudiants commandent le plus.</p>
+        </div>
+        
+        <div class="container">
+            <div class="product-carousel-container fade-in">
+                <div class="product-carousel">
+                    <div class="product-carousel-track">
+                        <!-- Product 1 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                🍔
+                                <span class="product-badge">Populaire</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Burger Complet</h4>
+                                <div class="price">350 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 2 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🍕</div>
+                            <div class="product-carousel-info">
+                                <h4>Pizza Margherita</h4>
+                                <div class="price">450 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 3 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                ☕
+                                <span class="product-badge" style="background: #E74C3C;">Promo</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Café + Croissant</h4>
+                                <div class="price">180 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 4 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">📚</div>
+                            <div class="product-carousel-info">
+                                <h4>Pack Fournitures</h4>
+                                <div class="price">550 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 5 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                🥤
+                                <span class="product-badge">Populaire</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Jus Naturel</h4>
+                                <div class="price">120 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 6 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🌯</div>
+                            <div class="product-carousel-info">
+                                <h4>Wrap Poulet</h4>
+                                <div class="price">280 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 7 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🎧</div>
+                            <div class="product-carousel-info">
+                                <h4>Location Écouteurs</h4>
+                                <div class="price">50 HTG/j</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 8 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                📦
+                                <span class="product-badge" style="background: #3498DB;">Nouveau</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Service Colis</h4>
+                                <div class="price">100 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 9 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🍟</div>
+                            <div class="product-carousel-info">
+                                <h4>Frites + Sauce</h4>
+                                <div class="price">150 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Product 10 -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🥗</div>
+                            <div class="product-carousel-info">
+                                <h4>Salade Fraîche</h4>
+                                <div class="price">320 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Duplicate for infinite loop -->
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                🍔
+                                <span class="product-badge">Populaire</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Burger Complet</h4>
+                                <div class="price">350 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🍕</div>
+                            <div class="product-carousel-info">
+                                <h4>Pizza Margherita</h4>
+                                <div class="price">450 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                ☕
+                                <span class="product-badge" style="background: #E74C3C;">Promo</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Café + Croissant</h4>
+                                <div class="price">180 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">📚</div>
+                            <div class="product-carousel-info">
+                                <h4>Pack Fournitures</h4>
+                                <div class="price">550 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                🥤
+                                <span class="product-badge">Populaire</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Jus Naturel</h4>
+                                <div class="price">120 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🌯</div>
+                            <div class="product-carousel-info">
+                                <h4>Wrap Poulet</h4>
+                                <div class="price">280 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🎧</div>
+                            <div class="product-carousel-info">
+                                <h4>Location Écouteurs</h4>
+                                <div class="price">50 HTG/j</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">
+                                📦
+                                <span class="product-badge" style="background: #3498DB;">Nouveau</span>
+                            </div>
+                            <div class="product-carousel-info">
+                                <h4>Service Colis</h4>
+                                <div class="price">100 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🍟</div>
+                            <div class="product-carousel-info">
+                                <h4>Frites + Sauce</h4>
+                                <div class="price">150 HTG</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-carousel-item">
+                            <div class="product-carousel-image">🥗</div>
+                            <div class="product-carousel-info">
+                                <h4>Salade Fraîche</h4>
+                                <div class="price">320 HTG</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-
-                <a href="register.php?role=client" class="btn btn-primary">Essayer Maintenant</a>
+            </div>
+            
+            <div class="product-cta-section fade-in">
+                <a href="boutique.php" class="btn btn-outline" style="font-size: 13px; padding: 8px 16px;">
+                    📖 Voir notre catalogue complet
+                </a>
+                <a href="boutique.php" class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;">
+                    🛒 Commander maintenant
+                </a>
             </div>
         </div>
     </section>
 
-    <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
-        <h2 class="section-title">Plans & Tarifs</h2>
-        <p class="section-subtitle">Choisir le plan qui vous convient</p>
+    <!-- Témoignages + Stats -->
+    <section id="campus" class="section trust-section">
+        <div class="section-header fade-in">
+            <h2>Ils nous font confiance</h2>
+            <p>Des milliers d'étudiants utilisent kodPwomo chaque jour.</p>
+        </div>
         
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <h3 class="pricing-title">👤 Client</h3>
-                <div class="pricing-price">Gratuit</div>
-                <p class="pricing-period">Pour tous les étudiants</p>
-                <ul class="pricing-features">
-                    <li>Inscription gratuite</li>
-                    <li>Accès à tous les commerces</li>
-                    <li>Système de loterie</li>
-                    <li>Suivi GPS en temps réel</li>
-                    <li>Support client 24/7</li>
-                </ul>
-                <a href="register.php?role=client" class="btn btn-primary">S'Inscrire</a>
-            </div>
-
-            <div class="pricing-card featured">
-                <div class="pricing-badge">Populaire</div>
-                <h3 class="pricing-title">📦 Livreur</h3>
-                <div class="pricing-price">6-8</div>
-                <p class="pricing-period">HTG par livraison</p>
-                <ul class="pricing-features">
-                    <li>Travail flexible</li>
-                    <li>6 HTG base + bonus</li>
-                    <li>Pas de cotisations</li>
-                    <li>Système de notation</li>
-                    <li>Paiement rapide</li>
-                </ul>
-                <a href="register.php?role=livreur" class="btn btn-primary">Devenir Livreur</a>
-            </div>
-
-            <div class="pricing-card">
-                <h3 class="pricing-title">🏪 Commerçant</h3>
-                <div class="pricing-price">50</div>
-                <p class="pricing-period">HTG/mois (Phase pilot gratuit!)</p>
-                <ul class="pricing-features">
-                    <li>Gestion catalogue</li>
-                    <li>Suivi commandes</li>
-                    <li>Analytics vendeurs</li>
-                    <li>Support prioritaire</li>
-                    <li>Paiements automatiques</li>
-                </ul>
-                <a href="contact.php?role=merchant" class="btn btn-secondary">Nous Contacter</a>
+        <div class="container">
+            <div class="testimonials">
+                <div class="testimonials-track">
+                    <div class="testimonial-card fade-in">
+                        <div class="testimonial-header">
+                            <div class="avatar">M</div>
+                            <div class="testimonial-info">
+                                <h5>Marie-Claire, UEH</h5>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <p>"Je commande entre deux cours, c'est livré avant la pause. Je gagne tellement de temps !"</p>
+                    </div>
+                    
+                    <div class="testimonial-card fade-in">
+                        <div class="testimonial-header">
+                            <div class="avatar">J</div>
+                            <div class="testimonial-info">
+                                <h5>Jean-Baptiste, Quisqueya</h5>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <p>"Le suivi en temps réel me rassure. Et les agents sont toujours sympas et pro."</p>
+                    </div>
+                    
+                    <div class="testimonial-card fade-in">
+                        <div class="testimonial-header">
+                            <div class="avatar">S</div>
+                            <div class="testimonial-info">
+                                <h5>Sarah, UNDH</h5>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <p>"Plus besoin de courir au resto. Je me concentre sur mes études, kodPwomo gère le reste."</p>
+                    </div>
+                    
+                    <!-- Duplicate for infinite scroll -->
+                    <div class="testimonial-card fade-in">
+                        <div class="testimonial-header">
+                            <div class="avatar">M</div>
+                            <div class="testimonial-info">
+                                <h5>Marie-Claire, UEH</h5>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <p>"Je commande entre deux cours, c'est livré avant la pause. Je gagne tellement de temps !"</p>
+                    </div>
+                    
+                    <div class="testimonial-card fade-in">
+                        <div class="testimonial-header">
+                            <div class="avatar">J</div>
+                            <div class="testimonial-info">
+                                <h5>Jean-Baptiste, Quisqueya</h5>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <p>"Le suivi en temps réel me rassure. Et les agents sont toujours sympas et pro."</p>
+                    </div>
+                    
+                    <div class="testimonial-card fade-in">
+                        <div class="testimonial-header">
+                            <div class="avatar">S</div>
+                            <div class="testimonial-info">
+                                <h5>Sarah, UNDH</h5>
+                                <div class="stars">⭐⭐⭐⭐⭐</div>
+                            </div>
+                        </div>
+                        <p>"Plus besoin de courir au resto. Je me concentre sur mes études, kodPwomo gère le reste."</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA Section -->
-    <section class="cta">
-        <h2 class="cta-title">Prêt à révolutionner ta vie d'étudiant? 🚀</h2>
-        <p class="cta-subtitle">
-            Rejoins des milliers d'étudiants qui font déjà partie du mouvement KodPwomo
-        </p>
-        <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
-            <a href="register.php?role=client" class="btn btn-primary">Télécharger l'App</a>
-            <a href="register.php?role=livreur" class="btn btn-secondary">Devenir Livreur</a>
+    <!-- Comment ça marche -->
+    <section id="comment" class="section">
+        <div class="section-header fade-in">
+            <h2>Comment ça marche ?</h2>
+            <p>En 4 étapes simples, tu reçois ta commande sur ton campus.</p>
+        </div>
+        
+        <div class="container">
+            <div class="how-it-works">
+                <div class="step-card fade-in">
+                    <div class="step-number">1</div>
+                    <h4>Tu commandes</h4>
+                    <p>Choisis tes produits sur l'app ou le site en 30 secondes.</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">2</div>
+                    <h4>Agent accepte</h4>
+                    <p>Un agent étudiant certifié prend ta commande.</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">3</div>
+                    <h4>Suivi en direct</h4>
+                    <p>Tu reçois des notifications et vois l'avancement.</p>
+                </div>
+                <div class="step-card fade-in">
+                    <div class="step-number">4</div>
+                    <h4>Tu reçois</h4>
+                    <p>Livraison avec code, tu notes l'agent. Simple !</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Final -->
+    <section class="final-cta">
+        <h2>Commence aujourd'hui. Gagne du temps.<br>Concentre-toi sur l'essentiel. 🚀</h2>
+        <p>Crée ton compte en 30 secondes et profite de la livraison interne sur ton campus.</p>
+        <a href="login.php" class="btn" style="font-size: 14px; padding: 8px 20px;">Créer mon compte gratuitement</a>
+        <div style="margin-top: 20px; font-size: 13px; opacity: 0.9;">
+            ✅ Inscription gratuite • ✅ Première livraison offerte • ✅ Support 7j/7
         </div>
     </section>
 
     <!-- Footer -->
-    <footer>
+    <footer id="contact">
         <div class="footer-content">
             <div class="footer-section">
-                <h4>À Propos</h4>
+                <h4>✨ À propos de kodPwomo</h4>
+                <p style="color: rgba(32, 43, 101, 0.7); margin-bottom: 16px;">
+                    La première plateforme de livraison interne sur campus en Haïti. 
+                    Modernise ta vie étudiante avec nous. 🎓
+                </p>
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Nous suivre:</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook">📘</a>
+                        <a href="#" title="Instagram">📸</a>
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="YouTube">📺</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <h4>🔗 Liens rapides</h4>
                 <ul>
-                    <li><a href="#">Notre Mission</a></li>
-                    <li><a href="#">Notre Équipe</a></li>
-                    <li><a href="#">Carrières</a></li>
-                    <li><a href="#">Blog</a></li>
+                    <li><a href="boutique.php">🛍️ Boutique</a></li>
+                    <li><a href="agent.php">🚴 Devenir agent</a></li>
+                    <li><a href="blog.php">📝 Blog & Guides</a></li>
+                    <li><a href="#">❓ FAQ</a></li>
                 </ul>
             </div>
+            
             <div class="footer-section">
-                <h4>Support</h4>
+                <h4>⚖️ Légal</h4>
                 <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">FAQ</a></li>
-                    <li><a href="#">Report Issue</a></li>
+                    <li><a href="#">📜 Mentions légales</a></li>
+                    <li><a href="#">📋 CGU</a></li>
+                    <li><a href="#">🔒 Politique de confidentialité</a></li>
+                    <li><a href="#">🍪 Cookies</a></li>
                 </ul>
             </div>
+            
             <div class="footer-section">
-                <h4>Légal</h4>
+                <h4>☎️ Contact</h4>
                 <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Cookies Policy</a></li>
-                    <li><a href="#">Disclaimer</a></li>
-                </ul>
-            </div>
-            <div class="footer-section">
-                <h4>Suivez-Nous</h4>
-                <ul>
-                    <li><a href="#">Facebook</a></li>
-                    <li><a href="#">Instagram</a></li>
-                    <li><a href="#">TikTok</a></li>
-                    <li><a href="#">WhatsApp</a></li>
+                    <li><a href="mailto:support@kodpwomo.com">📧 support@kodpwomo.com</a></li>
+                    <li><a href="tel:+509XXXXXXXX">📞 +509 XXXX XXXX</a></li>
+                    <li><a href="#">📍 Port-au-Prince, Haïti</a></li>
+                    <li><a href="#">🕐 Lun-Ven: 8h-18h</a></li>
                 </ul>
             </div>
         </div>
+        
         <div class="footer-bottom">
-            <p>&copy; 2025 KodPwomo. Tous droits réservés. Made with ❤️ for Students.</p>
+            © <?php echo date('Y'); ?> kodPwomo - Tous droits réservés • Projet en cours de légalisation auprès du Ministère du Commerce
         </div>
     </footer>
 
     <script>
-        // Smooth scroll for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-
-        // Animate elements on scroll
+        // Intersection Observer pour fade-in
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
         };
-
+        
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
+                    entry.target.classList.add('visible');
                 }
             });
         }, observerOptions);
-
-        document.querySelectorAll('.feature-card, .step, .pricing-card').forEach(el => {
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'all 0.6s ease';
+        
+        document.querySelectorAll('.fade-in').forEach(el => {
             observer.observe(el);
-        });
-
-        // Button hover effects
-        document.querySelectorAll('.btn').forEach(btn => {
-            btn.addEventListener('mouseenter', function() {
-                this.style.transform = 'translateY(-2px)';
-            });
-            btn.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-            });
         });
     </script>
 </body>

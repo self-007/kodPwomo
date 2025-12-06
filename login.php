@@ -44,7 +44,7 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--gradient-primary);
+            background: linear-gradient(135deg, #fff5f0 0%, #f0f4ff 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -53,55 +53,96 @@
         }
         
         .login-container {
-            background: white;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,0,0,0.06);
             border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+            padding: 32px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             width: 100%;
-            max-width: 450px;
+            max-width: 460px;
             position: relative;
         }
         
         .logo {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
+        }
+        .logo img{
+            height: 56px;
+            width: auto;
+            border-radius: 10px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            margin-bottom: 10px;
         }
         
         .logo h1 {
-            color: var(--primary);
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            color: #042b5e;
+            font-size: 2.2em;
+            margin-bottom: 8px;
         }
         
         .logo p {
             color: var(--medium-gray);
-            font-size: 1.1em;
+            font-size: 1.05em;
+            margin-bottom: 8px;
+        }
+        
+        .welcome-message {
+            background: linear-gradient(135deg, rgba(247, 182, 66, 0.08) 0%, rgba(39, 174, 96, 0.08) 100%);
+            border-left: 4px solid #f7b642;
+            border-radius: 12px;
+            padding: 14px 16px;
+            margin: 16px 0 24px 0;
+            color: #1a1a2e;
+            font-size: 0.9em;
+            line-height: 1.5;
+            box-shadow: 0 2px 8px rgba(247, 182, 66, 0.15);
+            text-align: center;
+        }
+        
+        .welcome-message strong {
+            color: #f7b642;
+            font-weight: 600;
+        }
+        .explain {
+            background: #ffffffcc;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #475569;
+            font-size: 0.95em;
+            margin: 10px 0 18px 0;
         }
         
         .mode-toggle {
             display: flex;
-            margin-bottom: 15px;
+            margin-bottom: 24px;
             border-radius: 25px;
-            overflow: hidden;
-            border: 2px solid var(--primary);
-            background: rgba(255, 255, 255, 0.1);
+            gap: 10px;
+            background: transparent;
         }
         
         .mode-btn {
             flex: 1;
-            padding: 12px 20px;
-            background: transparent;
-            color: #333;
-            border: none;
+            padding: 12px 16px;
+            background: #fff;
+            color: #64748b;
+            border: 2px solid #e2e8f0;
+            border-radius: 999px;
             cursor: pointer;
             font-weight: 600;
             font-size: 14px;
             transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
         
         .mode-btn.active {
-            background: var(--primary);
-            color: white;
+            background: #f7b642;
+            border-color: #f7b642;
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(247, 182, 66, 0.4);
         }
         
         .mode-btn:hover:not(.active) {
@@ -110,27 +151,35 @@
         
         .auth-tabs {
             display: flex;
-            margin-bottom: 30px;
-            background: var(--light-gray);
-            border-radius: 10px;
-            padding: 5px;
+            margin-bottom: 24px;
+            gap: 12px;
+            background: transparent;
         }
         
         .tab-btn {
             flex: 1;
-            padding: 12px;
-            background: transparent;
-            border: none;
-            border-radius: 8px;
+            padding: 12px 20px;
+            background: #fff;
+            border: 2px solid #e2e8f0;
+            border-radius: 999px;
             cursor: pointer;
             font-weight: 600;
             transition: all 0.3s ease;
-            color: var(--medium-gray);
+            color: #64748b;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
         
         .tab-btn.active {
-            background: var(--primary);
-            color: white;
+            background: #f7b642;
+            border-color: #f7b642;
+            color: #fff;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            border-color: #f7b642;
+            color: #f7b642;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(247, 182, 66, 0.15);
         }
         
         .auth-form {
@@ -142,47 +191,50 @@
         }
         
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
         
         .form-label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
-            color: var(--dark-gray);
+            color: #042b5e;
         }
         
         .form-input {
             width: 100%;
-            padding: 15px;
-            border: 2px solid var(--light-gray);
-            border-radius: 10px;
-            font-size: 16px;
+            padding: 14px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 15px;
             transition: border-color 0.3s ease;
+            background: #fff;
         }
         
         .form-input:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #f7b642;
         }
         
         .btn-submit {
             width: 100%;
             padding: 15px;
-            background: var(--primary);
-            color: white;
+            background: linear-gradient(135deg, #f7b642, #e19627);
+            color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
+            margin-top: 8px;
             margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(247, 182, 66, 0.4);
         }
         
         .btn-submit:hover {
-            background: var(--primary-dark);
             transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(247, 182, 66, 0.6);
         }
         
         .btn-submit:disabled {
@@ -199,25 +251,27 @@
         
         .google-btn {
             width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #dadce0;
-            border-radius: 10px;
-            background: white;
+            padding: 14px 18px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            background: #fff;
             color: #3c4043;
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 12px;
             transition: all 0.3s ease;
-            margin-bottom: 10px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
         }
         
         .google-btn:hover {
-            border-color: #4285f4;
-            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.2);
+            border-color: #f7b642;
+            box-shadow: 0 2px 8px rgba(247, 182, 66, 0.2);
+            background: rgba(247, 182, 66, 0.02);
         }
         
         .google-btn:active {
@@ -238,12 +292,14 @@
             left: 0;
             right: 0;
             height: 1px;
-            background: var(--light-gray);
+            background: #e2e8f0;
         }
         
         .divider span {
-            background: white;
-            padding: 0 15px;
+            background: #ffffffcc;
+            backdrop-filter: blur(4px);
+            padding: 0 12px;
+            border-radius: 8px;
         }
         
         /* Modal OTP */
@@ -264,12 +320,14 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: white;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,0,0,0.06);
             border-radius: 20px;
-            padding: 40px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            padding: 28px;
+            width: 92%;
+            max-width: 420px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
         }
         
         .modal-header {
@@ -307,7 +365,7 @@
         
         .otp-digit:focus {
             outline: none;
-            border-color: var(--primary);
+            border-color: #f7b642;
         }
         
         .btn-close {
@@ -322,14 +380,22 @@
         }
         
         .btn-resend {
-            background: var(--secondary);
+            background: #27ae60;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 10px 16px;
+            border-radius: 999px;
             cursor: pointer;
             font-size: 14px;
-            margin-top: 15px;
+            margin-top: 12px;
+            box-shadow: 0 4px 12px rgba(39, 174, 96, 0.35);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-resend:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(39, 174, 96, 0.5);
         }
         
         .loading {
@@ -347,27 +413,23 @@
         }
         
         .alert-success {
-            background: var(--success-alpha-10);
-            color: var(--success);
-            border: 1px solid var(--success);
+            background: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border: 1px solid #27ae60;
+            border-left: 4px solid #27ae60;
         }
         
         .alert-error {
-            background: var(--primary-alpha-10);
-            color: var(--error);
-            border: 1px solid var(--error);
+            background: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            border-left: 4px solid #e74c3c;
         }
         
         @media (max-width: 480px) {
-            .login-container {
-                padding: 30px 20px;
-            }
-            
-            .otp-digit {
-                width: 40px;
-                height: 40px;
-                font-size: 16px;
-            }
+            .login-container { padding: 24px; }
+            .mode-btn, .tab-btn { padding: 10px 12px; font-size: 13px; }
+            .otp-digit { width: 40px; height: 40px; font-size: 16px; }
         }
     </style>
 </head>
@@ -376,8 +438,14 @@
     <div class="login-container">
         <!-- Logo -->
         <div class="logo">
-            <h1>📦 kodPwomo</h1>
-            <p>Connexion à votre compte</p>
+            <img src="image/logo/logoGold1.jpg" alt="kodPwomo" />
+            <h1 id="pageTitle">Connexion</h1>
+            <p>Accédez à nos services</p>
+        </div>
+        
+        <!-- Message d'accueil professionnel -->
+        <div class="welcome-message">
+            Choisissez votre méthode d'authentification : <strong>Email</strong> ou <strong>Google</strong>
         </div>
         
         <!-- Alertes -->
@@ -393,8 +461,8 @@
         
         <!-- Tabs de méthodes d'auth -->
         <div class="auth-tabs">
-            <button class="tab-btn active" onclick="switchTab('email')">📧 Email</button>
-            <button class="tab-btn" onclick="switchTab('google')">🔍 Google</button>
+            <button class="tab-btn active" onclick="switchTab('email')">✉ Email</button>
+            <button class="tab-btn" onclick="switchTab('google')">G Google</button>
         </div>
         
         <!-- Formulaire Email/Password -->
@@ -420,7 +488,7 @@
             </div>
             
             <button type="submit" class="btn-submit" id="emailSubmitBtn">
-                🚀 Créer mon compte
+                → Créer mon compte
             </button>
         </form>
         
@@ -449,7 +517,7 @@
         
         <!-- Loading -->
         <div id="loading" class="loading">
-            <div>⏳ Création de votre compte...</div>
+            <div>Création de votre compte...</div>
         </div>
     </div>
     
@@ -464,7 +532,7 @@
             </div>
             
             <div class="modal-header">
-                <h2>🔐 Code de Vérification</h2>
+                <h2>Code de Vérification</h2>
                 <p>Nous avons envoyé un code à 6 chiffres sur votre email. Saisissez-le ci-dessous pour confirmer votre compte.</p>
             </div>
             
@@ -477,13 +545,13 @@
                 <input type="text" class="otp-digit" maxlength="1" oninput="moveToNext(this, 5)">
             </div>
             
-            <button class="btn-submit" onclick="verifyOtp()">✅ Vérifier le Code</button>
+            <button class="btn-submit" onclick="verifyOtp()">→ Vérifier le Code</button>
             
             <div style="text-align: center;">
                 <p style="color: var(--medium-gray); font-size: 0.9em; margin-bottom: 10px;">
                     Vous n'avez pas reçu le code ?
                 </p>
-                <button class="btn-resend" onclick="resendOtp()">📤 Renvoyer le Code</button>
+                <button class="btn-resend" onclick="resendOtp()">↻ Renvoyer le Code</button>
             </div>
         </div>
     </div>
@@ -524,12 +592,12 @@
             event.target.classList.add('active');
             
             // Mettre à jour le titre et les textes
-            const title = document.querySelector('h1');
+            const title = document.getElementById('pageTitle');
             const submitBtn = document.querySelector('.btn-submit');
             
             if (mode === 'login') {
-                title.textContent = 'kodPwomo - Connexion';
-                submitBtn.textContent = '🚀 Se connecter';
+                title.textContent = 'Connexion';
+                submitBtn.textContent = '→ Se connecter';
                 // Masquer les champs nom d'utilisateur et prénom pour la connexion
                 document.getElementById('username').parentElement.style.display = 'none';
                 document.getElementById('firstname').parentElement.style.display = 'none';
@@ -542,8 +610,8 @@
                 document.getElementById('email').required = true;
                 document.getElementById('password').required = true;
             } else {
-                title.textContent = 'kodPwomo - Inscription';
-                submitBtn.textContent = '✨ Créer mon compte';
+                title.textContent = 'Inscription';
+                submitBtn.textContent = '→ Créer mon compte';
                 // Afficher tous les champs pour l'inscription
                 document.getElementById('username').parentElement.style.display = 'block';
                 document.getElementById('firstname').parentElement.style.display = 'block';
@@ -671,9 +739,9 @@
             // Mettre à jour le texte de chargement selon le mode
             const loadingText = document.querySelector('#loading div');
             if (formData.mode === 'login') {
-                loadingText.textContent = '🔑 Connexion en cours...';
+                loadingText.textContent = 'Connexion en cours...';
             } else {
-                loadingText.textContent = '⏳ Création de votre compte...';
+                loadingText.textContent = 'Création de votre compte...';
             }
             
             try {
@@ -857,7 +925,7 @@
                 const remainingSeconds = Math.ceil((RESEND_COOLDOWN - timeSinceLastResend) / 1000);
                 const minutes = Math.floor(remainingSeconds / 60);
                 const seconds = remainingSeconds % 60;
-                showOtpAlert('error', `⏳ Veuillez patienter ${minutes}m ${seconds}s avant de renvoyer le code`);
+                showOtpAlert('error', `Veuillez patienter ${minutes}m ${seconds}s avant de renvoyer le code`);
                 return;
             }
             
@@ -879,18 +947,18 @@
                 
                 if (result.success === true) {
                     lastResendTime = now;
-                    showOtpAlert('success', '✅ Nouveau code envoyé ! Vérifiez votre email');
+                    showOtpAlert('success', 'Nouveau code envoyé ! Vérifiez votre email');
                     
                     // Démarrer le compte à rebours
                     startResendCooldown(resendBtn);
                 } else {
-                    showOtpAlert('error', '❌ ' + (result.error || 'Erreur lors du renvoi'));
+                    showOtpAlert('error', result.error || 'Erreur lors du renvoi');
                     resendBtn.disabled = false;
                 }
                 
             } catch (error) {
                 console.error('Erreur:', error);
-                showOtpAlert('error', '❌ Erreur de connexion');
+                showOtpAlert('error', 'Erreur de connexion');
                 document.querySelector('.btn-resend').disabled = false;
             }
         }
@@ -915,13 +983,13 @@
         // Démarrer le compte à rebours du cooldown
         function startResendCooldown(button) {
             let remainingTime = RESEND_COOLDOWN;
-            const originalText = '📤 Renvoyer le Code';
+            const originalText = '↻ Renvoyer le Code';
             
             const updateButton = () => {
                 const seconds = Math.ceil(remainingTime / 1000);
                 const minutes = Math.floor(seconds / 60);
                 const secs = seconds % 60;
-                button.textContent = `⏱️ Attendre ${minutes}m ${secs}s`;
+                button.textContent = `Attendre ${minutes}m ${secs}s`;
             };
             
             updateButton();
@@ -968,7 +1036,7 @@
             document.getElementById('password').required = true;
             
             // Mettre à jour le texte du bouton
-            document.querySelector('.btn-submit').textContent = '🚀 Se connecter';
+            document.querySelector('.btn-submit').textContent = '→ Se connecter';
         });
     </script>
     

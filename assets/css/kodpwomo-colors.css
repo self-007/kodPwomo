@@ -1,10 +1,11 @@
 /*
  * ======================================
- * 🎨 KODPWOMO - PALETTE "CAMPUS DELIVERY"
+ * 🎨 KODPWOMO - PALETTE OFFICIELLE
  * ======================================
- * Palette de couleurs optimisée pour la livraison campus-to-campus
- * Plateforme: kodPwomo - Livraison Étudiante
- * Date: Septembre 2025
+ * Palette de couleurs or et vert pour la livraison campus-to-campus
+ * Identité visuelle: Or premium & Vert nature
+ * Plateforme: kodPwomo - Livraison Étudiante en Haïti
+ * Mise à jour: Décembre 2025
  */
 
 /* =====================================
@@ -12,46 +13,51 @@
    ===================================== */
 :root {
   /* === PALETTE PRINCIPALE === */
-  --primary: #FF6B6B;           /* Rouge coral - Actions principales */
-  --secondary: #4ECDC4;         /* Turquoise - Éléments secondaires */
-  --accent: #45B7D1;            /* Bleu ciel - Informations */
-  --success: #96CEB4;           /* Vert menthe - Succès/Validations */
-  --warning: #FFEAA7;           /* Jaune doux - Alertes/Notifications */
+  --primary: #f7b642;           /* Or/Jaune - Actions principales & identité */
+  --secondary: #27ae60;         /* Vert nature - Succès & validation */
+  --accent: #e19627;            /* Or foncé - Accents & hover */
+  --success: #27ae60;           /* Vert - Succès/Validations */
+  --warning: #f39c12;           /* Orange - Alertes/Notifications */
   
   /* === NUANCES ET VARIATIONS === */
-  --primary-light: #FF8E8E;     /* Primary clair */
-  --primary-dark: #E55555;      /* Primary foncé */
-  --secondary-light: #6FD9D0;   /* Secondary clair */
-  --secondary-dark: #3BB8B0;    /* Secondary foncé */
+  --primary-light: #f9c76a;     /* Or clair */
+  --primary-dark: #e19627;      /* Or foncé */
+  --secondary-light: #2ecc71;   /* Vert clair */
+  --secondary-dark: #229954;    /* Vert foncé */
   
   /* === COULEURS NEUTRES === */
   --white: #FFFFFF;
-  --light-gray: #F8F9FA;
-  --medium-gray: #6C757D;
-  --dark-gray: #343A40;
+  --light-gray: #F5F5F5;
+  --medium-gray: #666666;
+  --dark-gray: #1A1A1A;
   --black: #000000;
   
   /* === COULEURS FONCTIONNELLES === */
-  --error: #E74C3C;            /* Rouge erreur */
-  --info: var(--accent);       /* Bleu information */
+  --error: #e74c3c;            /* Rouge erreur */
+  --info: #3498db;             /* Bleu information */
   --disabled: #BDC3C7;         /* Gris désactivé */
   
   /* === TRANSPARENCES === */
-  --primary-alpha-10: rgba(255, 107, 107, 0.1);
-  --primary-alpha-20: rgba(255, 107, 107, 0.2);
-  --secondary-alpha-10: rgba(78, 205, 196, 0.1);
-  --secondary-alpha-20: rgba(78, 205, 196, 0.2);
+  --primary-alpha-10: rgba(247, 182, 66, 0.1);
+  --primary-alpha-20: rgba(247, 182, 66, 0.2);
+  --secondary-alpha-10: rgba(39, 174, 96, 0.1);
+  --secondary-alpha-20: rgba(39, 174, 96, 0.2);
+  
+  /* === NEUMORPHISM / 3D SHADOWS === */
+  --shadow-3d-base: 8px 8px 20px rgba(0, 0, 0, 0.10), -8px -8px 20px rgba(255, 255, 255, 0.70);
+  --shadow-3d-hover: 16px 16px 32px rgba(0, 0, 0, 0.12), -16px -16px 32px rgba(255, 255, 255, 0.80);
+  --shadow-3d-active: 6px 6px 16px rgba(0, 0, 0, 0.08), -6px -6px 16px rgba(255, 255, 255, 0.65);
 }
 
 /* =====================================
    🌈 GRADIENTS PRÉDÉFINIS
    ===================================== */
 :root {
-  --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-  --gradient-warm: linear-gradient(135deg, #FF6B6B 0%, #FFEAA7 100%);
-  --gradient-cool: linear-gradient(135deg, #4ECDC4 0%, #45B7D1 100%);
-  --gradient-success: linear-gradient(135deg, #96CEB4 0%, #4ECDC4 100%);
-  --gradient-overlay: linear-gradient(135deg, rgba(255, 107, 107, 0.9) 0%, rgba(78, 205, 196, 0.9) 100%);
+  --gradient-primary: linear-gradient(135deg, #f7b642 0%, #e19627 100%);
+  --gradient-warm: linear-gradient(135deg, #f7b642 0%, #f39c12 100%);
+  --gradient-cool: linear-gradient(135deg, #27ae60 0%, #229954 100%);
+  --gradient-success: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  --gradient-overlay: linear-gradient(135deg, rgba(247, 182, 66, 0.9) 0%, rgba(39, 174, 96, 0.9) 100%);
 }
 
 /* =====================================
@@ -108,25 +114,25 @@
 .btn-primary {
   background: var(--primary);
   color: var(--white);
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+  box-shadow: 0 4px 15px rgba(247, 182, 66, 0.4);
 }
 
 .btn-primary:hover {
   background: var(--primary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+  box-shadow: 0 6px 20px rgba(247, 182, 66, 0.6);
 }
 
 .btn-secondary {
   background: var(--secondary);
   color: var(--white);
-  box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+  box-shadow: 0 4px 15px rgba(39, 174, 96, 0.4);
 }
 
 .btn-secondary:hover {
   background: var(--secondary-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(78, 205, 196, 0.4);
+  box-shadow: 0 6px 20px rgba(39, 174, 96, 0.6);
 }
 
 .btn-success {
@@ -135,7 +141,7 @@
 }
 
 .btn-success:hover {
-  background: #7FC29B;
+  background: var(--secondary-dark);
   transform: translateY(-2px);
 }
 
@@ -154,18 +160,19 @@
    📦 COMPOSANTS SPÉCIAUX KODPWOMO
    ===================================== */
 
-/* Card Restaurant */
-.restaurant-card {
-  background: var(--white);
+/* Card produit/université */
+.kodpwomo-card {
+  background: rgba(255,255,255,0.92);
   border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow-3d-base);
   border-left: 4px solid var(--primary);
   transition: all 0.3s ease;
+  backdrop-filter: blur(14px);
 }
 
-.restaurant-card:hover {
+.kodpwomo-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+  box-shadow: var(--shadow-3d-hover);
 }
 
 /* Status Agent */
@@ -227,7 +234,7 @@
     font-size: 14px;
   }
   
-  .restaurant-card {
+  .kodpwomo-card {
     border-left: 3px solid var(--primary);
   }
 }
@@ -236,10 +243,10 @@
    🎯 CLASSES SPÉCIFIQUES WORKFLOW
    ===================================== */
 
-/* Zone Restaurant */
-.restaurant-zone {
-  border-left: 4px solid #FF7F50;
-  background: rgba(255, 127, 80, 0.05);
+/* Zone Université */
+.university-zone {
+  border-left: 4px solid var(--primary);
+  background: var(--primary-alpha-10);
 }
 
 /* Zone Commande */
@@ -250,14 +257,14 @@
 
 /* Zone Agent */
 .agent-zone {
-  border-left: 4px solid var(--accent);
-  background: rgba(69, 183, 209, 0.05);
+  border-left: 4px solid var(--secondary);
+  background: var(--secondary-alpha-10);
 }
 
 /* Zone Succès */
 .success-zone {
   border-left: 4px solid var(--success);
-  background: rgba(150, 206, 180, 0.05);
+  background: var(--secondary-alpha-10);
 }
 
 /* =====================================
@@ -267,7 +274,7 @@
 .debug-secondary { background: var(--secondary) !important; color: white; }
 .debug-accent { background: var(--accent) !important; color: white; }
 .debug-success { background: var(--success) !important; color: white; }
-.debug-warning { background: var(--warning) !important; color: black; }
+.debug-warning { background: var(--warning) !important; color: white; }
 
 /* 
  * ======================================
@@ -279,9 +286,9 @@
  * <!-- Bouton Commander -->
  * <button class="btn-kodpwomo btn-primary">🛒 Commander Maintenant</button>
  * 
- * <!-- Card Restaurant -->
- * <div class="restaurant-card restaurant-zone">
- *   <h3 class="text-primary">Restaurant Universitaire</h3>
+ * <!-- Card Université -->
+ * <div class="kodpwomo-card university-zone">
+ *   <h3 class="text-primary">Université d'État d'Haïti</h3>
  * </div>
  * 
  * <!-- Status Agent -->
@@ -289,5 +296,8 @@
  * 
  * <!-- Zone Workflow -->
  * <section class="order-zone">Passez votre commande</section>
+ * 
+ * <!-- Gradient Background -->
+ * <div class="bg-gradient-primary">Contenu avec gradient or</div>
  * 
  */

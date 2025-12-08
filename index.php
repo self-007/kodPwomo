@@ -71,7 +71,12 @@
             color: var(--primary);
         }
         
-        .logo img { height: auto; border-radius: 8px; width: 50%; }
+        .logo img { 
+            height: auto; 
+            border-radius: 8px; 
+            width: 5%;
+           
+        }
         
         /* Hamburger Menu */
         .hamburger-btn {
@@ -168,29 +173,28 @@
             font-weight: 700 !important;
         }
         
+        .header-connection-btn {
+            display: inline-block;
+        }
+        
         /* Media queries - Logo responsive */
         @media (max-width: 480px) {
-            .logo img { width: 55%; }
+            .logo img { width: 75% !important; }
+            .header-connection-btn { display: none !important; }
+            .hamburger-btn { display: flex; }
         }
         
         @media (min-width: 481px) and (max-width: 768px) {
-            .logo img { width: 45%; }
+            .logo img { width: 65% !important; }
+            .header-connection-btn { display: none !important; }
+            .hamburger-btn { display: flex; }
         }
         
         @media (min-width: 769px) {
-            .logo img { width: 35%; }
-            .single-btn {
-                display: inline-block;
-            }
-            .mobile-login {
-                display: none;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .hamburger-btn {
-                display: flex;
-            }
+            .logo img { width: 30% !important; }
+            .single-btn { display: inline-block; }
+            .mobile-login { display: none; }
+            .header-connection-btn { display: inline-block; }
         }
         
         .btn {
@@ -819,7 +823,7 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
-            .logo img { height: auto; border-radius: 8px; width: 35%; }
+            .logo img { height: auto; border-radius: 8px; width: 5%; }
         }
         
         .footer-section h4 {
@@ -939,7 +943,7 @@
                 <img src="image/logo/logo1.1.jpg" alt="kodPwomo">
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
-                <a href="login.php" class="btn btn-primary single-btn">Connexion</a>
+                <a href="login.php" class="btn btn-primary header-connection-btn">Connexion</a>
                 <button class="hamburger-btn" id="hamburgerBtn">
                     <span></span>
                     <span></span>
@@ -949,8 +953,6 @@
             
             <!-- Dropdown Menu -->
             <div class="dropdown-menu" id="dropdownMenu">
-                <a href="login.php" class="mobile-login"><i class="fas fa-sign-in-alt" style="vertical-align: middle; margin-right: 8px;"></i>Connexion</a>
-                <hr>
                 <a href="#accueil"><i class="fas fa-home" style="vertical-align: middle; margin-right: 8px;"></i>Accueil</a>
                 <a href="#services"><i class="fas fa-cubes" style="vertical-align: middle; margin-right: 8px;"></i>Services</a>
                 <a href="#products"><i class="fas fa-shopping-bag" style="vertical-align: middle; margin-right: 8px;"></i>Produits</a>
@@ -959,6 +961,8 @@
                 <hr>
                 <a href="boutique.php"><i class="fas fa-store" style="vertical-align: middle; margin-right: 8px;"></i>Boutique</a>
                 <a href="agent.php"><i class="fas fa-bicycle" style="vertical-align: middle; margin-right: 8px;"></i>Devenir agent</a>
+                <hr>
+                <a href="login.php" style="color: var(--primary); font-weight: 700;"><i class="fas fa-sign-in-alt" style="vertical-align: middle; margin-right: 8px;"></i>Connexion</a>
                 <hr>
                 <a href="#contact"><i class="fas fa-phone" style="vertical-align: middle; margin-right: 8px;"></i>Contact</a>
             </div>

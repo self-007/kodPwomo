@@ -42,12 +42,15 @@
         
         /* Header Sticky */
         header {
-            background: rgba(255,255,255,0.92);
+            background: rgba(255, 255, 255, 1);
             backdrop-filter: blur(12px);
             box-shadow: 0 4px 16px rgba(0,0,0,0.12);
             position: sticky;
-            top: 0;
+            top: 20px;
             z-index: 100;
+            width:95%;
+            border-radius: 30px;
+            margin: 10px auto 50px;
         }
         
         .header-content {
@@ -57,6 +60,7 @@
             padding: 10px;
             max-width: 1200px;
             margin: 0 auto;
+            position: relative;
         }
         
         .logo {
@@ -68,9 +72,98 @@
             color: var(--primary);
         }
         
-        .logo img { height: 40px; border-radius: 8px; }
+        .logo img { height: auto; border-radius: 8px; width: 30%; }
         
-        nav { display: none; }
+        /* Hamburger Menu */
+        .hamburger-btn {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 5px;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+        
+        .hamburger-btn span {
+            width: 25px;
+            height: 3px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+        
+        .hamburger-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(10px, 10px);
+        }
+        
+        .hamburger-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .hamburger-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -7px);
+        }
+        
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            min-width: 250px;
+            padding: 12px 0;
+            margin-top: 10px;
+            border: 1px solid rgba(0,0,0,0.08);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .dropdown-menu.active {
+            display: flex;
+        }
+        
+        .dropdown-menu a {
+            padding: 12px 20px;
+            color: var(--text);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .dropdown-menu a:hover {
+            background: rgba(247, 182, 66, 0.1);
+            color: var(--primary);
+            padding-left: 24px;
+        }
+        
+        .dropdown-menu hr {
+            margin: 8px 0;
+            border: none;
+            border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        
+        @media (max-width: 768px) {
+            .hamburger-btn {
+                display: flex;
+            }
+        }
         
         .btn {
             padding: 6px 12px;
@@ -121,6 +214,14 @@
             margin-top: 0;
             position: relative;
             overflow: hidden;
+            background-image: linear-gradient(rgba(0,0,0,0.25), rgba(0,0,0,0.25)), url('image/haiti_manje-ayisyen_1714491933_2.webp');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 96%;
+            margin-left: auto;
+            margin-right: auto;
+            border-radius: 20px;
         }
         
         @keyframes float {
@@ -137,6 +238,8 @@
             align-items: center;
             position: relative;
             z-index: 1;
+        
+            
         }
         
         .hero h3 {
@@ -144,13 +247,15 @@
             font-weight: 700;
             line-height: 1.2;
             margin-bottom: 20px;
-            color: var(--text);
+            color: white;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.3);
         }
         
         .hero p {
             font-size: 16px;
-            color: var(--text-muted);
+            color: white;
             margin-bottom: 40px;
+            text-shadow: 0 1px 4px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3);
         }
         
         .hero-cta {
@@ -160,26 +265,45 @@
             flex-wrap: wrap;
         }
         
+        .hero-cta .btn {
+            border-radius: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .hero-cta .btn:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+        
         .hero-visual {
-            background: rgba(248,249,250,0.5);
-            border-radius: 16px;
+            background: transparent;
+            border-radius: 20px;
             padding: 20px;
-            
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15), 0 0 20px rgba(247,182,66,0.1);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s ease;
         }
-		.hero-visual img {
-			width: 100%;
-			height: auto;
-			border-radius: 12px;
-			box-shadow: var(--shadow);
-			/*animation: float 6s ease-in-out infinite;*/
-		}
         
-        @media (max-width: 768px) {
+        .hero-visual:hover {
+            box-shadow: 0 12px 40px rgba(0,0,0,0.2), 0 0 30px rgba(247,182,66,0.2);
+            transform: translateY(-5px);
+        }
+        .hero-visual img {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            animation: float 6s ease-in-out infinite;
+        }        @media (max-width: 768px) {
             .hero {
                 grid-template-columns: 1fr;
             }
@@ -198,24 +322,36 @@
         
         /* Badge Section */
         .badge-strip {
-            background: rgba(255,255,255,0.6);
-            backdrop-filter: blur(8px);
-            padding: 16px;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(12px);
+            padding: 24px;
             text-align: center;
-            border-radius: 12px;
-            margin: -20px auto 30px;
+            border-radius: 16px;
+            margin: -30px auto 40px;
             max-width: 1200px;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
-            display: none;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            display: flex;
             justify-content: space-around;
             flex-wrap: wrap;
-            gap: 16px;
+            gap: 20px;
+            border: 1px solid rgba(255,255,255,0.4);
         }
         
         .badge-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            flex: 1;
+            min-width: 150px;
+            padding: 12px;
+            border-radius: 12px;
+            background: rgba(247, 182, 66, 0.05);
+            transition: all 0.3s ease;
+        }
+        
+        .badge-item:hover {
+            background: rgba(247, 182, 66, 0.15);
+            transform: translateY(-2px);
         }
         
         .badge-item .icon {
@@ -223,13 +359,15 @@
         }
         
         .badge-item strong {
-            font-size: 14px;
-            color: var(--text);
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--primary);
         }
         
         .badge-item span {
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 13px;
+            font-weight: 500;
         }
         
         @media (max-width: 768px) {
@@ -242,6 +380,8 @@
         /* Section Title */
         .section {
             padding: 60px 10px;
+            width: 95%;
+            margin: 0 auto;
         }
         
         .section-header {
@@ -759,11 +899,29 @@
         <div class="header-content">
             <div class="logo">
                 <img src="image/logo/logo1.1.jpg" alt="kodPwomo">
-                
             </div>
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 10px; align-items: center;">
                 <a href="login.php" class="btn btn-outline">Connexion</a>
                 <a href="login.php" class="btn btn-primary">Inscription</a>
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+            
+            <!-- Dropdown Menu -->
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="#accueil"><ion-icon name="home" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Accueil</a>
+                <a href="#services"><ion-icon name="cube" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Services</a>
+                <a href="#products"><ion-icon name="bag-handle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Produits</a>
+                <a href="#campus"><ion-icon name="chatbubbles" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Avis</a>
+                <a href="#comment"><ion-icon name="help-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Comment ça marche</a>
+                <hr>
+                <a href="boutique.php"><ion-icon name="storefront" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Boutique</a>
+                <a href="agent.php"><ion-icon name="bicycle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Devenir agent</a>
+                <hr>
+                <a href="#contact"><ion-icon name="call" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Contact</a>
             </div>
         </div>
     </header>
@@ -773,10 +931,10 @@
         <div class="hero-content">
             <div>
                 <h3>Commande depuis ta salle de classe Et nous On s'occupe du reste. </h3>
-                <p>Bienvenue sur kodPwomo, la premiere platforme de livraison sur les campus universitaire d'haiti Dis nous sur quel campus vous etes et nous vous apporterons ce que vous voudrez.</p>
+                <p>Bienvenue sur kodPwomo, la première plateforme de livraison sur les campus universitaires d'Haïti. Dis-nous sur quel campus tu es et nous t'apporterons ce que tu voudras.</p>
                 <div class="hero-cta">
                     <a href="boutique.php" class="btn btn-primary" style="font-size: 14px; padding: 8px 18px;">
-                        a propros
+                        À propos
                     </a>
                     <a href="#comment" class="btn btn-outline" style="font-size: 13px; padding: 8px 18px;">Comment ça marche</a>
                 </div>
@@ -787,9 +945,11 @@
                 </div>
             </div>
             <div class="hero-visual">
-                
-                <img src="image/OIP.webp" alt="hero">
-                
+                <div style="text-align: center;">
+                    <h4 style="font-size: 18px; font-weight: 700; color: var(--text); margin-bottom: 12px;">Que voulez-vous commander ?</h4>
+                    <p style="font-size: 14px; color: white; margin-bottom: 20px;">Regarde les produits disponibles sur ton campus</p>
+                    <a href="boutique.php" class="btn btn-primary" style="font-size: 13px; padding: 10px 24px; border-radius: 12px;">Voir les produits</a>
+                </div>
             </div>
         </div>
     </section>
@@ -1192,7 +1352,8 @@
 
     <!-- CTA Final -->
     <section class="final-cta">
-        <h2>pret a revolutinner ta vie d'etidiant?<br>Concentre-toi sur l'essentiel. </h2>
+        <h2>Prêt à révolutionner ta vie d'étudiant ? </h2>
+        <p>Rejoins la communauté de tous les étudiants faisant partie de kodPwomo.</p>
         <p>Crée ton compte en 30 secondes et profite de la livraison interne sur ton campus.</p>
         <a href="login.php" class="btn" style="font-size: 14px; padding: 8px 20px;">Créer mon compte gratuitement</a>
         <div style="margin-top: 20px; font-size: 13px; opacity: 0.9;">
@@ -1257,6 +1418,31 @@
     </footer>
 
     <script>
+        // Hamburger Menu Toggle
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        
+        hamburgerBtn.addEventListener('click', () => {
+            hamburgerBtn.classList.toggle('active');
+            dropdownMenu.classList.toggle('active');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.header-content')) {
+                hamburgerBtn.classList.remove('active');
+                dropdownMenu.classList.remove('active');
+            }
+        });
+        
+        // Close menu when clicking a link
+        dropdownMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburgerBtn.classList.remove('active');
+                dropdownMenu.classList.remove('active');
+            });
+        });
+        
         // Intersection Observer pour fade-in
         const observerOptions = {
             threshold: 0.1,

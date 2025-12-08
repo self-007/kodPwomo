@@ -11,8 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
             --primary: #f7b642;
@@ -72,7 +71,7 @@
             color: var(--primary);
         }
         
-        .logo img { height: auto; border-radius: 8px; width: 30%; }
+        .logo img { height: auto; border-radius: 8px; width: 50%; }
         
         /* Hamburger Menu */
         .hamburger-btn {
@@ -157,6 +156,35 @@
             margin: 8px 0;
             border: none;
             border-top: 1px solid rgba(0,0,0,0.08);
+        }
+        
+        /* Responsive Header Buttons */
+        .single-btn {
+            display: none;
+        }
+        
+        .mobile-login {
+            color: var(--primary) !important;
+            font-weight: 700 !important;
+        }
+        
+        /* Media queries - Logo responsive */
+        @media (max-width: 480px) {
+            .logo img { width: 55%; }
+        }
+        
+        @media (min-width: 481px) and (max-width: 768px) {
+            .logo img { width: 45%; }
+        }
+        
+        @media (min-width: 769px) {
+            .logo img { width: 35%; }
+            .single-btn {
+                display: inline-block;
+            }
+            .mobile-login {
+                display: none;
+            }
         }
         
         @media (max-width: 768px) {
@@ -517,6 +545,13 @@
             justify-content: center;
             font-size: 48px;
             position: relative;
+            overflow: hidden;
+        }
+        .product-carousel-image img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
         }
         
         .product-badge {
@@ -677,6 +712,7 @@
             .how-it-works {
                 grid-template-columns: 1fr;
             }
+            
         }
         
         .step-card {
@@ -783,6 +819,7 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+            .logo img { height: auto; border-radius: 8px; width: 35%; }
         }
         
         .footer-section h4 {
@@ -890,6 +927,7 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+            
         }
     </style>
 </head>
@@ -901,8 +939,7 @@
                 <img src="image/logo/logo1.1.jpg" alt="kodPwomo">
             </div>
             <div style="display: flex; gap: 10px; align-items: center;">
-                <a href="login.php" class="btn btn-outline">Connexion</a>
-                <a href="login.php" class="btn btn-primary">Inscription</a>
+                <a href="login.php" class="btn btn-primary single-btn">Connexion</a>
                 <button class="hamburger-btn" id="hamburgerBtn">
                     <span></span>
                     <span></span>
@@ -912,16 +949,18 @@
             
             <!-- Dropdown Menu -->
             <div class="dropdown-menu" id="dropdownMenu">
-                <a href="#accueil"><ion-icon name="home" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Accueil</a>
-                <a href="#services"><ion-icon name="cube" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Services</a>
-                <a href="#products"><ion-icon name="bag-handle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Produits</a>
-                <a href="#campus"><ion-icon name="chatbubbles" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Avis</a>
-                <a href="#comment"><ion-icon name="help-circle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Comment ça marche</a>
+                <a href="login.php" class="mobile-login"><i class="fas fa-sign-in-alt" style="vertical-align: middle; margin-right: 8px;"></i>Connexion</a>
                 <hr>
-                <a href="boutique.php"><ion-icon name="storefront" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Boutique</a>
-                <a href="agent.php"><ion-icon name="bicycle" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Devenir agent</a>
+                <a href="#accueil"><i class="fas fa-home" style="vertical-align: middle; margin-right: 8px;"></i>Accueil</a>
+                <a href="#services"><i class="fas fa-cubes" style="vertical-align: middle; margin-right: 8px;"></i>Services</a>
+                <a href="#products"><i class="fas fa-shopping-bag" style="vertical-align: middle; margin-right: 8px;"></i>Produits</a>
+                <a href="#campus"><i class="fas fa-comments" style="vertical-align: middle; margin-right: 8px;"></i>Avis</a>
+                <a href="#comment"><i class="fas fa-question-circle" style="vertical-align: middle; margin-right: 8px;"></i>Comment ça marche</a>
                 <hr>
-                <a href="#contact"><ion-icon name="call" style="vertical-align: middle; margin-right: 8px;"></ion-icon>Contact</a>
+                <a href="boutique.php"><i class="fas fa-store" style="vertical-align: middle; margin-right: 8px;"></i>Boutique</a>
+                <a href="agent.php"><i class="fas fa-bicycle" style="vertical-align: middle; margin-right: 8px;"></i>Devenir agent</a>
+                <hr>
+                <a href="#contact"><i class="fas fa-phone" style="vertical-align: middle; margin-right: 8px;"></i>Contact</a>
             </div>
         </div>
     </header>
@@ -939,9 +978,9 @@
                     <a href="#comment" class="btn btn-outline" style="font-size: 13px; padding: 8px 18px;">Comment ça marche</a>
                 </div>
                 <div style="margin-top: 20px; display: flex; gap: 20px; color: var(--text-muted); font-size: 13px;">
-                    <span><ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Livraison en 15 min</span>
-                    <span><ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Agents certifiés</span>
-                    <span><ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Paiement sécurisé</span>
+                    <span><i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Livraison en 15 min</span>
+                    <span><i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Agents certifiés</span>
+                    <span><i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Paiement sécurisé</span>
                 </div>
             </div>
             <div class="hero-visual">
@@ -979,7 +1018,7 @@
                 </div>
             </div>
             <div class="badge-item">
-                <span class="icon"><ion-icon name="star" style="color: #FFD700;"></ion-icon></span>
+                <span class="icon"><i class="fas fa-star" style="color: #FFD700;"></i></span>
                 <div>
                     <strong>4.8/5</strong><br>
                     <span>Satisfaction</span>
@@ -998,19 +1037,19 @@
             <div class="ps-card fade-in">
                 <div class="icon">⏱️</div>
                 <h3>Plus de temps perdu</h3>
-                <p class="problem"><ion-icon name="close-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Faire la queue, traverser le campus, perdre 1h par jour</p>
-                <div class="solution"><ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Commande en 30 sec, livraison interne rapide</div>
+                <p class="problem"><i class="fas fa-times-circle" style="vertical-align: middle; margin-right: 5px;"></i>Faire la queue, traverser le campus, perdre 1h par jour</p>
+                <div class="solution"><i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Commande en 30 sec, livraison interne rapide</div>
             </div>
             <div class="ps-card fade-in">
                 <div class="icon">❓</div>
                 <h3>Disponibilité garantie</h3>
-                <p class="problem"><ion-icon name="close-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Tu te déplaces et le produit n'est plus disponible</p>
-                <div class="solution"><ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Catalogue en temps réel par campus</div>
+                <p class="problem"><i class="fas fa-times-circle" style="vertical-align: middle; margin-right: 5px;"></i>Tu te déplaces et le produit n'est plus disponible</p>
+                <div class="solution"><i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Catalogue en temps réel par campus</div>
             </div>
             <div class="ps-card fade-in">
-                <div class="icon"><ion-icon name="lock-closed" style="font-size: 48px;"></ion-icon></div>
+                <div class="icon"><i class="fas fa-lock" style="font-size: 48px;"></i></div>
                 <h3>Confiance & Sécurité</h3>
-                <p class="problem"><ion-icon name="close-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Tu ne sais pas qui livre, pas de suivi</p>
+                <p class="problem"><i class="fas fa-times-circle" style="vertical-align: middle; margin-right: 5px;"></i>Tu ne sais pas qui livre, pas de suivi</p>
                 <div class="solution">✅ Agents certifiés + tracking en direct</div>
             </div>
         </div>
@@ -1030,7 +1069,7 @@
                         <!-- Product 1 -->
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                <ion-icon name="fast-food" style="font-size: 48px;"></ion-icon>
+                                <img src="image/cahier.jpeg" alt="" name="fast-food" style="font-size: 48px;">
                                 <span class="product-badge">Populaire</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1041,7 +1080,9 @@
                         
                         <!-- Product 2 -->
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="pizza" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image">
+                                <img src="image/OIP (1).webp" alt="" name="pizza" style="font-size: 48px;">
+                            </div>
                             <div class="product-carousel-info">
                                 <h4>Pizza Margherita</h4>
                                 <div class="price">450 HTG</div>
@@ -1051,7 +1092,7 @@
                         <!-- Product 3 -->
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                <ion-icon name="cafe" style="font-size: 48px;"></ion-icon>
+                                <img src="image/salade.jpeg" alt="" name="cafe" style="font-size: 48px;">
                                 <span class="product-badge" style="background: #E74C3C;">Promo</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1062,7 +1103,10 @@
                         
                         <!-- Product 4 -->
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="book" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image">
+                            
+                              <img src="image/haiti_manje-ayisyen_1714491933_2.webp" alt="" name="book" style="font-size: 48px;">
+                            </div>
                             <div class="product-carousel-info">
                                 <h4>Pack Fournitures</h4>
                                 <div class="price">550 HTG</div>
@@ -1072,7 +1116,7 @@
                         <!-- Product 5 -->
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                <ion-icon name="water" style="font-size: 48px;"></ion-icon>
+                               <img src="image/haiti_manje-ayisyen_1707184123_1.webp" alt="" name="water" style="font-size: 48px;">
                                 <span class="product-badge">Populaire</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1083,7 +1127,9 @@
                         
                         <!-- Product 6 -->
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="nutrition" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image">
+                                <img src="image/sandwich.jpeg" alt="Wrap Poulet" style="font-size: 48px;">
+                            </div>
                             <div class="product-carousel-info">
                                 <h4>Wrap Poulet</h4>
                                 <div class="price">280 HTG</div>
@@ -1092,7 +1138,9 @@
                         
                         <!-- Product 7 -->
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="headset" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image">
+                                <img src="image/coca.jpeg" alt="Boisson" style="font-size: 48px;">
+                            </div>
                             <div class="product-carousel-info">
                                 <h4>Location Écouteurs</h4>
                                 <div class="price">50 HTG/j</div>
@@ -1102,7 +1150,7 @@
                         <!-- Product 8 -->
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                <ion-icon name="package" style="font-size: 48px;"></ion-icon>
+                                <img src="image/riz_poulet.jpeg" alt="Service Colis" style="font-size: 48px;">
                                 <span class="product-badge" style="background: #3498DB;">Nouveau</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1113,7 +1161,9 @@
                         
                         <!-- Product 9 -->
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="flame" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image">
+                                <img src="image/eau.jpeg" alt="Frites + Sauce" style="font-size: 48px;">
+                            </div>
                             <div class="product-carousel-info">
                                 <h4>Frites + Sauce</h4>
                                 <div class="price">150 HTG</div>
@@ -1122,7 +1172,9 @@
                         
                         <!-- Product 10 -->
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="leaf" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image">
+                                <img src="image/haiti_manje-ayisyen_1707184123_1.webp" alt="Salade Fraîche" style="font-size: 48px;">
+                            </div>
                             <div class="product-carousel-info">
                                 <h4>Salade Fraîche</h4>
                                 <div class="price">320 HTG</div>
@@ -1132,7 +1184,7 @@
                         <!-- Duplicate for infinite loop -->
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                🍔
+                                <img src="image/cahier.jpeg" alt="Burger Complet">
                                 <span class="product-badge">Populaire</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1142,7 +1194,7 @@
                         </div>
                         
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image">🍕</div>
+                            <div class="product-carousel-image"><img src="image/OIP (1).webp" alt="Pizza Margherita"></div>
                             <div class="product-carousel-info">
                                 <h4>Pizza Margherita</h4>
                                 <div class="price">450 HTG</div>
@@ -1151,7 +1203,7 @@
                         
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                ☕
+                                <img src="image/salade.jpeg" alt="Café + Croissant">
                                 <span class="product-badge" style="background: #E74C3C;">Promo</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1161,7 +1213,7 @@
                         </div>
                         
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="book" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image"><img src="image/haiti_manje-ayisyen_1714491933_2.webp" alt="Pack Fournitures"></div>
                             <div class="product-carousel-info">
                                 <h4>Pack Fournitures</h4>
                                 <div class="price">550 HTG</div>
@@ -1170,7 +1222,7 @@
                         
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                <ion-icon name="water" style="font-size: 48px;"></ion-icon>
+                                <img src="image/haiti_manje-ayisyen_1707184123_1.webp" alt="Jus Naturel">
                                 <span class="product-badge">Populaire</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1180,7 +1232,7 @@
                         </div>
                         
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="nutrition" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image"><img src="image/sandwich.jpeg" alt="Wrap Poulet" style="font-size: 48px;"></div>
                             <div class="product-carousel-info">
                                 <h4>Wrap Poulet</h4>
                                 <div class="price">280 HTG</div>
@@ -1188,7 +1240,7 @@
                         </div>
                         
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image"><ion-icon name="headset" style="font-size: 48px;"></ion-icon></div>
+                            <div class="product-carousel-image"><img src="image/coca.jpeg" alt="Boisson" style="font-size: 48px;"></div>
                             <div class="product-carousel-info">
                                 <h4>Location Écouteurs</h4>
                                 <div class="price">50 HTG/j</div>
@@ -1197,7 +1249,7 @@
                         
                         <div class="product-carousel-item">
                             <div class="product-carousel-image">
-                                <ion-icon name="package" style="font-size: 48px;"></ion-icon>
+                                <img src="image/riz_poulet.jpeg" alt="Service Colis" style="font-size: 48px;">
                                 <span class="product-badge" style="background: #3498DB;">Nouveau</span>
                             </div>
                             <div class="product-carousel-info">
@@ -1207,7 +1259,7 @@
                         </div>
                         
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image">🍟</div>
+                            <div class="product-carousel-image"><img src="image/eau.jpeg" alt="Frites + Sauce"></div>
                             <div class="product-carousel-info">
                                 <h4>Frites + Sauce</h4>
                                 <div class="price">150 HTG</div>
@@ -1215,7 +1267,7 @@
                         </div>
                         
                         <div class="product-carousel-item">
-                            <div class="product-carousel-image">🥗</div>
+                            <div class="product-carousel-image"><img src="image/haiti_manje-ayisyen_1707184123_1.webp" alt="Salade Fraîche"></div>
                             <div class="product-carousel-info">
                                 <h4>Salade Fraîche</h4>
                                 <div class="price">320 HTG</div>
@@ -1227,10 +1279,10 @@
             
             <div class="product-cta-section fade-in">
                 <a href="boutique.php" class="btn btn-outline" style="font-size: 13px; padding: 8px 16px;">
-                    📖 Voir notre catalogue complet
+                    <i class="fas fa-book" style="vertical-align: middle; margin-right: 5px;"></i>Voir notre catalogue complet
                 </a>
                 <a href="boutique.php" class="btn btn-primary" style="font-size: 13px; padding: 8px 16px;">
-                    🛒 Commander maintenant
+                    <i class="fas fa-shopping-cart" style="vertical-align: middle; margin-right: 5px;"></i>Commander maintenant
                 </a>
             </div>
         </div>
@@ -1357,7 +1409,7 @@
         <p>Crée ton compte en 30 secondes et profite de la livraison interne sur ton campus.</p>
         <a href="login.php" class="btn" style="font-size: 14px; padding: 8px 20px;">Créer mon compte gratuitement</a>
         <div style="margin-top: 20px; font-size: 13px; opacity: 0.9;">
-            <ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Inscription gratuite • <ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Première livraison offerte • <ion-icon name="checkmark-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Support 7j/7
+            <i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Inscription gratuite • <i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Première livraison offerte • <i class="fas fa-check-circle" style="vertical-align: middle; margin-right: 5px;"></i>Support 7j/7
         </div>
     </section>
 
@@ -1365,7 +1417,7 @@
     <footer id="contact">
         <div class="footer-content">
             <div class="footer-section">
-                <h4><ion-icon name="sparkles" style="vertical-align: middle; margin-right: 5px;"></ion-icon>À propos de kodPwomo</h4>
+                <h4><i class="fas fa-star" style="vertical-align: middle; margin-right: 5px;"></i>À propos de kodPwomo</h4>
                 <p style="color: rgba(32, 43, 101, 0.7); margin-bottom: 16px;">
                     La première plateforme de livraison interne sur campus en Haïti. 
                     Modernise ta vie étudiante avec nous.
@@ -1373,41 +1425,41 @@
                 <div style="margin-bottom: 20px;">
                     <p style="font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px;">Nous suivre:</p>
                     <div class="social-links">
-                        <a href="#" title="Facebook"><ion-icon name="logo-facebook"></ion-icon></a>
-                        <a href="#" title="Instagram"><ion-icon name="logo-instagram"></ion-icon></a>
-                        <a href="#" title="Twitter"><ion-icon name="logo-twitter"></ion-icon></a>
-                        <a href="#" title="YouTube"><ion-icon name="logo-youtube"></ion-icon></a>
+                        <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" title="YouTube"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
             </div>
             
             <div class="footer-section">
-                <h4><ion-icon name="link" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Liens rapides</h4>
+                <h4><i class="fas fa-link" style="vertical-align: middle; margin-right: 5px;"></i>Liens rapides</h4>
                 <ul>
-                    <li><a href="boutique.php"><ion-icon name="bag-handle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Boutique</a></li>
-                    <li><a href="agent.php"><ion-icon name="bicycle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Devenir agent</a></li>
-                    <li><a href="blog.php"><ion-icon name="document-text" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Blog & Guides</a></li>
-                    <li><a href="#"><ion-icon name="help-circle" style="vertical-align: middle; margin-right: 5px;"></ion-icon>FAQ</a></li>
+                    <li><a href="boutique.php"><i class="fas fa-shopping-bag" style="vertical-align: middle; margin-right: 5px;"></i>Boutique</a></li>
+                    <li><a href="agent.php"><i class="fas fa-bicycle" style="vertical-align: middle; margin-right: 5px;"></i>Devenir agent</a></li>
+                    <li><a href="blog.php"><i class="fas fa-file-alt" style="vertical-align: middle; margin-right: 5px;"></i>Blog & Guides</a></li>
+                    <li><a href="#"><i class="fas fa-question-circle" style="vertical-align: middle; margin-right: 5px;"></i>FAQ</a></li>
                 </ul>
             </div>
             
             <div class="footer-section">
-                <h4><ion-icon name="scale" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Légal</h4>
+                <h4><i class="fas fa-balance-scale" style="vertical-align: middle; margin-right: 5px;"></i>Légal</h4>
                 <ul>
-                    <li><a href="#"><ion-icon name="document" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Mentions légales</a></li>
-                    <li><a href="#"><ion-icon name="list" style="vertical-align: middle; margin-right: 5px;"></ion-icon>CGU</a></li>
-                    <li><a href="#"><ion-icon name="lock-closed" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Politique de confidentialité</a></li>
-                    <li><a href="#"><ion-icon name="shield" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Cookies</a></li>
+                    <li><a href="#"><i class="fas fa-file" style="vertical-align: middle; margin-right: 5px;"></i>Mentions légales</a></li>
+                    <li><a href="#"><i class="fas fa-list" style="vertical-align: middle; margin-right: 5px;"></i>CGU</a></li>
+                    <li><a href="#"><i class="fas fa-lock" style="vertical-align: middle; margin-right: 5px;"></i>Politique de confidentialité</a></li>
+                    <li><a href="#"><i class="fas fa-shield-alt" style="vertical-align: middle; margin-right: 5px;"></i>Cookies</a></li>
                 </ul>
             </div>
             
             <div class="footer-section">
-                <h4><ion-icon name="call" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Contact</h4>
+                <h4><i class="fas fa-phone" style="vertical-align: middle; margin-right: 5px;"></i>Contact</h4>
                 <ul>
-                    <li><a href="mailto:support@kodpwomo.com"><ion-icon name="mail" style="vertical-align: middle; margin-right: 5px;"></ion-icon>support@kodpwomo.com</a></li>
-                    <li><a href="tel:+509XXXXXXXX"><ion-icon name="phone-portrait" style="vertical-align: middle; margin-right: 5px;"></ion-icon>+509 XXXX XXXX</a></li>
-                    <li><a href="#"><ion-icon name="location" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Port-au-Prince, Haïti</a></li>
-                    <li><a href="#"><ion-icon name="time" style="vertical-align: middle; margin-right: 5px;"></ion-icon>Lun-Ven: 8h-18h</a></li>
+                    <li><a href="mailto:support@kodpwomo.com"><i class="fas fa-envelope" style="vertical-align: middle; margin-right: 5px;"></i>support@kodpwomo.com</a></li>
+                    <li><a href="tel:+509XXXXXXXX"><i class="fas fa-mobile-alt" style="vertical-align: middle; margin-right: 5px;"></i>+509 XXXX XXXX</a></li>
+                    <li><a href="#"><i class="fas fa-map-marker-alt" style="vertical-align: middle; margin-right: 5px;"></i>Port-au-Prince, Haïti</a></li>
+                    <li><a href="#"><i class="fas fa-clock" style="vertical-align: middle; margin-right: 5px;"></i>Lun-Ven: 8h-18h</a></li>
                 </ul>
             </div>
         </div>

@@ -40,7 +40,9 @@ function addOrders($orderCode, $idUser, $idProduct, $price, $qnt, $idPlace, $sta
 }
 //create order
 function createOrder( $status = 'pending') {
-    $userId ='GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12'; // Example user ID, replace with actual user ID from session or token
+
+    $accessToken = getBearerToken();
+    $userId = $accessToken->sub; // Example user ID, replace with actual user ID from session or token
     global $datas;
     //verify datas for order
     if(!isset($datas['delivery_place_id']) || !isset($datas['university_id']) || !isset($datas['total_amount']) || !isset($datas['products'])){

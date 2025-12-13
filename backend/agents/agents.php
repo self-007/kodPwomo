@@ -1,4 +1,5 @@
 <?php
+
 $datas = validateRequest() ?? []; 
 //get Agents
 function getAllAgents() {
@@ -39,6 +40,10 @@ function getAgentAvailability($id) {
 // modify agent availability
 function setAgentAvailability() {
     global $datas;
+    global $user_role;
+    if($user_role !== 'agent' && $user_role !== 'manager'){
+        response(['error' => 'Unauthorized - Agents only'], 401);
+    }
     //verify if data exist or empty
     if(!isset($datas['agentId']) || !isset($datas['isAvailable'])){
         response(['donnees manquantes'], 404);

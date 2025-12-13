@@ -1,4 +1,7 @@
 <?php
+if($user_role !== 'admin' && $user_role !== 'manager'){
+    response(['error' => 'Unauthorized - Admins only'], 401);
+}
 // KodPwomo Backend Integration
 //require_once __DIR__.'/../agents/agents.php';
 require_once __DIR__.'/../controllers/users.php';

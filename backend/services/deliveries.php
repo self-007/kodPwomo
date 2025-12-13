@@ -76,7 +76,16 @@ function updateDeliveryStatus($deliveryId) {
     }
 }
 // give a note and a comment to an agent after delivery
-function rateAgent($agentId, $rating, $comment = null) {
+function rateAgent() {
+    global $datas;
+    //verify datas
+    if (!isset($datas['agent_code']) || !isset($datas['feedback']) || !isset($datas['rating']) || !isset($datas['order_id'])) {
+        response(['error' => 'Invalid agent ID or rating'], 400);
+    }
+    $agentId = sanitizeInput($datas['agent_code']);
+    $rating = sanitizeInput($datas['rating']);
+    $orderId = sanitizeInput($datas['order_id']);
+    $comment = isset($datas['feedback']) ? sanitizeInput($datas['feedback']) : null;
     // verify int value or superior to 0
     if (intval($agentId) <= 0 || intval($rating) < 1 || intval($rating) > 10) {
         response(['error' => 'Invalid agent ID or rating'], 400);
@@ -84,14 +93,36 @@ function rateAgent($agentId, $rating, $comment = null) {
     $rating = intval($rating);
     $comment = $comment ? sanitizeInput($comment) : null;
     global $connection;
-    $stmt = $connection->prepare("UPDATE deliveries SET rating = :rating, comment = :comment WHERE id = :id");
-    
+    //get the user id using access token
+    $accessToken = getBearerToken();
+    $userId = $accessToken->sub;
+    //verify this user has a delivery with that order id
+    $stmt = $connection->prepare("SELECT * FROM orders WHERE order_id = :order_id AND id_user = :user_id");
+    $stmt->bindParam(':order_id', $orderId);
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->execute();
+    if ($stmt->rowCount() === 0) {
+        response(['error' => 'You have no delivery with this order ID'], 400);
+    }
+    //verify if the agentCode belongs to that agent
+    $stmt = $connection->prepare("SELECT * FROM deliveries d JOIN users u ON d.id_agent = u.id_unique WHERE code = :agent_code");
+    $stmt->bindParam(':agent_code', $agentId);
+    $stmt->execute();
+    if ($stmt->rowCount() === 0) {
+        response(['error' => 'Invalid agent code'], 400);
+    }
+    //update the delivery, set it completed and rate the agent
+    $stmt = $connection->prepare("UPDATE deliveries SET note = :rating, feedback = :comment, status = 'completed' WHERE id_commande = :order_id");
+     
     $stmt->bindParam(':rating', $rating);
     $stmt->bindParam(':comment', $comment);
-    $stmt->bindParam(':id', $agentId);
+    $stmt->bindParam(':order_id', $orderId);
     if ($stmt->execute()) {
         return ['message' => 'Agent rated successfully'];
     } else {
+        $message = 'their is an issues with the rate agent function inside deliveries page';
+        $type = 'system alert';
+        notificationsCenter($userId, $message, $type);
         response(['error' => 'Failed to rate agent'], 500);
     }
 }
@@ -452,16 +483,19 @@ function getAllDeliveriesByMonth($month = null) {
 // get total completed delivery
 // get total processing
   
-function getUserDeliDatas($userId){  
+function getUserDeliDatas(){ 
+    $accessToken = getBearerToken();
+    $userId = $accessToken->sub; 
     //verify datas  
     if(empty($userId)){
         response(['error' => 'Invalid user ID'], 400);
     }
     $userId = sanitizeInput($userId);
     global $connection;
-    $stmt = "SELECT d.id_commande, d.note, d.status, d.feedback FROM deliveries d
-    JOIN orders o ON d.id_commande = o.order_id
-    WHERE o.id_user = :user_id GROUP BY d.id_commande";
+    $stmt = "SELECT d.id_commande, d.note, d.status, d.feedback, p.name as product_name, o.qnt, p.prices, s.salle_name as room_name, u.name as university_name
+    FROM deliveries d
+    JOIN orders o ON d.id_commande = o.order_id JOIN products p ON o.id_product = p.id JOIN salle s ON o.adresse_id = s.id JOIN university u ON s.id_university = u.id
+    WHERE o.id_user = :user_id ";
     $stmt = $connection->prepare($stmt);
     $stmt->bindParam(':user_id', $userId);
     $stmt->execute();

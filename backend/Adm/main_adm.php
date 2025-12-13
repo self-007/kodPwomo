@@ -1,4 +1,7 @@
 <?php
+if($user_role !== 'admin'){
+    response(['error' => 'Unauthorized - Super Admins only'], 401);
+}
 // KodPwomo Backend Integration
 require_once __DIR__.'/adm.php';
 // this is the super powerfull admin

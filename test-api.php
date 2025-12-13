@@ -177,7 +177,7 @@ $serverInfo = [
         }
 
         function testUsers() {
-            const url = `backend/users`;
+            const url = `backend/deliveries/user/GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1`;
             makeRequest(url, 'All Users');
         }
 

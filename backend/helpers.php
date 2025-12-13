@@ -143,7 +143,8 @@ function createRefreshToken($userId, $role) {
         'iat' => time(),
         'exp' => time() + 1209600, // Expiration dans 2 semaines
         'sub' => $userId,
-        'role' => $role
+        'role' => $role,
+        'jti' => bin2hex(random_bytes(32)) // ID unique du token
     ];
 
     return JWT::encode($refreshPayload, $REFRESH_SECRET, 'HS256');
@@ -173,6 +174,7 @@ function createAccessToken($username, $user_id, $role, $fingerprint) {
         'username' => $username, // Informations utilisateur
         'role' => $role, // Rôle client/agent/ADM (exemple)
         'sub' => $user_id,
+        'jti' => bin2hex(random_bytes(16)), // ID unique du token
         'fingerPrint' => $fingerprint // Empreinte digitale pour sécurité supplémentaire
     ];
     return JWT::encode($accessPayload, $ACCESS_SECRET, 'HS256');
@@ -194,8 +196,8 @@ function getTotalPrice($order_id) {
 }
 
 //get access token from header
-function getBearerToken() {
-    global $ACCESS_SECRET;
+function getBearerToken() { 
+    global $ACCESS_SECRET, $connection;
     $headers = getallheaders();
     if (!isset($headers['Authorization'])) {
         response(['error' => 'Unauthorized A1'], 401);
@@ -205,18 +207,56 @@ function getBearerToken() {
     if (count($matches) !== 2) {
         response(['error' => 'Unauthorized A2'], 401);
     }
+    if($matches[0] !== 'Bearer'){
+        response(['error' => 'Unauthorized A3'], 401);
+    }
     $token = $matches[1];
     //decode token
    // var_dump($token);
    try {
+        //verify if token is blacklisted
+        $stmt = $connection->prepare("SELECT * FROM black_list WHERE access_token = :access_token AND id_user = :id_user");
+        $stmt->bindParam(':access_token', $token);
+        $stmt->bindParam(':id_user', $id_unique);
+        $stmt->execute();
+        if ($stmt->rowCount() > 0) {
+            response(['error' => 'Unauthorized B1'], 401);
+        }
         $accessToken = JWT::decode($token, new Key($ACCESS_SECRET, 'HS256'));
+        $accessToken->access = $token;
         return $accessToken;
    } catch (\Firebase\JWT\ExpiredException $e){
-        response(['error' => 'Unauthorized', 'action' => 'out'], 401);
+        response(['error' => 'expired', 'action' => 'out'], 401);
    } catch (Exception $e) {
         response(['error' => 'Unauthorized ', 'action' => 'out'], 401);
    }
 }
+//get the user role
+function getUserRole() {
+    global $ACCESS_SECRET;
+    $headers = getallheaders();
+    $matches = [];
+
+    if(!isset($headers['Authorization'])){
+        return 0;
+    }
+    $matches = explode(" ", $headers['Authorization']);
+    if($matches[0] != 'Bearer'){
+        return null;
+    }
+    $accessToken = $matches[1];
+    try {
+        $accessToken = JWT::decode($accessToken, new Key($ACCESS_SECRET, 'HS256'));
+        return $accessToken;
+    } catch (\Firebase\JWT\ExpiredException $e){
+        return null;
+    } catch (Exception $e) {
+        return null;
+    }
+}
+//global  variable role
+$user_role = getUserRole()->role ?? 'vide';
+//echo $role;
 //get refreshToken
 function getRefreshToken(){
     global $REFRESH_SECRET;
@@ -232,6 +272,32 @@ function getRefreshToken(){
     } catch(Exeption $e){
         response(['error' => 'Unauthorized E1'], 401);
     }
+
+}
+//blacklist token
+function blacklistToken($accessToken, $id_unique) {
+    global $connection;
+    $stmt = $connection->prepare("INSERT INTO black_list (access_token, id_user) VALUES (:access_token, :id_unique)");
+    $stmt->bindParam(':access_token', $accessToken);
+    $stmt->bindParam(':id_unique', $id_unique);
+    if($stmt->execute()){
+        response(['status' => 'success'], 200);
+    }
+    // alert the adm about the issues
+    $message = 'their is an issues with the blacklist function inside helpers page blacklistToken';
+    $type = 'system alert';
+    notificationsCenter($id_unique, $message, $type);
+    response(['error' => 'Failed to blacklist token'], 500);
+}
+
+function notificationsCenter($id_unique, $message, $type){
+    global $connection;
+    //add to the database
+    $stmt = $connection->prepare("INSERT INTO support (idUser, subject, category, message) VALUES (:id_user, 'system', :type, :message)");
+    $stmt->bindParam(':id_user', $id_unique);
+    $stmt->bindParam(':type', $type);
+    $stmt->bindParam(':message', $message);
+    $stmt->execute();
 
 }
     

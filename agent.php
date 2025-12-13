@@ -2714,5 +2714,6 @@
         }
         // Intégrer afterDataRender dans displayTransactions / displayAvailableOrders / displayCurrentDelivery
     </script>
+    <?php include 'heartbeat.php'; ?>
 </body>
 </html>

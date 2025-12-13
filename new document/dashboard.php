@@ -336,7 +336,7 @@
                 <div class="user-mini" style="display:flex; align-items:center; gap:8px; margin-top:8px">
                     <div class="avatar" aria-hidden="true"></div>
                     <div style="display:flex; flex-direction:column">
-                        <strong id="userNameDisplay" style="font-size:13px; color:#111827">Jean Dupont</strong>
+                        <strong style="font-size:13px; color:#111827">Jean Dupont</strong>
                         
                     </div>
                 </div>
@@ -397,26 +397,39 @@
                             <div class="form-row">
                                 <div>
                                     <label for="firstName">Prénom</label>
-                                    <input id="firstName" class="input" type="text" placeholder="Votre prénom" />
+                                    <input id="firstName" class="input" type="text" placeholder="Jean" />
                                 </div>
                                 <div>
                                     <label for="lastName">Nom</label>
-                                    <input id="lastName" class="input" type="text" placeholder="Votre nom complet" />
+                                    <input id="lastName" class="input" type="text" placeholder="Dupont" />
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div>
-                                    <label for="phone">Téléphone</label>
-                                    <input id="phone" class="input" type="tel" placeholder="+233 50 123 45 67" />
+                                    <label for="email">Email</label>
+                                    <input id="email" class="input" type="email" placeholder="jean.dupont@example.com" />
                                 </div>
                                 <div>
-                                    <label for="university">Université</label>
-                                    <select id="university" class="select">
-                                        <option value="">Chargement des universités...</option>
-                                    </select>
+                                    <label for="phone">Téléphone</label>
+                                    <input id="phone" class="input" type="tel" placeholder="+33 6 12 34 56 78" />
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-primary" id="saveProfileBtn">Enregistrer</button>
+                            <div class="form-row">
+                                <div>
+                                    <label for="country">Pays</label>
+                                    <select id="country" class="select">
+                                        <option>France</option>
+                                        <option>Belgique</option>
+                                        <option>Canada</option>
+                                        <option>Suisse</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="city">Ville</label>
+                                    <input id="city" class="input" type="text" placeholder="Paris" />
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-primary">Enregistrer</button>
                         </form>
                     </div>
                     <div class="card">
@@ -437,8 +450,8 @@
                                 </div>
                             </div>
                             <div style="margin-top:12px; display:flex; gap:10px">
-                                <button type="button" class="btn btn-primary" id="updateSecurityBtn">Mettre à jour</button>
-                                <button type="button" class="btn btn-outline" id="logoutBtn">Se déconnecter</button>
+                                <button type="button" class="btn btn-primary">Mettre à jour</button>
+                                <button type="button" class="btn btn-outline">Se déconnecter</button>
                             </div>
                         </form>
                     </div>
@@ -504,14 +517,8 @@
                             <label for="message">Message</label>
                             <textarea id="message" class="textarea" placeholder="Expliquez votre demande..."></textarea>
                         </div>
-                        <div>
-                            <label for="supportUniversity">Université concernée</label>
-                            <select id="supportUniversity" class="select">
-                                <option value="">Sélectionnez une université</option>
-                            </select>
-                        </div>
                         <div style="margin-top:12px; display:flex; gap:10px">
-                            <button type="button" id="supportSendBtn" class="btn btn-primary">Envoyer</button>
+                            <button type="button" class="btn btn-primary">Envoyer</button>
                             <button type="reset" class="btn btn-outline">Réinitialiser</button>
                         </div>
                     </form>
@@ -597,225 +604,14 @@
             const codeModalConfirm = qs('#codeModalConfirm');
             const deliveryStepper = qs('#deliveryStepper');
             const agentCodeInput = qs('#agentCodeInput');
-            const universitySelect = qs('#university');
 
             // ============ API CONFIGURATION ============
             const API_BASE = `${window.location.origin}/kodPwomo/backend/deliveries/user`;
-            const UNIVERSITIES_API = `${window.location.origin}/kodPwomo/backend/universities`;
-            const USER_DATA_API = `${window.location.origin}/kodPwomo/backend/users/datas`;
-            
-            // ============ CHARGER LES DONNÉES UTILISATEUR ============
-            async function loadUserData() {
-                try {
-                    console.log('👤 Chargement des données utilisateur depuis:', USER_DATA_API);
-                    const accessToken = localStorage.getItem('access_token');
-                    
-                    if (!accessToken) {
-                        console.error('❌ ERREUR: Pas de token trouvé');
-                        return null;
-                    }
-
-                    const response = await fetch(USER_DATA_API, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + accessToken
-                        }
-                    });
-
-                    if (!response.ok) {
-                        console.error('❌ Erreur lors du chargement des données utilisateur:', response.status);
-                        return null;
-                    }
-
-                    const apiResponse = await response.json();
-                    console.log('✅ Réponse API brute:', apiResponse);
-                    
-                    // Gérer la structure de réponse du backend
-                    if (apiResponse.status === 'success' && apiResponse.user) {
-                        const user = apiResponse.user;
-                        
-                        // Transformer les données pour avoir une structure cohérente
-                        // user.firstname = Prénom (ex: "Bill")
-                        // user.name = Nom complet (ex: "Bill James-sky Voltaire")
-                        // user.email = Email
-                        // user.phone = Téléphone (peut être vide)
-                        // user.university_name = Université (peut être vide)
-                        
-                        const userData = {
-                            first_name: user.firstname || '',
-                            last_name: user.name || '',
-                            email: user.email || '',
-                            phone: user.phone || '',
-                            university_name: user.university_name || ''
-                        };
-                        
-                        console.log('✅ Données utilisateur transformées:', userData);
-                        return userData;
-                    }
-                    
-                    return null;
-
-                } catch (error) {
-                    console.error('❌ Erreur lors du chargement des données utilisateur:', error);
-                    return null;
-                }
-            }
-
-            // ============ CHARGER LES UNIVERSITÉS ============
-            async function loadUniversities() {
-                try {
-                    console.log('🎓 Chargement des universités depuis:', UNIVERSITIES_API);
-                    const response = await fetch(UNIVERSITIES_API, {
-                        method: 'GET',
-                        headers: {
-                            'Accept': 'application/json'
-                        }
-                    });
-
-                    if (!response.ok) {
-                        console.error('❌ Erreur lors du chargement des universités:', response.status);
-                        return;
-                    }
-
-                    const universities = await response.json();
-                    console.log('✅ Universités reçues:', universities);
-
-                    // Vérifier que c'est un tableau
-                    if (!Array.isArray(universities) || universities.length === 0) {
-                        console.warn('⚠️ Aucune université trouvée');
-                        universitySelect.innerHTML = '<option value="">Aucune université disponible</option>';
-                        const supportUniversitySelect = qs('#supportUniversity');
-                        if (supportUniversitySelect) {
-                            supportUniversitySelect.innerHTML = '<option value="">Aucune université disponible</option>';
-                        }
-                        return;
-                    }
-
-                    // Construire les options avec id et name
-                    let options = '<option value="">Sélectionnez votre université</option>';
-                    universities.forEach(uni => {
-                        const { id, name } = uni;
-                        
-                        if (id && name) {
-                            options += `<option value="${id}" data-id="${id}">${name}</option>`;
-                            console.log(`  ✓ ${name} (ID: ${id})`);
-                        }
-                    });
-
-                    universitySelect.innerHTML = options;
-                    console.log('✅ Universités chargées dans le select profil');
-
-                    // Charger aussi le select de support
-                    const supportUniversitySelect = qs('#supportUniversity');
-                    if (supportUniversitySelect) {
-                        let supportOptions = '<option value="">Sélectionnez une université</option>';
-                        universities.forEach(uni => {
-                            const { id, name } = uni;
-                            if (id && name) {
-                                supportOptions += `<option value="${id}" data-id="${id}">${name}</option>`;
-                            }
-                        });
-                        supportUniversitySelect.innerHTML = supportOptions;
-                        console.log('✅ Universités chargées dans le select support');
-                    }
-
-                    // Ajouter un event listener pour capturer l'ID sélectionné
-                    universitySelect.addEventListener('change', (e) => {
-                        const selectedId = e.target.value;
-                        const selectedOption = e.target.options[e.target.selectedIndex];
-                        const selectedName = selectedOption.text;
-                        
-                        console.log('🎓 Université sélectionnée:', {
-                            id: selectedId,
-                            name: selectedName
-                        });
-                        
-                        // Stocker dans une variable globale pour l'utiliser lors de l'enregistrement
-                        window.selectedUniversityId = selectedId;
-                        window.selectedUniversityName = selectedName;
-                    });
-
-                } catch (error) {
-                    console.error('❌ Erreur lors du chargement des universités:', error);
-                    universitySelect.innerHTML = '<option value="">Erreur lors du chargement</option>';
-                    const supportUniversitySelect = qs('#supportUniversity');
-                    if (supportUniversitySelect) {
-                        supportUniversitySelect.innerHTML = '<option value="">Erreur lors du chargement</option>';
-                    }
-                }
-            }
-
-            // Charger les universités et les données utilisateur au démarrage
-            async function initializeProfileData() {
-                // Charger les universités
-                await loadUniversities();
-                
-                // Charger les données utilisateur
-                const userData = await loadUserData();
-                if (userData) {
-                    // Pré-remplir le formulaire avec les données réelles
-                    const firstNameInput = qs('#firstName');
-                    const lastNameInput = qs('#lastName');
-                    const phoneInput = qs('#phone');
-                    const universitySelect = qs('#university');
-                    
-                    // Pré-remplir Prénom
-                    if (firstNameInput && userData.first_name) {
-                        firstNameInput.value = userData.first_name;
-                        console.log('✅ Prénom chargé:', userData.first_name);
-                    }
-                    
-                    // Pré-remplir Nom (depuis user.name du backend)
-                    if (lastNameInput && userData.last_name) {
-                        lastNameInput.value = userData.last_name;
-                        console.log('✅ Nom chargé:', userData.last_name);
-                    }
-                    
-                    // Pré-remplir Téléphone
-                    if (phoneInput && userData.phone) {
-                        phoneInput.value = userData.phone;
-                        console.log('✅ Téléphone chargé:', userData.phone);
-                    }
-                    
-                    // Sélectionner l'université si elle existe
-                    if (universitySelect && userData.university_name) {
-                        // Attendre un peu que les universités soient chargées
-                        setTimeout(() => {
-                            // Chercher l'université par son nom
-                            const options = Array.from(universitySelect.querySelectorAll('option'));
-                            const matchingOption = options.find(opt => opt.textContent.trim() === userData.university_name.trim());
-                            
-                            if (matchingOption) {
-                                universitySelect.value = matchingOption.value;
-                                window.selectedUniversityId = matchingOption.value;
-                                window.selectedUniversityName = userData.university_name;
-                                console.log('✅ Université sélectionnée:', userData.university_name);
-                            } else {
-                                console.warn('⚠️ Université non trouvée dans la liste:', userData.university_name);
-                            }
-                        }, 500);
-                    }
-                    
-                    console.log('✅ Formulaire de profil pré-rempli avec les données réelles');
-                    
-                    // Mettre à jour le nom dans la barre latérale
-                    const userNameDisplay = qs('#userNameDisplay');
-                    if (userNameDisplay && userData.first_name) {
-                        userNameDisplay.textContent = userData.first_name;
-                        console.log('✅ Nom mis à jour dans le menu:', userData.first_name);
-                    }
-                } else {
-                    console.warn('⚠️ Aucune donnée utilisateur reçue');
-                }
-            }
-            
-            // Initialiser les données de profil
-            initializeProfileData();
             
             // Traduction des statuts
             const statusTranslations = {
                 'processing': 'En préparation',
+                'in-route': 'En route',
                 'completed': 'Livrée',
                 'canceled': 'Annulée'
             };
@@ -836,18 +632,14 @@
             }
 
             // ============ API HELPER ============
-            const API_BASE = `${window.location.origin}/kodPwomo/backend/deliveries/user`;
-
             async function fetchAPI() {
                 try {
                     const accessToken = localStorage.getItem('access_token');
                     if (!accessToken) {
-                        console.error('❌ ERREUR: Pas de token trouvé');
-                        handleSessionExpired();
+                        console.warn('No access token found');
                         return null;
                     }
 
-                    console.log('📡 Appel API:', API_BASE);
                     const response = await fetch(API_BASE, {
                         method: 'GET',
                         headers: {
@@ -858,38 +650,32 @@
 
                     if (!response.ok) {
                         if (response.status === 401 || response.status === 403) {
-                            console.error('❌ Session expirée (401/403)');
                             handleSessionExpired();
                             return null;
                         }
-                        console.error(`❌ HTTP Error: ${response.status}`);
+                        console.error(`HTTP Error: ${response.status}`);
                         return null;
                     }
 
                     const data = await response.json();
-                    console.log('✅ Données reçues:', data);
                     
                     // Vérifier les messages d'erreur du backend
                     if (data.error && (data.error.includes('expired') || data.error.includes('out') || data.error.includes('Unauthorized'))) {
-                        console.error('❌ Session expirée (message):', data.error);
                         handleSessionExpired();
                         return null;
                     }
 
                     return data;
                 } catch (error) {
-                    console.error('❌ Erreur fetch:', error);
+                    console.error('API Error:', error);
                     return null;
                 }
             }
 
             // ============ DATA TRANSFORMATION ============
             function transformData(apiResponse) {
-                console.log('🔄 Transformation des données:', apiResponse);
-                
                 // Gérer les réponses vides ou sans structure
-                if (!apiResponse || !apiResponse.datas) {
-                    console.warn('⚠️ Pas de datas reçues');
+                if (!apiResponse) {
                     return {
                         commandes: [],
                         stats: {
@@ -907,61 +693,41 @@
                 const datas = apiResponse.datas || [];
                 
                 if (datas.length === 0) {
-                    console.warn('⚠️ Tableau datas vide');
                     return {
                         commandes: [],
                         stats: {
                             nombreCommandes: 0,
-                            totalGlobal: apiResponse.totalAmounts?.total_order_amount || 0,
+                            totalGlobal: apiResponse.total_delivery || 0,
                             totalLivraisons: 0,
                             totalProduits: 0,
                             noteMoyenne: 0,
-                            enRoute: 0,
-                            livrees: 0
+                            enRoute: apiResponse.processing_delivery || 0,
+                            livrees: apiResponse.completed_delivery || 0
                         }
                     };
                 }
 
-                console.log('📦 Items reçus:', datas.length);
-                console.log('🔍 Premier item:', datas[0]);
-
                 // Grouper les items par id_commande
                 const commandesMap = new Map();
                 
-                datas.forEach((item, idx) => {
-                    console.log(`Item ${idx}:`, {
-                        id_commande: item.id_commande,
-                        product_name: item.product_name,
-                        qnt: item.qnt,
-                        prices: item.prices,
-                        room_name: item.room_name,
-                        university_name: item.university_name
-                    });
-                    
+                datas.forEach(item => {
                     if (!commandesMap.has(item.id_commande)) {
                         commandesMap.set(item.id_commande, {
                             id_commande: item.id_commande,
-                            note: item.note || 0,
-                            status: item.status || 'pending',
-                            feedback: item.feedback || '',
-                            university_name: item.university_name || '',
-                            room_name: item.room_name || '',
+                            note: item.note,
+                            status: item.status,
+                            feedback: item.feedback,
+                            name: item.name,
+                            salle_name: item.salle_name,
                             items: [],
                             totalCommande: 0
                         });
                     }
                     
-                    // S'assurer que qnt et prices sont des nombres
-                    const qnt = parseInt(item.qnt) || 1;
-                    const price = parseFloat(item.prices) || 0;
-                    const subtotal = qnt * price;
-                    
-                    console.log(`  ➜ Subtotal: ${qnt} × ${price} = ${subtotal}`);
-                    
+                    const subtotal = item.qnt * item.prices;
                     commandesMap.get(item.id_commande).items.push({
-                        product_name: item.product_name || 'Produit inconnu',
-                        qnt: qnt,
-                        prices: price,
+                        qnt: item.qnt,
+                        prices: item.prices,
                         subtotal: subtotal
                     });
                     
@@ -972,58 +738,44 @@
                 const commandes = Array.from(commandesMap.values()).reverse();
 
                 // Calculer les stats
-                const notesArray = commandes.filter(c => c.note && c.note > 0).map(c => c.note);
-                const noteMoyenne = notesArray.length > 0 ? notesArray.reduce((a, b) => a + b, 0) / notesArray.length : 0;
-
                 const stats = {
                     nombreCommandes: commandes.length,
-                    totalGlobal: parseFloat(apiResponse.totalAmounts?.total_order_amount) || 0,
-                    totalLivraisons: parseFloat(apiResponse.totalAmounts?.total_amount) || 0,
-                    totalProduits: parseFloat(apiResponse.totalSpent) || 0,
-                    noteMoyenne: noteMoyenne,
-                    enRoute: commandes.filter(c => c.status === 'processing').length,
-                    livrees: commandes.filter(c => c.status === 'completed').length
+                    totalGlobal: apiResponse.total_delivery || 0,
+                    totalLivraisons: apiResponse.totalAmounts?.total_amount || 0,
+                    totalProduits: apiResponse.totalSpent || 0,
+                    noteMoyenne: commandes.filter(c => c.note).reduce((sum, c) => sum + c.note, 0) / commandes.filter(c => c.note).length || 0,
+                    enRoute: apiResponse.processing_delivery || commandes.filter(c => c.status === 'in-route').length,
+                    livrees: apiResponse.completed_delivery || commandes.filter(c => c.status === 'completed').length
                 };
 
-                console.log('✅ Transformation complète:');
-                console.log('  Commandes:', commandes.length);
-                console.log('  Stats:', stats);
-                commandes.forEach(cmd => {
-                    console.log(`  - ${cmd.id_commande}: ${cmd.items.length} items, total: ${cmd.totalCommande}€`);
-                });
-                
                 return { commandes, stats };
             }
 
             // ============ RENDER FUNCTIONS ============
             function renderStats(stats) {
-                console.log('📊 Rendu des stats:', stats);
                 const statsGrid = qs('.grid-stats');
-                if (!statsGrid) {
-                    console.error('❌ Élément .grid-stats non trouvé');
-                    return;
-                }
+                if (!statsGrid) return;
 
                 statsGrid.innerHTML = `
                     <div class="card order-card">
                         <div class="stat-icon green">
                             <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M4 7h16v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7Z" stroke="#10b981" stroke-width="2"/><path d="M7 7V5a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2v2" stroke="#10b981" stroke-width="2"/></svg>
                         </div>
-                        <div class="stat-value">${stats.nombreCommandes || 0}</div>
+                        <div class="stat-value">${stats.nombreCommandes}</div>
                         <p class="card-sub">COMMANDES TOTALES</p>
                     </div>
                     <div class="card order-card">
                         <div class="stat-icon green">
                             <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M3 16h18l-2-7H6L3 16Z" stroke="#10b981" stroke-width="2" stroke-linecap="round"/><path d="M7 16a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm10 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Z" stroke="#10b981" stroke-width="2"/></svg>
                         </div>
-                        <div class="stat-value">${stats.enRoute || 0}</div>
+                        <div class="stat-value">${stats.enRoute}</div>
                         <p class="card-sub">EN ROUTE</p>
                     </div>
                     <div class="card order-card">
                         <div class="stat-icon green">
                             <svg viewBox="0 0 24 24" width="22" height="22" fill="none"><path d="M20 6 9 17l-5-5" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
                         </div>
-                        <div class="stat-value">${stats.livrees || 0}</div>
+                        <div class="stat-value">${stats.livrees}</div>
                         <p class="card-sub">LIVRÉES</p>
                     </div>
                     <div class="card order-card">
@@ -1037,15 +789,10 @@
             }
 
             function renderOrders(commandes) {
-                console.log('🛒 Rendu des commandes:', commandes.length);
                 const ordersGrid = qs('#ordersGrid');
-                if (!ordersGrid) {
-                    console.error('❌ Élément #ordersGrid non trouvé');
-                    return;
-                }
+                if (!ordersGrid) return;
 
                 if (commandes.length === 0) {
-                    console.warn('⚠️ Aucune commande à afficher');
                     ordersGrid.innerHTML = '<p class="muted" style="text-align:center;padding:40px;grid-column:1/-1">Aucune commande disponible</p>';
                     return;
                 }
@@ -1058,6 +805,9 @@
                     if (cmd.status === 'completed') {
                         badgeClass = 'livree';
                         badgeText = '✓ Livrée';
+                    } else if (cmd.status === 'in-route') {
+                        badgeClass = 'en-route';
+                        badgeText = '🚗 En route';
                     } else if (cmd.status === 'canceled') {
                         badgeClass = 'annulee';
                         badgeText = '✕ Annulée';
@@ -1072,11 +822,11 @@
                             <p class="order-date">${new Date().toLocaleDateString('fr-FR')}</p>
                             <div class="order-info">
                                 <div class="label">Université:</div>
-                                <div class="value">${cmd.university_name || '-'}</div>
+                                <div class="value">${cmd.name}</div>
                                 <div class="label">Salle:</div>
-                                <div class="value">${cmd.room_name || '-'}</div>
+                                <div class="value">${cmd.salle_name}</div>
                             </div>
-                            <div class="order-price">${(cmd.totalCommande || 0).toFixed(2)}€</div>
+                            <div class="order-price">${cmd.totalCommande.toFixed(2)}€</div>
                             <div class="order-footer">
                                 <button class="btn btn-primary" data-open-modal="order" data-order="${cmd.id_commande}">
                                     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
@@ -1122,35 +872,18 @@
                 }).join('');
             }
 
-            // ============ GLOBAL STATE ============
-            let dashboardState = {
-                commandes: [],
-                stats: {}
-            };
-
             // ============ INITIALIZATION ============
             async function initDashboard() {
-                console.log('🚀 Initialisation du dashboard...');
-                
                 // Charger les données via l'accessToken
                 const apiData = await fetchAPI();
-                console.log('📥 Données brutes de l\'API:', apiData);
                 
                 // Transformer les données (retourne toujours une structure valide)
                 const transformed = transformData(apiData);
-                console.log('✨ Données transformées:', transformed);
-                
-                // SAUVEGARDER LES DONNÉES GLOBALES (pour le modal)
-                dashboardState.commandes = transformed.commandes;
-                dashboardState.stats = transformed.stats;
-                console.log('💾 State sauvegardé:', dashboardState);
 
                 // Rendre les sections
                 renderStats(transformed.stats);
                 renderOrders(transformed.commandes);
                 renderReviews(transformed.commandes);
-                
-                console.log('✅ Dashboard initialisé avec succès');
             }
 
             // Initialiser le dashboard au chargement
@@ -1243,85 +976,136 @@
                 const btn = e.target.closest('[data-open-modal="order"]');
                 if(!btn) return;
                 e.preventDefault();
-                
                 const card = btn.closest('.order-card');
-                const orderId = card?.getAttribute('data-order-id');
-                const status = card?.getAttribute('data-status');
+                const orderId = card?.getAttribute('data-order-id') || btn.getAttribute('data-order') || '';
+                const status = card?.getAttribute('data-status') || 'attente';
+                const date = card?.getAttribute('data-date') || '';
+                const restaurant = card?.getAttribute('data-restaurant') || '';
+                const address = card?.getAttribute('data-address') || '';
+                const totalAttr = card?.getAttribute('data-total') || '0';
                 
-                // Chercher la commande dans les données du state
-                const commande = dashboardState.commandes.find(cmd => cmd.id_commande === orderId);
-                if (!commande) {
-                    openModal(orderId, '<p class="muted">Erreur: Commande non trouvée</p>');
-                    return;
-                }
+                // Articles demo
+                const items = [
+                    { name:'Pizza Margherita', qty:1, price:15.90 },
+                    { name:'Pizza Quattro Formaggi', qty:1, price:16.90 },
+                    { name:'Coca-Cola 1.5L', qty:1, price:3.00 }
+                ];
                 
-                // Générer le HTML des articles
-                const articleRows = commande.items.map(item => `
-                    <div style="display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid #f3f4f6">
+                const subTotal = items.reduce((a,b)=>a+(b.price*b.qty),0);
+                const delivery = 5.00;
+                const service = 4.70;
+                const total = subTotal + delivery + service;
+                
+                const articleRows = items.map(i=>`
+                    <div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #f3f4f6">
                         <div>
-                            <div style="font-weight:600">${item.product_name}</div>
-                            <div style="font-size:13px; color:var(--muted)">x${item.qnt}</div>
+                            <div style="font-weight:600">${i.name}</div>
+                            <div style="font-size:13px; color:var(--muted)">x${i.qty}</div>
                         </div>
-                        <div style="text-align:right">
-                            <div style="font-weight:600">${item.prices.toFixed(2)}€</div>
-                            <div style="font-size:12px; color:var(--muted)">Sous-total: ${item.subtotal.toFixed(2)}€</div>
-                        </div>
+                        <div style="font-weight:600">${i.price.toFixed(2)}€</div>
                     </div>
                 `).join('');
                 
-                // Déterminer le badge de statut
                 let statusBadge = '';
-                if(status === 'completed') statusBadge = '<span class="badge livree">✓ Livrée</span>';
-                else if(status === 'processing') statusBadge = '<span class="badge attente">⏳ En préparation</span>';
-                else if(status === 'canceled') statusBadge = '<span class="badge annulee">✕ Annulée</span>';
+                if(status === 'livree') statusBadge = '<span class="badge livree">✓ Livrée</span>';
+                else if(status === 'en-route') statusBadge = '<span class="badge en-route">🚗 En route</span>';
+                else if(status === 'attente') statusBadge = '<span class="badge attente">⏳ En préparation</span>';
+                else if(status === 'annulee') statusBadge = '<span class="badge annulee">✕ Annulée</span>';
                 
                 const html = `
                     <div style="margin-bottom:16px">
                         <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px">
                             <div>
                                 <div style="font-size:13px; color:var(--muted)">Date:</div>
-                                <div style="font-weight:600">${new Date().toLocaleDateString('fr-FR')}</div>
+                                <div style="font-weight:600">${date} à 14:30</div>
                             </div>
                             <div style="text-align:right">${statusBadge}</div>
                         </div>
                         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:12px">
                             <div>
                                 <div style="font-size:13px; color:var(--muted)">Université:</div>
-                                <div style="font-weight:600">${commande.university_name || '-'}</div>
+                                <div style="font-weight:600">${restaurant}</div>
                             </div>
                             <div>
-                                <div style="font-size:13px; color:var(--muted)">Salle:</div>
-                                <div style="font-weight:600">${commande.room_name || '-'}</div>
+                                <div style="font-size:13px; color:var(--muted)">Places:</div>
+                                <div style="font-weight:600">${address}</div>
                             </div>
                         </div>
                     </div>
                     
                     <div style="border-top:2px solid #e5e7eb; padding-top:16px; margin-top:16px">
-                        <h4 style="margin:0 0 12px; font-size:16px; font-weight:700">Produits (${commande.items.length})</h4>
+                        <h4 style="margin:0 0 12px; font-size:16px; font-weight:700">Articles</h4>
                         ${articleRows}
                         <div style="margin-top:16px; padding-top:12px; border-top:2px solid #e5e7eb">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px">
+                                <span>Sous-total:</span>
+                                <span style="font-weight:600">${subTotal.toFixed(2)}€</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:8px">
+                                <span>Frais de livraison:</span>
+                                <span style="font-weight:600">${delivery.toFixed(2)}€</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:12px">
+                                <span>Frais de service:</span>
+                                <span style="font-weight:600">${service.toFixed(2)}€</span>
+                            </div>
                             <div style="display:flex; justify-content:space-between; padding-top:12px; border-top:2px solid var(--green); font-size:18px">
                                 <span style="font-weight:700">Total:</span>
-                                <span style="font-weight:700; color:var(--green)">${commande.totalCommande.toFixed(2)}€</span>
+                                <span style="font-weight:700; color:var(--green)">${total.toFixed(2)}€</span>
                             </div>
                         </div>
                     </div>
                     
-                    ${status === 'completed' && commande.feedback ? `
+                    ${status==='livree' ? `
                     <div style="margin-top:20px; padding-top:20px; border-top:2px solid #e5e7eb">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px">
                             <svg viewBox="0 0 24 24" width="20" height="20" fill="#f59e0b"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
-                            <h4 style="margin:0; font-size:16px; font-weight:700">Votre avis</h4>
+                            <h4 style="margin:0; font-size:16px; font-weight:700">Évaluez la livraison</h4>
                         </div>
-                        <div class="stars" style="display:flex; gap:4px; color:#f59e0b; margin-bottom:8px">
-                            ${Array.from({length: 5}, (_, i) => `<svg viewBox="0 0 24 24" width="20" height="20" fill="${i < commande.note ? 'currentColor' : '#d1d5db'}"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>`).join('')}
+                        <div id="ratingStars" style="display:flex; gap:8px; font-size:28px; cursor:pointer; margin-bottom:8px" aria-label="Note sur 5">
+                            <span data-v="1">☆</span><span data-v="2">☆</span><span data-v="3">☆</span><span data-v="4">☆</span><span data-v="5">☆</span>
                         </div>
-                        <p class="review-text" style="margin:0; color:var(--muted); font-size:14px; font-style:italic">"${commande.feedback}"</p>
-                    </div>
-                    ` : ''}
+                        <p class="muted" id="ratingHint" style="margin:0 0 14px; font-size:13px">Aucune note sélectionnée</p>
+                        
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="#f59e0b"><path d="M12 22c4.97 0 9-4.03 9-9S16.97 4 12 4 3 8.03 3 13c0 1.84.55 3.55 1.49 4.97L4 22l4.2-1.32A8.96 8.96 0 0 0 12 22Z"/></svg>
+                            <h4 style="margin:0; font-weight:700">Votre impression sur le livreur</h4>
+                        </div>
+                        <textarea id="deliveryReview" class="textarea" placeholder="Partagez votre expérience avec le livreur..." style="min-height:100px"></textarea>
+                        
+                        <div style="margin-top:16px">
+                            <button class="btn btn-primary" id="finishDeliveryBtn" style="width:100%">
+                                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                                TERMINER LA LIVRAISON
+                            </button>
+                        </div>
+                    </div>` : ''}
                 `;
                 
                 openModal(orderId, html);
+
+                // rating stars (if present)
+                const starsWrap = qs('#ratingStars');
+                if(starsWrap){
+                    let rating = 0;
+                    starsWrap.addEventListener('click',(ev)=>{
+                        const el = ev.target.closest('[data-v]');
+                        if(!el) return;
+                        rating = Number(el.getAttribute('data-v'))||0;
+                        Array.from(starsWrap.children).forEach((s,idx)=>{ s.textContent = (idx<rating?'★':'☆'); });
+                        const hint = qs('#ratingHint');
+                        if(hint) hint.textContent = rating? `${rating}/5` : 'Aucune note sélectionnée';
+                    });
+                }
+
+                // finish delivery -> open code modal
+                const finishBtn = qs('#finishDeliveryBtn');
+                if(finishBtn){
+                    finishBtn.addEventListener('click', ()=>{
+                        closeModal();
+                        openCodeModal(status);
+                    });
+                }
             });
 
             // Responsive adjustments
@@ -1333,276 +1117,6 @@
                 }
             }
             window.addEventListener('resize', onResize);
-
-            // ============ FONCTION DE SAUVEGARDE (INFOS PERSONNELLES ET SÉCURITÉ) ============
-            async function handleSaveData(type) {
-                console.log('💾 Tentative de sauvegarde:', type);
-                const accessToken = localStorage.getItem('access_token');
-                
-                if (!accessToken) {
-                    showNotification('Erreur: Token d\'accès manquant', 'error', 'Erreur d\'authentification');
-                    return;
-                }
-
-                let payload = {};
-                let isValid = true;
-
-                // ============ VALIDATION ET PRÉPARATION DES DONNÉES ============
-                if (type === 'userDatas') {
-                    // Récupérer les données du formulaire
-                    const firstName = qs('#firstName').value.trim();
-                    const lastName = qs('#lastName').value.trim();
-                    const phone = qs('#phone').value.trim();
-                    const university = window.selectedUniversityId || '';
-
-                    // Validation
-                    if (!firstName) {
-                        showNotification('Veuillez entrer votre prénom', 'warning', 'Prénom requis');
-                        isValid = false;
-                    }
-                    if (!lastName) {
-                        showNotification('Veuillez entrer votre nom complet (ex: Bill James-sky Voltaire)', 'warning', 'Nom complet requis');
-                        isValid = false;
-                    }
-                    if (!phone) {
-                        showNotification('Veuillez entrer votre numéro de téléphone (ex: +233 50 123 45 67)', 'warning', 'Téléphone requis');
-                        isValid = false;
-                    }
-
-                    if (isValid) {
-                        payload = {
-                            type: 'userDatas',
-                            firstname: firstName,
-                            name: lastName,
-                            phone: phone,
-                            university_id: university || null
-                        };
-                        console.log('✅ Données personnelles valides:', payload);
-                    }
-
-                } else if (type === 'security') {
-                    // Récupérer les données du formulaire de sécurité
-                    const currentPass = qs('#currentPass').value;
-                    const newPass = qs('#newPass').value;
-                    const confirmPass = qs('#confirmPass').value;
-
-                    // Validation
-                    if (!currentPass) {
-                        showNotification('Veuillez entrer votre mot de passe actuel pour confirmer votre identité', 'warning', 'Mot de passe actuel requis');
-                        isValid = false;
-                    }
-                    if (!newPass) {
-                        showNotification('Veuillez entrer un nouveau mot de passe', 'warning', 'Nouveau mot de passe requis');
-                        isValid = false;
-                    }
-                    if (newPass && newPass.length < 8) {
-                        showNotification('Le mot de passe doit contenir au moins 8 caractères. Vous en avez actuellement ' + newPass.length, 'warning', 'Mot de passe trop court');
-                        isValid = false;
-                    }
-                    // Vérifier que le mot de passe contient au moins une lettre ET un chiffre
-                    if (newPass && !/[a-zA-Z]/.test(newPass)) {
-                        showNotification('Le mot de passe doit contenir au moins une lettre (a-z ou A-Z)', 'warning', 'Aucune lettre détectée');
-                        isValid = false;
-                    }
-                    if (newPass && !/[0-9]/.test(newPass)) {
-                        showNotification('Le mot de passe doit contenir au moins un chiffre (0-9)', 'warning', 'Aucun chiffre détecté');
-                        isValid = false;
-                    }
-                    // Vérifier alphanumérique + caractères spéciaux autorisés
-                    if (newPass && !/^[a-zA-Z0-9!@#$%^&*()_+=\-{}[\]:;"'<>,.?/\\|`~]*$/.test(newPass)) {
-                        showNotification('Le mot de passe contient des caractères non autorisés. Utilisez uniquement: lettres (a-z, A-Z), chiffres (0-9) et ces caractères spéciaux: !@#$%^&*()_+-=[]{}:;"\'<>,.?/|`~', 'warning', 'Format invalide');
-                        isValid = false;
-                    }
-                    if (!confirmPass) {
-                        showNotification('Veuillez confirmer votre nouveau mot de passe dans le champ "Confirmer"', 'warning', 'Confirmation requise');
-                        isValid = false;
-                    }
-                    if (newPass && confirmPass && newPass !== confirmPass) {
-                        showNotification('Les deux mots de passe ne correspondent pas. Assurez-vous que le nouveau mot de passe et sa confirmation sont exactement identiques', 'warning', 'Mots de passe non identiques');
-                        isValid = false;
-                    }
-
-                    if (isValid) {
-                        payload = {
-                            type: 'security',
-                            current_password: currentPass,
-                            new_password: newPass
-                        };
-                        console.log('✅ Données de sécurité valides');
-                    }
-                }
-
-                // Si les données ne sont pas valides, ne pas envoyer
-                if (!isValid) {
-                    console.error('❌ Validation échouée');
-                    return;
-                }
-
-                // ============ ENVOI AU SERVEUR ============
-                try {
-                    console.log('📡 Envoi des données au serveur...');
-                    const response = await fetch(`${window.location.origin}/kodPwomo/backend/users/update`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + accessToken
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    const result = await response.json();
-                    console.log('📥 Réponse du serveur:', result);
-
-                    if (!response.ok) {
-                        showNotification(result.error || 'Erreur serveur', 'error', 'Erreur');
-                        console.error('❌ Erreur HTTP:', response.status);
-                        return;
-                    }
-
-                    if (result.status === 'success') {
-                        const message = type === 'userDatas' 
-                            ? 'Vos informations personnelles ont été mises à jour avec succès!'
-                            : 'Votre mot de passe a été modifié avec succès!';
-                        
-                        showNotification(message, 'success', 'Succès');
-                        console.log('✅ Mise à jour réussie');
-
-                        // Réinitialiser le formulaire de sécurité si c'était celui-ci
-                        if (type === 'security') {
-                            qs('#currentPass').value = '';
-                            qs('#newPass').value = '';
-                            qs('#confirmPass').value = '';
-                        }
-                    } else {
-                        showNotification(result.error || 'Erreur inconnue', 'error', 'Erreur');
-                    }
-
-                } catch (error) {
-                    console.error('❌ Erreur lors de l\'envoi:', error);
-                    showNotification('Erreur réseau: ' + error.message, 'error', 'Erreur');
-                }
-            }
-
-            // ============ GESTION DES SOUMISSIONS DE SUPPORT ============
-            async function handleSupportSubmit() {
-                console.log('💾 Tentative d\'envoi du formulaire de support');
-                const accessToken = localStorage.getItem('access_token');
-                
-                if (!accessToken) {
-                    showNotification('Erreur: Token d\'accès manquant', 'error', 'Erreur d\'authentification');
-                    return;
-                }
-
-                const subject = qs('#subject').value.trim();
-                const category = qs('#category').value.trim();
-                const message = qs('#message').value.trim();
-                const universityId = qs('#supportUniversity').value;
-
-                let isValid = true;
-
-                // Validation
-                if (!subject) {
-                    showNotification('Veuillez entrer un sujet pour votre demande', 'warning', 'Sujet requis');
-                    isValid = false;
-                }
-                if (!message) {
-                    showNotification('Veuillez entrer votre message', 'warning', 'Message requis');
-                    isValid = false;
-                }
-                if (!universityId) {
-                    showNotification('Veuillez sélectionner une université', 'warning', 'Université requise');
-                    isValid = false;
-                }
-
-                if (!isValid) {
-                    console.error('❌ Validation du formulaire de support échouée');
-                    return;
-                }
-
-                // Préparation des données
-                const payload = {
-                    subject: subject,
-                    category: category,
-                    message: message,
-                    university_id: universityId
-                };
-
-                console.log('✅ Données de support valides:', payload);
-
-                // Envoi au serveur
-                try {
-                    console.log('📡 Envoi du formulaire de support au serveur...');
-                    const response = await fetch(`${window.location.origin}/kodPwomo/backend/support/create`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Accept': 'application/json',
-                            'Authorization': 'Bearer ' + accessToken
-                        },
-                        body: JSON.stringify(payload)
-                    });
-
-                    const result = await response.json();
-                    console.log('📥 Réponse du serveur:', result);
-
-                    if (!response.ok) {
-                        showNotification(result.error || 'Erreur serveur', 'error', 'Erreur');
-                        console.error('❌ Erreur HTTP:', response.status);
-                        return;
-                    }
-
-                    if (result.status === 'success') {
-                        showNotification('Votre demande de support a été envoyée avec succès! Nous vous répondrons dans les plus brefs délais.', 'success', 'Succès');
-                        console.log('✅ Formulaire de support envoyé');
-
-                        // Réinitialiser le formulaire
-                        qs('#subject').value = '';
-                        qs('#category').value = 'Commande';
-                        qs('#message').value = '';
-                        qs('#supportUniversity').value = '';
-                    } else {
-                        showNotification(result.error || 'Erreur inconnue', 'error', 'Erreur');
-                    }
-
-                } catch (error) {
-                    console.error('❌ Erreur lors de l\'envoi du formulaire de support:', error);
-                    showNotification('Erreur réseau: ' + error.message, 'error', 'Erreur');
-                }
-            }
-
-            // ============ EVENT LISTENERS POUR LES BOUTONS ============
-            const saveProfileBtn = qs('#saveProfileBtn');
-            if (saveProfileBtn) {
-                saveProfileBtn.addEventListener('click', () => {
-                    handleSaveData('userDatas');
-                });
-            }
-
-            const updateSecurityBtn = qs('#updateSecurityBtn');
-            if (updateSecurityBtn) {
-                updateSecurityBtn.addEventListener('click', () => {
-                    handleSaveData('security');
-                });
-            }
-
-            const logoutBtn = qs('#logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', () => {
-                    if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
-                        localStorage.removeItem('access_token');
-                        localStorage.removeItem('refresh_token');
-                        window.location.href = `${window.location.origin}/kodPwomo/login.php`;
-                    }
-                });
-            }
-
-            const supportSendBtn = qs('#supportSendBtn');
-            if (supportSendBtn) {
-                supportSendBtn.addEventListener('click', () => {
-                    handleSupportSubmit();
-                });
-            }
 
             // Cancel button (only if not assigned)
             qsa('.order-card').forEach(card=>{

@@ -771,7 +771,7 @@
                         // Succès direct (Google)
                         showAlert('success', result.message);
                         setTimeout(() => {
-                            window.location.href = 'heartbeat.php';
+                            window.location.href = 'dashboard.php';
                         }, 2000);
                     }
                 } else {
@@ -886,7 +886,8 @@
                     },
                     body: JSON.stringify({
                         email: currentUserEmail,
-                        otp: otpCode
+                        otp: otpCode,
+                        fingerprint: fingerPrint
                     })
                 });
                 
@@ -901,7 +902,7 @@
                     closeOtpModal();
                     showAlert('success', 'Compte créé avec succès ! Redirection...');
                     setTimeout(() => {
-                        window.location.href = 'heartbeat.php';
+                        window.location.href = 'dashboard.php';
                     }, 2000);
                 } else {
                     showOtpAlert('error', result.error || 'Code OTP incorrect');

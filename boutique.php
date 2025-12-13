@@ -1699,6 +1699,15 @@
                 });
                 
                 if (!response.ok) {
+                    if(response.status === 401){
+                        showAlert('Votre session a expiré. Veuillez vous reconnecter.', 'error');
+                        //rediriger vers la page de connexion after 5s
+                        setTimeout(() => {
+                            window.location.href = 'login.php';
+                        }, 5000);
+                        
+                        return;
+                    }
                     throw new Error('Erreur lors de la création de la commande');
                 }
                 

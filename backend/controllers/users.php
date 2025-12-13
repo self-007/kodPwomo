@@ -41,16 +41,16 @@ function createUser() {
             response(['error' => 'Cet utilisateur existe déjà'], 409);
         }
         //create access token
-        $accessToken = createAccessToken($username, $userid);
+        $accessToken = createAccessToken($username, $userid, $role = 'user', $fingerprint);
         //create refresh token
         $refreshToken = createRefreshToken($userid);
-        $stmt = $connection->prepare("INSERT INTO users (name, email, firstname, id_unique, refresh_token, finger_print, is_verified) VALUES (:username, :email, :firstname, :id_unique, :refresh_token, :fingerprint, 1)");
+        $stmt = $connection->prepare("INSERT INTO users (name, email, firstname, id_unique, refresh_token, access_token, is_verified) VALUES (:username, :email, :firstname, :id_unique, :refresh_token, :access_token, 1)");
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':email', $useremail);
         $stmt->bindParam(':firstname', $userfirstname);
         $stmt->bindParam(':id_unique', $userid);
         $stmt->bindParam(':refresh_token', $refreshToken);
-        $stmt->bindParam(':fingerprint', $fingerprint);
+        $stmt->bindParam(':access_token', $accessToken);
         if ($stmt->execute()) {
             response(['status' => 'success', 'message' => 'Bienvenue a vous ' . $username . ' sur kodPwomo'], 201);
         } else {
@@ -84,13 +84,12 @@ function createUser() {
     $userid = idUser();       
 
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $connection->prepare("INSERT INTO users (name, password, email, firstname, id_unique, refresh_token, is_verified) VALUES (:username, :password, :email, :firstname, :id_unique, :refresh_token, 0)");
+    $stmt = $connection->prepare("INSERT INTO users (name, password, email, firstname, id_unique,  is_verified) VALUES (:username, :password, :email, :firstname, :id_unique, 0)");
     $stmt->bindParam(':username', $username);
     $stmt->bindParam(':password', $hashedPassword);
     $stmt->bindParam(':email', $useremail);
     $stmt->bindParam(':firstname', $userfirstname);
     $stmt->bindParam(':id_unique', $userid);
-    $stmt->bindParam(':refresh_token', $refreshToken);
     if ($stmt->execute()) {
         sendOtp($useremail); // Envoi OTP
         response(['status' => 'success', 'otp' => 'confim'], 200);
@@ -162,18 +161,21 @@ function authenticateUser() {
     if (empty($user['password'])) {
         response(['error' => 'votre methode de connexion est google, veuillez vous connecter avec votre compte Google'], 400);
     }
-    if ($user && password_verify($password, $user['password'])) {
+    if (password_verify($password, $user['password'])) {
         //get the user id and the user name, and the user role
         $userId = $user['id_unique'];
         $role = isset($user['role']) ? $user['role'] : 'user';
         $username = $user['name'];
         $refreshToken = createRefreshToken($userId, $role);
+        // create access token
+        $accessToken = createAccessToken($username, $userId, $role, $fingerprint);
         //update refresh token to database
-        $stmt = $connection->prepare("UPDATE users SET refresh_token = :refresh_token WHERE id_unique = :id_unique");
+        $stmt = $connection->prepare("UPDATE users SET refresh_token = :refresh_token, access_token = :access_token WHERE id_unique = :id_unique");
         $stmt->bindParam(':refresh_token', $refreshToken);
+        $stmt->bindParam(':access_token', $accessToken);
         $stmt->bindParam(':id_unique', $userId);
         $stmt->execute();
-        $accessToken = createAccessToken($username,$userId, $role, $fingerprint);
+        
         //send refresh into cookies, and send access token to server
         setRefreshTokenCookie($refreshToken);
         response(['status' => 'success', 'accessToken' => $accessToken, 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo'], 200);
@@ -209,30 +211,80 @@ function getUserById($id) {
 // update user
 function updateUser() {
     global $datas;
-    if(!isset($datas['id']) || !isset($datas['username']) || !isset($datas['password'])){
-        response(['error' => 'Invalid user ID, username or password'], 400);
+    global $connection;
+    //get the userId
+    $accessToken = getBearerToken();
+    $id_unique = $accessToken->sub;
+    function setNewPassword($newPass, $id_unique){
+        global $connection;
+        $hashedPassword = password_hash($newPass, PASSWORD_DEFAULT);
+        //update the password
+        $stmt = $connection->prepare("UPDATE users SET password = :password WHERE id_unique = :id_unique");
+        $stmt->bindParam(':password', $hashedPassword);
+        $stmt->bindParam(':id_unique', $id_unique);
+        if($stmt->execute()){
+            response(['status' => 'success', 'message' => 'Mot de passe mis à jour avec succès'], 200);
+        } else {
+            response(['error' => 'Échec de la mise à jour du mot de passe'], 500);
+        }
     }
-    $id = intval($datas['id']);
-    $username = sanitizeInput($datas['username']);
-    $password = sanitizeInput($datas['password']);
+    if(!isset($datas['type'])){
+        response(['error' => 'bad request'], 404);
+    }
+    if($datas['type'] == 'security'){
+        if(!isset($datas['current_password']) || !isset($datas['new_password'])){
+            response(['error' => 'il vous manques des donnes'], 404);
+        }
+        
+        $oldPass = sanitizeInput($datas['current_password']);
+        $newPass = sanitizeInput($datas['new_password']);
+        //get the user password
+        $stmt = $connection->prepare("SELECT password FROM users WHERE id_unique = :id_unique");
+        $stmt->bindParam(':id_unique', $id_unique);
+        $stmt->execute();
+        $result = $stmt->rowCount();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($result === 0){
+            response(['error' => 'Utilisateur non trouvé'], 404);
+        }
+        //get the password
+        $currentPassword = $user['password'];
+        //verify old password
+        if(empty($datas['current_password']) && !empty($currentPassword) ){
+            response(['error' => 'Veuillez entrer votre mot de passe actuel'], 400);
+        } else if(empty($datas['current_password']) && empty($currentPassword) ){
+            setNewPassword($newPass, $id_unique);
+        }
+        else if(!password_verify($oldPass, $currentPassword)){
+            response(['error' => 'Mot de passe actuel incorrect'], 401);
+        }
+        //hash the new password
+        setNewPassword($newPass, $id_unique);
+    }
+    if(!isset($datas['university_id']) || !isset($datas['name']) || !isset($datas['firstname']) || !isset($datas['phone'])){
+        response(['error' => 'Invalid user data'], 400);
+    }
+    $university_id = intval($datas['university_id']);
+    $name = sanitizeInput($datas['name']);
+    $firstname = sanitizeInput($datas['firstname']);
+    $phone = sanitizeInput($datas['phone']);
     // verify int value or superior to 0
-    if (intval($id) <= 0) {
-        response(['error' => 'Invalid user ID'], 400);
+    if (intval($university_id) <= 0) {
+        response(['error' => 'Invalid university name'], 400);
     }
     // Validate input
-    if (empty($username) || empty($password)) {
-        response(['error' => 'Username and password are required'], 400);
-    }        
-    $username = sanitizeInput($username);
-    $password = sanitizeInput($password);
-    global $connection;
-    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $connection->prepare("UPDATE users SET username = :username, password = :password WHERE id = :id");
-    $stmt->bindParam(':username', $username);
-    $stmt->bindParam(':password', $hashedPassword);
-    $stmt->bindParam(':id', $id);
+    if (empty($name) || empty($phone) || empty($firstname)) {
+        response(['error' => 'Name, firstname and phone are required'], 400);
+    }         
+    //get the userId
+    $stmt = $connection->prepare("UPDATE users SET name = :name, firstname = :firstname, phone = :phone, id_university = :university_id WHERE id_unique = :id");
+    $stmt->bindParam(':name', $name);
+    $stmt->bindParam(':firstname', $firstname);
+    $stmt->bindParam(':phone', $phone);
+    $stmt->bindParam(':university_id', $university_id);
+    $stmt->bindParam(':id', $id_unique);
     if ($stmt->execute()) {
-        return getUserById($id);
+        response(['message' => 'User updated successfully', 'status' => 'success'], 200);
     } else {
         response(['error' => 'Failed to update user'], 500);
     }
@@ -350,7 +402,7 @@ function heartbeat(){
     $stmt->execute([$refreshToken]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
     if($stmt->rowCount() === 0) {
-        response(['error' => 'Invalid refresh token'], 401);
+        response(['error' => 'Invalid refresh token'.$refreshToken], 401);
     }
 
     //get access token
@@ -391,4 +443,59 @@ function heartbeat(){
     
     
 
+}
+//get user personnel datas 
+function getUserDatas(){
+    $accessToken = getBearerToken();
+    $id_unique = $accessToken->sub; 
+    global $connection;
+    if(empty($id_unique)){
+        response(['error' => 'invalid id'], 400);  
+    }
+    $id_unique = sanitizeInput($id_unique);
+    $stmt = $connection->prepare('SELECT u.name, u.email, u.firstname, u.phone,
+     un.name as university_name FROM users u JOIN university un ON u.id_university = un.id 
+     WHERE id_unique =:id_unique');
+    $stmt->bindParam(':id_unique', $id_unique);
+    $stmt->execute();
+    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    if($stmt->rowCount() === 0) {
+        response(['error' => 'Utilisateur non trouvé'], 404);
+    }
+    response(['status' => 'success', 'user' => $user], 200);
+}
+
+//ask for support from adms
+function askForSupport(){
+    global $datas;
+    if(!isset($datas['subject']) || !isset($datas['category']) || !isset($datas['message']) || !isset($datas['university_id'])){
+        response(['error' => 'Invalid support data'], 400);
+    }
+    $subject = sanitizeInput($datas['subject']);
+    $category = sanitizeInput($datas['category']);
+    $message = sanitizeInput($datas['message']);
+    $university_id = intval($datas['university_id']);
+    // verify int value or superior to 0
+    if ($university_id <= 0) {
+        response(['error' => 'Invalid university ID'], 400);
+    }
+    // Validate input
+    if (empty($subject) || empty($category) || empty($message) || empty($datas['university_id'])) {
+        response(['error' => 'All fields are required'], 400);
+    }         
+    //get the userId
+    $accessToken = getBearerToken();
+    $id_unique = $accessToken->sub;
+    global $connection;
+    $stmt = $connection->prepare("INSERT INTO support (idUser, subject, category, message, university_id) VALUES (:user_id, :subject, :category, :message, :university_id)");
+    $stmt->bindParam(':user_id', $id_unique);
+    $stmt->bindParam(':subject', $subject);
+    $stmt->bindParam(':category', $category);
+    $stmt->bindParam(':message', $message);
+    $stmt->bindParam(':university_id', $university_id);
+    if ($stmt->execute()) {
+        response(['message' => 'Support request submitted successfully', 'status' => 'success'], 200);
+    } else {
+        response(['error' => 'Failed to submit support request'], 500);
+    }
 }

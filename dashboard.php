@@ -10,13 +10,8 @@
     <title>KodPwomo - Dashboard Utilisateur</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />Parfait ! Je vois ta structure. Laisse-moi analyser et discuter de la méthode de récupération.
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     
-    📊 Analyse de ta structure JSON
-    Points positifs :
-    
-    ✅ Une seule requête pour tout récupérer
-    ✅ Tu as les stats (totalAmounts, totalSpent)
     
     <style>
         :root{
@@ -320,7 +315,7 @@
 <body>
     <header class="app-header" role="banner">
         <div class="header-left">
-            <div class="logo" aria-label="KodPwomo"><img src="../image/logo/logo1.1.jpg" alt=""></div>
+            <div class="logo" aria-label="KodPwomo"><img src="image/logo/logo1.1.jpg" alt=""></div>
         </div>
         <div class="header-center">
             <div class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="sidebar" role="button" tabindex="0">
@@ -362,7 +357,7 @@
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 10V7a6 6 0 1 0-12 0v3m-2 0h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Support
                 </a>
-                <a href="#" class="nav-link" data-target="notifications">
+                <a href="notifications.php" class="nav-link" data-target="notifications">
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3c-3.314 0-6 2.686-6 6v3.382l-1.447 2.894A1 1 0 0 0 5.447 17h13.106a1 1 0 0 0 .894-1.447L18 12.382V9c0-3.314-2.686-6-6-6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     Notifications
                 </a>
@@ -412,7 +407,11 @@
                                 <div>
                                     <label for="university">Université</label>
                                     <select id="university" class="select">
-                                        <option value="">Chargement des universités...</option>
+                                        <option value="">Sélectionnez votre université</option>
+                                        <option>Université de Ghana</option>
+                                        <option>KNUST</option>
+                                        <option>Université d'Accra</option>
+                                        <option>Autre</option>
                                     </select>
                                 </div>
                             </div>
@@ -534,7 +533,7 @@
             </div>
             <div class="modal-actions">
                 <button class="btn btn-outline" id="modalCancel">Fermer</button>
-                <button class="btn btn-primary">Télécharger la facture</button>
+                <button class="btn btn-primary" id="downloadInvoiceBtn">Télécharger la facture</button>
             </div>
         </div>
     </div>
@@ -575,6 +574,22 @@
         </div>
     </div>
 
+    <!-- Modal Notification Personnalisée -->
+    <div class="modal-overlay" id="notificationModal" aria-hidden="true" role="alert" aria-modal="true" style="justify-content:flex-end; align-items:flex-start; padding:20px">
+        <div class="modal" role="document" style="max-width:400px; margin:20px; border-radius:12px; box-shadow:0 10px 40px rgba(0,0,0,0.2)">
+            <div style="display:flex; align-items:flex-start; gap:12px; padding:20px">
+                <div id="notificationIcon" style="font-size:28px; flex-shrink:0">ℹ️</div>
+                <div style="flex:1">
+                    <h4 id="notificationTitle" style="margin:0 0 8px 0; font-size:16px; font-weight:700; color:#1f2937">Notification</h4>
+                    <p id="notificationMessage" style="margin:0; font-size:14px; color:#666; line-height:1.5">Message</p>
+                </div>
+                <button id="notificationClose" class="close-x" style="cursor:pointer; border:none; background:none; padding:0; flex-shrink:0">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M6 6l12 12M18 6 6 18" stroke="#111827" stroke-width="2" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         (function(){
             const qs = (sel, ctx=document) => ctx.querySelector(sel);
@@ -597,7 +612,62 @@
             const codeModalConfirm = qs('#codeModalConfirm');
             const deliveryStepper = qs('#deliveryStepper');
             const agentCodeInput = qs('#agentCodeInput');
+            const notificationModal = qs('#notificationModal');
+            const notificationIcon = qs('#notificationIcon');
+            const notificationTitle = qs('#notificationTitle');
+            const notificationMessage = qs('#notificationMessage');
+            const notificationClose = qs('#notificationClose');
             const universitySelect = qs('#university');
+
+            // ============ FONCTION DE NOTIFICATION PERSONNALISÉE ============
+            function showNotification(message, type = 'info', title = 'Notification') {
+                notificationTitle.textContent = title;
+                notificationMessage.textContent = message;
+                
+                // Définir l'icône et la couleur selon le type
+                let icon = 'ℹ️';
+                let bgColor = '#e0f2fe';
+                let borderColor = '#0ea5e9';
+                let textColor = '#0369a1';
+                
+                if (type === 'success') {
+                    icon = '✅';
+                    bgColor = '#dcfce7';
+                    borderColor = '#22c55e';
+                    textColor = '#15803d';
+                } else if (type === 'error' || type === 'warning') {
+                    icon = '⚠️';
+                    bgColor = '#fef2f2';
+                    borderColor = '#ef4444';
+                    textColor = '#991b1b';
+                }
+                
+                notificationIcon.textContent = icon;
+                notificationModal.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+                notificationModal.querySelector('.modal').style.borderLeft = `4px solid ${borderColor}`;
+                notificationTitle.style.color = textColor;
+                
+                // Afficher la modale
+                notificationModal.classList.add('open');
+                notificationModal.removeAttribute('aria-hidden');
+                
+                // Fermer automatiquement après 4 secondes
+                const timeout = setTimeout(() => {
+                    closeNotification();
+                }, 4000);
+                
+                // Permettre la fermeture manuelle
+                notificationClose.onclick = closeNotification;
+                notificationModal.addEventListener('click', (e) => {
+                    if (e.target === notificationModal) closeNotification();
+                }, { once: true });
+                
+                function closeNotification() {
+                    clearTimeout(timeout);
+                    notificationModal.classList.remove('open');
+                    notificationModal.setAttribute('aria-hidden', 'true');
+                }
+            }
 
             // ============ API CONFIGURATION ============
             const API_BASE = `${window.location.origin}/kodPwomo/backend/deliveries/user`;
@@ -816,6 +886,7 @@
             // Traduction des statuts
             const statusTranslations = {
                 'processing': 'En préparation',
+                'in-route': 'En route',
                 'completed': 'Livrée',
                 'canceled': 'Annulée'
             };
@@ -831,13 +902,11 @@
                 `;
                 document.body.appendChild(msgDiv);
                 setTimeout(() => {
-                    window.location.href = '../login.php';
+                    window.location.href = 'login.php';
                 }, 5000);
             }
 
             // ============ API HELPER ============
-            const API_BASE = `${window.location.origin}/kodPwomo/backend/deliveries/user`;
-
             async function fetchAPI() {
                 try {
                     const accessToken = localStorage.getItem('access_token');
@@ -878,7 +947,7 @@
 
                     return data;
                 } catch (error) {
-                    console.error('❌ Erreur fetch:', error);
+                    console.error('API Error:', error);
                     return null;
                 }
             }
@@ -1058,6 +1127,9 @@
                     if (cmd.status === 'completed') {
                         badgeClass = 'livree';
                         badgeText = '✓ Livrée';
+                    } else if (cmd.status === 'processing') {
+                        badgeClass = 'attente';
+                        badgeText = '⏳ En préparation';
                     } else if (cmd.status === 'canceled') {
                         badgeClass = 'annulee';
                         badgeText = '✕ Annulée';
@@ -1158,6 +1230,21 @@
 
             const state = { current: 'home' };
 
+            // ============ LOCALSTORAGE MANAGEMENT ============
+            const STORAGE_KEY = 'kodPwomo_activeSection';
+
+            // Récupérer la section sauvegardée dans localStorage
+            function getActiveSection() {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                return saved || 'home'; // Par défaut: 'home'
+            }
+
+            // Sauvegarder la section active dans localStorage
+            function saveActiveSection(section) {
+                localStorage.setItem(STORAGE_KEY, section);
+                console.log('💾 Section sauvegardée dans localStorage:', section);
+            }
+
             function isMobile(){ return window.innerWidth < 600; }
 
             function openSidebar(){
@@ -1180,6 +1267,10 @@
 
             function setActiveSection(target){
                 state.current = target;
+                
+                // Sauvegarder dans localStorage
+                saveActiveSection(target);
+                
                 // links
                 qsa('.nav-link').forEach(a=>{
                     const active = a.getAttribute('data-target')===target;
@@ -1212,15 +1303,243 @@
             if(btnNotifications){
                 btnNotifications.addEventListener('click', (e)=>{
                     e.preventDefault();
-                    setActiveSection('support');
+                    window.location.href = 'notifications.php';
                 });
             }
             if(btnLogout){
                 btnLogout.addEventListener('click', (e)=>{
                     e.preventDefault();
                     // Minimal logout handler placeholder
-                    alert('Déconnexion...');
+                    showNotification('Vous êtes en cours de déconnexion...', 'info', 'Déconnexion');
+                    logout();
                 });
+            }
+
+            // Fonction pour générer et télécharger la facture
+            function generateAndDownloadInvoice(orderId) {
+                console.log('📄 Génération de facture pour:', orderId);
+                
+                // Chercher la commande
+                const commande = dashboardState.commandes.find(cmd => cmd.id_commande === orderId);
+                if (!commande) {
+                    showNotification('Impossible de charger les détails de cette commande.', 'error', 'Erreur');
+                    return;
+                }
+                
+                // Infos de l'entreprise
+                const company = {
+                    name: 'KodPwomo',
+                    tagline: 'Service de Livraison Universitaire',
+                    address: 'Accra, Ghana',
+                    phone: '+233 500 XXXXX',
+                    email: 'contact@kodpwomo.com',
+                    website: 'www.kodpwomo.com'
+                };
+                
+                // Créer un canvas pour la facture
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 900;
+                canvas.height = 1300;
+                
+                // Couleurs
+                const bgColor = '#ffffff';
+                const primaryColor = '#1f2937';
+                const accentColor = '#f59e0b';
+                const lightGray = '#f9fafb';
+                const borderColor = '#e5e7eb';
+                
+                // Fond blanc
+                ctx.fillStyle = bgColor;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // En-tête avec fond coloré
+                ctx.fillStyle = primaryColor;
+                ctx.fillRect(0, 0, canvas.width, 150);
+                
+                // Logo/Nom de l'entreprise
+                ctx.font = 'bold 48px Arial';
+                ctx.fillStyle = accentColor;
+                ctx.fillText(company.name, 50, 80);
+                
+                // Tagline
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#fff';
+                ctx.fillText(company.tagline, 50, 105);
+                
+                // Infos entreprise à droite
+                ctx.font = '12px Arial';
+                ctx.fillStyle = '#ccc';
+                const rightX = canvas.width - 250;
+                ctx.fillText(company.address, rightX, 50);
+                ctx.fillText(`Tél: ${company.phone}`, rightX, 70);
+                ctx.fillText(`Email: ${company.email}`, rightX, 90);
+                ctx.fillText(`Site: ${company.website}`, rightX, 110);
+                
+                // Ligne de séparation
+                ctx.strokeStyle = accentColor;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(50, 160);
+                ctx.lineTo(canvas.width - 50, 160);
+                ctx.stroke();
+                
+                // Titre de la facture
+                ctx.font = 'bold 28px Arial';
+                ctx.fillStyle = primaryColor;
+                ctx.fillText('FACTURE', 50, 210);
+                
+                // Numéro et date
+                let y = 250;
+                ctx.font = 'bold 13px Arial';
+                ctx.fillStyle = primaryColor;
+                ctx.fillText('Détails de la facture:', 50, y);
+                
+                ctx.font = '13px Arial';
+                ctx.fillStyle = '#666';
+                y += 30;
+                ctx.fillText(`N° Facture: ${orderId}`, 50, y);
+                y += 25;
+                ctx.fillText(`Date d'émission: ${new Date().toLocaleDateString('fr-FR')}`, 50, y);
+                y += 25;
+                ctx.fillText(`Date de livraison: ${new Date().toLocaleDateString('fr-FR')}`, 50, y);
+                
+                // Statut de la commande
+                ctx.fillStyle = '#22c55e';
+                ctx.fillText('✓ Livrée', 50, y + 40);
+                
+                // Informations client
+                y = 250;
+                ctx.font = 'bold 13px Arial';
+                ctx.fillStyle = primaryColor;
+                ctx.fillText('Destinataire:', canvas.width / 2 + 50, y);
+                
+                ctx.font = '13px Arial';
+                ctx.fillStyle = '#666';
+                y += 30;
+                ctx.fillText(`Université: ${commande.university_name || '-'}`, canvas.width / 2 + 50, y);
+                y += 25;
+                ctx.fillText(`Salle/Chambre: ${commande.room_name || '-'}`, canvas.width / 2 + 50, y);
+                y += 25;
+                ctx.fillText(`Statut: Livraison confirmée`, canvas.width / 2 + 50, y);
+                
+                // Tableau des articles
+                y = 400;
+                ctx.font = 'bold 14px Arial';
+                ctx.fillStyle = primaryColor;
+                ctx.fillText('Articles commandés', 50, y);
+                
+                // En-têtes tableau
+                y += 35;
+                ctx.fillStyle = accentColor;
+                ctx.fillRect(50, y - 20, canvas.width - 100, 35);
+                
+                ctx.font = 'bold 13px Arial';
+                ctx.fillStyle = '#ffffff';
+                ctx.fillText('Produit', 70, y + 5);
+                ctx.fillText('Quantité', 500, y + 5);
+                ctx.fillText('Prix unitaire', 650, y + 5);
+                ctx.fillText('Sous-total', 800, y + 5);
+                
+                // Articles
+                y += 50;
+                ctx.fillStyle = '#333';
+                ctx.font = '12px Arial';
+                let totalHT = 0;
+                
+                commande.items.forEach((item, idx) => {
+                    const subtotal = (item.qnt || 0) * (item.prices || 0);
+                    totalHT += subtotal;
+                    
+                    // Fond gris alternant
+                    if (idx % 2 === 0) {
+                        ctx.fillStyle = lightGray;
+                        ctx.fillRect(50, y - 18, canvas.width - 100, 30);
+                    }
+                    
+                    ctx.fillStyle = '#333';
+                    ctx.fillText(item.product_name || 'Produit', 70, y);
+                    ctx.fillText((item.qnt || 0).toString(), 510, y);
+                    ctx.fillText(`${(item.prices || 0).toFixed(2)} GHS`, 670, y);
+                    ctx.fillText(`${subtotal.toFixed(2)} GHS`, 820, y);
+                    y += 35;
+                });
+                
+                // Ligne de séparation
+                y += 10;
+                ctx.strokeStyle = borderColor;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(50, y);
+                ctx.lineTo(canvas.width - 50, y);
+                ctx.stroke();
+                
+                // Résumé des totaux
+                y += 30;
+                ctx.font = '13px Arial';
+                ctx.fillStyle = '#666';
+                ctx.textAlign = 'right';
+                
+                ctx.fillText(`Montant HT: ${totalHT.toFixed(2)} GHS`, canvas.width - 70, y);
+                y += 30;
+                
+                // TVA (si applicable)
+                const tva = totalHT * 0.15;
+                ctx.fillText(`TVA (15%): ${tva.toFixed(2)} GHS`, canvas.width - 70, y);
+                y += 30;
+                
+                // Total TTC
+                const totalTTC = totalHT + tva;
+                ctx.font = 'bold 16px Arial';
+                ctx.fillStyle = primaryColor;
+                ctx.fillText(`MONTANT TOTAL TTC: ${totalTTC.toFixed(2)} GHS`, canvas.width - 70, y);
+                
+                // Mode de paiement
+                y += 50;
+                ctx.font = 'bold 12px Arial';
+                ctx.fillStyle = primaryColor;
+                ctx.textAlign = 'left';
+                ctx.fillText('Conditions de paiement:', 50, y);
+                
+                ctx.font = '12px Arial';
+                ctx.fillStyle = '#666';
+                y += 25;
+                ctx.fillText('Paiement à la livraison', 50, y);
+                
+                // Notes/Termes
+                y += 50;
+                ctx.font = 'bold 12px Arial';
+                ctx.fillStyle = primaryColor;
+                ctx.fillText('Merci pour votre confiance!', 50, y);
+                
+                ctx.font = '11px Arial';
+                ctx.fillStyle = '#999';
+                y += 25;
+                ctx.fillText('Cette facture confirme votre commande livrée avec succès.', 50, y);
+                y += 20;
+                ctx.fillText('Pour toute question, contactez-nous à contact@kodpwomo.com', 50, y);
+                
+                // Pied de page
+                y = canvas.height - 80;
+                ctx.font = '11px Arial';
+                ctx.fillStyle = '#999';
+                ctx.textAlign = 'center';
+                ctx.fillText('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', canvas.width / 2, y);
+                y += 25;
+                ctx.fillText(`KodPwomo © ${new Date().getFullYear()} | Service de Livraison Universitaire`, canvas.width / 2, y);
+                y += 20;
+                ctx.fillText(`Facture générée le ${new Date().toLocaleString('fr-FR')}`, canvas.width / 2, y);
+                
+                // Télécharger le canvas en PNG
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = `FACTURE_${orderId}_${new Date().getTime()}.png`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log('✅ Facture générée et téléchargée');
+                showNotification('Votre facture a été téléchargée avec succès.', 'success', 'Facture téléchargée');
             }
 
             // Modal (Orders)
@@ -1237,6 +1556,23 @@
             modalClose.addEventListener('click', closeModal);
             modalCancel.addEventListener('click', closeModal);
             modalOverlay.addEventListener('click', (e)=>{ if(e.target === modalOverlay) closeModal(); });
+
+            // Gestion du bouton télécharger la facture
+            const downloadInvoiceBtn = qs('#downloadInvoiceBtn');
+            if (downloadInvoiceBtn) {
+                downloadInvoiceBtn.addEventListener('click', (ev) => {
+                    ev.preventDefault();
+                    console.log('📄 Tentative téléchargement facture - Status:', window.currentOrderStatus);
+                    
+                    if (window.currentOrderStatus !== 'completed') {
+                        showNotification('Les factures ne sont disponibles que pour les commandes livrées. Veuillez attendre la confirmation de votre livraison.', 'warning', 'Commande en cours');
+                        return;
+                    }
+                    
+                    // Générer et télécharger la facture
+                    generateAndDownloadInvoice(window.currentOrderId);
+                });
+            }
 
             // Event delegation for "Voir détails"
             qs('#content').addEventListener('click', (e)=>{
@@ -1275,7 +1611,7 @@
                 else if(status === 'processing') statusBadge = '<span class="badge attente">⏳ En préparation</span>';
                 else if(status === 'canceled') statusBadge = '<span class="badge annulee">✕ Annulée</span>';
                 
-                const html = `
+                let html = `
                     <div style="margin-bottom:16px">
                         <div style="display:flex; justify-content:space-between; align-items:start; margin-bottom:12px">
                             <div>
@@ -1306,22 +1642,157 @@
                             </div>
                         </div>
                     </div>
-                    
-                    ${status === 'completed' && commande.feedback ? `
+                `;
+                
+                // Stocker le status et l'ID pour le bouton télécharger la facture
+                window.currentOrderStatus = status;
+                window.currentOrderId = orderId;
+                
+                // SI COMMANDE EN COURS: Ajouter le formulaire de note + feedback + code agent
+                if (status === 'processing') {
+                    html += `
                     <div style="margin-top:20px; padding-top:20px; border-top:2px solid #e5e7eb">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px">
                             <svg viewBox="0 0 24 24" width="20" height="20" fill="#f59e0b"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
-                            <h4 style="margin:0; font-size:16px; font-weight:700">Votre avis</h4>
+                            <h4 style="margin:0; font-size:16px; font-weight:700">Confirmer la livraison</h4>
                         </div>
-                        <div class="stars" style="display:flex; gap:4px; color:#f59e0b; margin-bottom:8px">
-                            ${Array.from({length: 5}, (_, i) => `<svg viewBox="0 0 24 24" width="20" height="20" fill="${i < commande.note ? 'currentColor' : '#d1d5db'}"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>`).join('')}
+                        
+                        <!-- Note (Étoiles) -->
+                        <div style="margin-bottom:12px">
+                            <label style="font-size:13px; color:var(--muted); display:block; margin-bottom:8px">Votre note:</label>
+                            <div class="delivery-rating-stars" style="display:flex; gap:8px; font-size:28px; cursor:pointer">
+                                <span data-rating="1" style="user-select:none">☆</span>
+                                <span data-rating="2" style="user-select:none">☆</span>
+                                <span data-rating="3" style="user-select:none">☆</span>
+                                <span data-rating="4" style="user-select:none">☆</span>
+                                <span data-rating="5" style="user-select:none">☆</span>
+                            </div>
+                            <p class="rating-hint" style="margin:8px 0 0; font-size:12px; color:var(--muted)">Aucune note sélectionnée</p>
                         </div>
-                        <p class="review-text" style="margin:0; color:var(--muted); font-size:14px; font-style:italic">"${commande.feedback}"</p>
+                        
+                        <!-- Feedback -->
+                        <div style="margin-bottom:12px">
+                            <label style="font-size:13px; color:var(--muted); display:block; margin-bottom:6px">Votre avis:</label>
+                            <textarea class="delivery-feedback" placeholder="Partagez votre expérience avec la livraison..." style="width:100%; padding:10px; border-radius:8px; border:1px solid #e5e7eb; font-size:13px; min-height:80px; font-family:inherit"></textarea>
+                        </div>
+                        
+                        <!-- Code Agent -->
+                        <div style="margin-bottom:12px">
+                            <label style="font-size:13px; color:var(--muted); display:block; margin-bottom:6px">Code agent:</label>
+                            <input type="text" class="delivery-agent-code" placeholder="Entrez le code fourni par l'agent" style="width:100%; padding:10px; border-radius:8px; border:1px solid #e5e7eb; font-size:13px; font-family:monospace" />
+                        </div>
+                        
+                        <!-- Bouton de confirmation -->
+                        <button class="btn btn-primary deliver-confirm-btn" style="width:100%; margin-top:12px">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+                            CONFIRMER LA LIVRAISON
+                        </button>
                     </div>
-                    ` : ''}
-                `;
+                    `;
+                }
                 
                 openModal(orderId, html);
+                
+                // Si c'est une commande en cours, ajouter les event listeners
+                if (status === 'processing') {
+                    setTimeout(() => {
+                        const starsContainer = qs('.delivery-rating-stars');
+                        const feedbackInput = qs('.delivery-feedback');
+                        const codeInput = qs('.delivery-agent-code');
+                        const confirmBtn = qs('.deliver-confirm-btn');
+                        let selectedRating = 0;
+                        
+                        // Gestion des étoiles
+                        if (starsContainer) {
+                            starsContainer.addEventListener('click', (ev) => {
+                                const star = ev.target.closest('[data-rating]');
+                                if (!star) return;
+                                selectedRating = parseInt(star.getAttribute('data-rating')) || 0;
+                                
+                                // Mettre à jour l'affichage des étoiles
+                                Array.from(starsContainer.querySelectorAll('[data-rating]')).forEach((s, idx) => {
+                                    s.textContent = (idx < selectedRating) ? '★' : '☆';
+                                });
+                                
+                                // Mettre à jour le hint
+                                const hint = qs('.rating-hint');
+                                if (hint) {
+                                    hint.textContent = selectedRating ? `${selectedRating}/5` : 'Aucune note sélectionnée';
+                                }
+                            });
+                        }
+                        
+                        // Gestion du bouton de confirmation
+                        if (confirmBtn) {
+                            confirmBtn.addEventListener('click', async () => {
+                                const feedback = feedbackInput?.value.trim() || '';
+                                const code = codeInput?.value.trim() || '';
+                                
+                                if (!selectedRating) {
+                                    showNotification('Veuillez sélectionner une note de 1 à 5 étoiles.', 'warning', 'Champ obligatoire');
+                                    return;
+                                }
+                                if (!feedback) {
+                                    showNotification('Veuillez laisser un avis sur votre livraison.', 'warning', 'Champ obligatoire');
+                                    return;
+                                }
+                                if (!code) {
+                                    showNotification('Veuillez entrer le code agent fourni lors de la livraison.', 'warning', 'Champ obligatoire');
+                                    return;
+                                }
+                                
+                                // Préparer le payload
+                                const payload = {
+                                    order_id: orderId,
+                                    agent_code: code,
+                                    rating: selectedRating,
+                                    feedback: feedback
+                                };
+                                
+                                console.log('📡 Envoi de la notation à:', payload);
+                                
+                                try {
+                                    const accessToken = localStorage.getItem('access_token');
+                                    if (!accessToken) {
+                                        showNotification('Erreur: Token d\'accès manquant', 'error', 'Erreur d\'authentification');
+                                        return;
+                                    }
+                                    
+                                    const response = await fetch(`${window.location.origin}/kodPwomo/backend/rate/agent`, {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json',
+                                            'Authorization': 'Bearer ' + accessToken
+                                        },
+                                        body: JSON.stringify(payload)
+                                    });
+                                    
+                                    const result = await response.json();
+                                    console.log('📥 Réponse du serveur:', result);
+                                    
+                                    if (!response.ok) {
+                                        showNotification(result.error || 'Erreur serveur', 'error', 'Erreur');
+                                        console.error('❌ Erreur HTTP:', response.status);
+                                        return;
+                                    }
+                                    
+                                    if (result.status === 'success') {
+                                        showNotification('Votre livraison a été confirmée avec succès. Merci pour votre notation!', 'success', 'Livraison confirmée');
+                                        console.log('✅ Notation envoyée');
+                                        setTimeout(() => closeModal(), 1500);
+                                    } else {
+                                        showNotification(result.error || 'Erreur inconnue', 'error', 'Erreur');
+                                    }
+                                    
+                                } catch (error) {
+                                    console.error('❌ Erreur lors de l\'envoi de la notation:', error);
+                                    showNotification('Erreur réseau: ' + error.message, 'error', 'Erreur');
+                                }
+                            });
+                        }
+                    }, 0);
+                }
             });
 
             // Responsive adjustments
@@ -1387,10 +1858,9 @@
                     const confirmPass = qs('#confirmPass').value;
 
                     // Validation
-                    if (!currentPass) {
-                        showNotification('Veuillez entrer votre mot de passe actuel pour confirmer votre identité', 'warning', 'Mot de passe actuel requis');
-                        isValid = false;
-                    }
+                    // Note: Le mot de passe actuel peut être vide (utilisateurs Google sans password)
+                    // Dans ce cas, on l'envoie vide et le backend gère la logique
+                    
                     if (!newPass) {
                         showNotification('Veuillez entrer un nouveau mot de passe', 'warning', 'Nouveau mot de passe requis');
                         isValid = false;
@@ -1652,15 +2122,18 @@
             codeModal.addEventListener('click', (e)=>{ if(e.target===codeModal) closeCodeModal(); });
             codeModalConfirm.addEventListener('click', ()=>{
                 const code = agentCodeInput.value.trim();
-                if(!code){ alert('Veuillez saisir le code agent.'); return; }
+                if(!code){ showNotification('Veuillez saisir le code agent fourni par le livreur.', 'warning', 'Code requis'); return; }
                 // Placeholder success
-                alert('Livraison confirmée. Merci !');
+                showNotification('Livraison confirmée avec succès. Merci!', 'success', 'Confirmation');
                 closeCodeModal();
             });
 
-            // Initialize default section
-            setActiveSection(state.current);
+            // Initialize with section saved in localStorage
+            const activeSection = getActiveSection();
+            console.log('🔄 Chargement de la section depuis localStorage:', activeSection);
+            setActiveSection(activeSection);
         })();
     </script>
+     <?php include 'heartbeat.php'; ?>
 </body>
 </html>

@@ -6,13 +6,14 @@ function verifyOtp() {
     try {
         $data = validateRequest();
         
-        if (!isset($data['email']) || !isset($data['otp'])) {
-            response(['error' => 'Email et code OTP requis'], 400);
+        if (!isset($data['email']) || !isset($data['otp']) || !isset($data['fingerprint'])) {
+            response(['error' => 'Email, code OTP et empreinte digitale requis'], 400);
             return;
         }
         
         $email = filter_var($data['email'], FILTER_VALIDATE_EMAIL);
         $otp = trim($data['otp']);
+        $fingerprint = trim(strip_tags(htmlspecialchars($data['fingerprint'])));
         
         if (!$email) {
             response(['error' => 'Email invalide'], 400);
@@ -47,14 +48,14 @@ function verifyOtp() {
             response(['error' => 'Code OTP expiré'], 400);
             return;
         }
-
-        // - Marquer l'utilisateur comme vérifié
-        $stmt = $connection->prepare("UPDATE users SET is_verified = 1 WHERE email = ?");
-        $stmt->execute([$email]);
         //create access token
-        $accessToken = createAccessToken($username, $userid, $role);
+        $accessToken = createAccessToken($username, $userid, $role = 'user', $fingerprint);
         //create refresh token
-        $refreshToken = createRefreshToken($userid, $role);
+        $refreshToken = createRefreshToken($userid, $role = 'user');
+        // - Marquer l'utilisateur comme vérifié
+        $stmt = $connection->prepare("UPDATE users SET is_verified = 1, access_token = ?,refresh_token = ? WHERE email = ?");
+        $stmt->execute([$accessToken, $refreshToken, $email]);
+
         //set cookie for refresh token
         setRefreshTokenCookie($refreshToken);
         response([

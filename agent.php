@@ -231,10 +231,10 @@
             position: relative;
             overflow: hidden;
 
-                border-radius: 18px;
-    box-shadow:
-        10px 10px 22px rgba(0,0,0,0.10),
-        -10px -10px 22px rgba(255,255,255,0.95);
+            border-radius: 18px;
+            box-shadow:
+            10px 10px 22px rgba(0,0,0,0.10),
+            -10px -10px 22px rgba(255,255,255,0.95);
         }
         
         .welcome-section::before {
@@ -1133,8 +1133,8 @@
             white-space: nowrap;
             text-align: center;
             box-shadow:
-    3px 3px 8px rgba(0,0,0,0.18),
-    -3px -3px 8px rgba(255,255,255,0.85);
+            3px 3px 8px rgba(0,0,0,0.18),
+            -3px -3px 8px rgba(255,255,255,0.85);
 
         }
         
@@ -1184,7 +1184,7 @@
         .depth-3d {
             position: relative;
             background: #f1f3f9;
-;
+    
             backdrop-filter: blur(14px);
             box-shadow: var(--shadow-3d-base);
             transform-style: preserve-3d;
@@ -2137,7 +2137,6 @@
                     },
                     body: JSON.stringify({
                         message: message,
-                        id_user: userId,
                         order_id: orderId,
                         type: 'delivery_feedback'
                     })
@@ -2252,7 +2251,6 @@
                     },
                     body: JSON.stringify({
                         order_id: deliveryId,
-                        agent_id: agentId,
                         status: 'completed'
                     })
                 });
@@ -2367,7 +2365,7 @@
         async function getAgentStatusFromAPI(agentUniqueId) {
             // Utilise votre route GET via .htaccess rewrite
             try {
-                const response = await fetch(`backend/agents/availability/${agentUniqueId}`,
+                const response = await fetch(`backend/agents/availability`,
                 {
                     method: 'GET',
                     headers: {
@@ -2402,8 +2400,7 @@
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     },
-                    body: JSON.stringify({
-                        agentId: agentUniqueId,      // Correspond à votre backend
+                    body: JSON.stringify({      // Correspond à votre backend
                         isAvailable: isAvailable     // Correspond à votre backend
                     })
                 });
@@ -2427,7 +2424,7 @@
         async function getAgentTransactionsAPI(agentId) {
             // Utilise votre vraie route backend
             try {
-                const response = await fetch(`backend/deliveries/agent/${agentId}`,
+                const response = await fetch(`backend/deliveries/agent`,
                 {
                     method: 'GET',
                     headers: {
@@ -2520,7 +2517,6 @@
                     },
                     body: JSON.stringify({
                         order_id: orderId,
-                        agent_id: agentId
                     }),
                     signal: controller.signal
                 });
@@ -2560,7 +2556,7 @@
 
         async function getCurrentDeliveryAPI(agentId) {
             try {
-                const response = await fetch(`backend/deliveries/agent/orderProcess/${agentId}`, {
+                const response = await fetch(`backend/deliveries/agent/orderProcess`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2608,7 +2604,7 @@
         
         async function loadNotifications() {
             try {
-                const response = await fetch(`backend/notifications/${AGENT_UNIQUE_ID}`, {
+                const response = await fetch(`backend/notifications/unread`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

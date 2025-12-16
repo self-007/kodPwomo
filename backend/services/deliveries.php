@@ -53,16 +53,22 @@ function createDelivery( $status = 'processing') {
 function updateDeliveryStatus($deliveryId) {
     global $datas;
     //verify datas
-    if(!isset($datas['status']) || !isset($datas['order_id']) || !isset($datas['agent_id'])) {
+    if(!isset($datas['status']) || !isset($datas['order_id'])) {
         response(['error' => 'Invalid status'], 400); 
     }
     // verify int value or superior to 0
-    if (intval($deliveryId) <= 0 || empty($datas['status']) || empty($datas['order_id']) || empty($datas['agent_id'])) {
+    if (intval($deliveryId) <= 0 || empty($datas['status']) || empty($datas['order_id'])) {
         response(['error' => 'Invalid delivery ID or status'], 400);
     }
     $status = sanitizeInput($datas['status']);
     $orderId = sanitizeInput($datas['order_id']);
-    $agentId = sanitizeInput($datas['agent_id']);
+    $user = getBearerToken();
+    $agentId = sanitizeInput($user->sub);
+    //verify the role
+    $role = $user->role;
+    if($role !== 'agent' && $role !== 'manager' && $role !== 'SUPER-ADMIN'){
+        response(['error' => 'Unauthorized access'], 403);
+    }
     global $connection;
     $stmt = $connection->prepare("UPDATE deliveries SET status = :status WHERE id = :id AND id_agent = :agent_id AND id_commande = :order_id");
     $stmt->bindParam(':status', $status);
@@ -284,10 +290,12 @@ function getCompletedDeliveriesByAgent($agentId) {
 // 2- total completed deliveries by agent id
 // 3- total money earned by agent id
 // 4- total money by month by agent id
-function getAgentStats($agentId) {
+function getAgentStats() {
 
     //id is alphaNumeric , clean id
-    $agentId = sanitizeInput($agentId); // Sanitize input
+    //$agentId = sanitizeInput($agentId); // Sanitize input
+    $user = getBearerToken();
+    $agentId = sanitizeInput($user->sub);
     getAgentById($agentId); // Check if agent exists
     $totalDeliveries = getDeliveryById($agentId);
     $completedDeliveries = getCompletedDeliveriesByAgent($agentId);
@@ -323,11 +331,18 @@ function getPendingDeliveriesByAgent($agentId) {
     $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);
     response(['nbrs' => $nbrs, 'deliveries' => $deliveries]);
 }
-// get pending deliveries
-function getProcessingDeliveriesByAgent($agentId){
+// get pending deliveries being processed
+function getProcessingDeliveriesByAgent(){
+    //verify the user role
+    $user = getBearerToken();
+    $role = $user->role;
+    if($role !== 'agent' && $role !== 'manager' && $role !== 'SUPER-ADMIN'){
+        response(['error' => 'Unauthorized access'], 403);
+    }
     //get productName, qnt , get orderid, university, room, product price, id_user
     //id is alphaNumeric , clean id
-    $agentId = sanitizeInput($agentId);
+   
+    $agentId = sanitizeInput($user->sub);
     global $connection;
     $stmt = 'SELECT deliveries.id as delivery_id, products.name as product_name, delivery_price, orders.price as order_price, orders.qnt, orders.order_id, university.name, salle_name FROM deliveries JOIN orders ON id_commande = orders.order_id
      JOIN  products ON products.id = orders.id_product JOIN salle ON salle.id = adresse_id JOIN university ON salle.id_university = university.id WHERE deliveries.status = "processing" AND 

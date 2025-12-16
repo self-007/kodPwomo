@@ -1,23 +1,37 @@
 <?php
 //get notifications
-function getNotificationsByUserId($userId) {
+function getNotificationsByUserId($type) {
     // verify userId
-    if (empty($userId)) {
-        response(['error' => 'Invalid user ID'], 400);
+    
+    if (empty($type)) {
+        response(['error' => 'Invalid type'], 400);
     }
+    //get user id from token
+    $user = getBearerToken();
     //sanitize userId
-    $userId = sanitizeInput($userId);
+    $userId = sanitizeInput($user->sub);
+    
     global $connection;
-    $stmt = $connection->prepare("SELECT * FROM notifications WHERE id_user = :user_id AND status != 'deleted' AND status != 'read' AND calls < 2 ORDER BY date DESC");
+    if($type === 'all'){
+        $stmt = $connection->prepare("SELECT id, type, message, status, link, date FROM notifications WHERE id_user = :user_id AND status != 'deleted' ORDER BY date DESC");
+    } else if($type === 'unread'){
+        $stmt = $connection->prepare("SELECT id, type, message, status, link, date FROM notifications WHERE id_user = :user_id AND status != 'deleted' AND status != 'read' AND calls < 2 ORDER BY date DESC");
+    } else {
+        response(['error' => 'Invalid type'], 400);
+    }
+    
     $stmt->bindParam(':user_id', $userId);
     $stmt->execute();
     if ($stmt->rowCount() > 0) {
         $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $allNotifications = $notifications;
         $nbrs = $stmt->rowCount();
-        foreach ($notifications as $notifications) {
-            //update each notifications call
-            setNotificationCall($notifications['id']);
+        if($type === 'unread'){
+            
+            foreach ($notifications as $notifications) {
+                //update each notifications call
+                setNotificationCall($notifications['id']);
+            }
         }
         response(['nbrs' => $nbrs, 'notifications' => $allNotifications], 200);
     } else {
@@ -81,15 +95,19 @@ function createNotification() {
 }
 //delete notification
 function deleteNotification($id) {
+    //get the user id from token
+    $user = getBearerToken();
+    $user_id = sanitizeInput($user->sub);
     // verify int value or superior to 0
     if (intval($id) <= 0) {
         response(['error' => 'Invalid notification ID'], 400);
     }
     global $connection;
-    $stmt = $connection->prepare("UPDATE notifications SET status = 'deleted' WHERE id = :id");
+    $stmt = $connection->prepare("UPDATE notifications SET status = 'deleted' WHERE id = :id AND id_user = :user_id");
     $stmt->bindParam(':id', $id);
+    $stmt->bindParam(':user_id', $user_id);
     if ($stmt->execute()) {
-        return ['message' => 'Notification deleted successfully'];
+        response(['message' => 'Notification deleted successfully', 'status' => 'success']);
     } else {
         response(['error' => 'Failed to delete notification'], 500);
     }
@@ -97,21 +115,38 @@ function deleteNotification($id) {
 //mark notification as read
 //must veify if this is the current user notifications
 function markNotificationAsRead() {
-    global $datas;
+    global $datas, $connection;
+    //get user id from token
+    $user = getBearerToken();
+    $userId = sanitizeInput($user->sub);
     //verify datas
-    if(!isset($datas['notification_id'])) {
+    if(!isset($datas['status'])) {
         response(['error' => 'Missing notification ID'], 400);
     }
-    $id = $datas['notification_id'];
-    // verify int value or superior to 0
-    if (intval($id) <= 0) {
-        response(['error' => 'Invalid notification ID'], 400);
+    if(!isset($datas['notification_id'])){
+        if(!isset($datas['all']) || $datas['all'] !== true){
+            response(['error' => 'Missing notification ID'], 400);
+        }else{
+            $stmt = $connection->prepare("UPDATE notifications SET status = :status WHERE id_user = :user_id");
+        }
+ 
+    }else {
+        $id = sanitizeInput($datas['notification_id']);    // verify int value or superior to 0
+        if (intval($id) <= 0) {
+            response(['error' => 'Invalid notification ID'], 400);
+        }
+
+        $stmt = $connection->prepare("UPDATE notifications SET status = :status WHERE id = :id AND id_user = :user_id");
+        $stmt->bindParam(':id', $id);
     }
-    global $connection;
-    $stmt = $connection->prepare("UPDATE notifications SET status = 'read' WHERE id = :id");
-    $stmt->bindParam(':id', $id);
+    $status = sanitizeInput($datas['status']);
+
+   
+   
+    $stmt->bindParam(':status', $status);
+    $stmt->bindParam(':user_id', $userId);
     if ($stmt->execute()) {
-        response(['success' => 'Notification marked as read successfully']);
+        response(['success' => 'Notification marked as read successfully', 'status' => 'success']);
     } else {
         response(['error' => 'Failed to mark notification as read'], 500);
     }

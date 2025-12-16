@@ -1,7 +1,7 @@
 <?php
 // heartbeat.php - Système de heartbeat pour maintenir la session active
 // À inclure dans toutes les pages : <?php include 'heartbeat.php'; ?>
-?>
+
 
 <script>
 // Générer un fingerprint simple
@@ -87,7 +87,7 @@ async function logout() {
     }
 }
 
-// Envoyer un heartbeat immédiatement, puis tous les 20 secondes
+// Envoyer un heartbeat immédiatement, puis tous les 2 minutes
 heartBeat();
-setInterval(heartBeat, 20000);
+setInterval(heartBeat, 120000);
 </script>

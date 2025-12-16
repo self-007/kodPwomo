@@ -672,6 +672,40 @@
             }
         }
     </style>
+
+    <!-- Heartbeat pour utilisateurs connectés -->
+    <script>
+        // Charger heartbeat seulement si l'utilisateur a un access token
+        (function() {
+            const accessToken = localStorage.getItem('access_token');
+            if (accessToken) {
+                // Charger et exécuter le script heartbeat
+                fetch('heartbeat.php', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + accessToken
+                    }
+                })
+                .then(response => response.text())
+                .then(htmlContent => {
+                    // Extraire le contenu du <script> si le fichier retourne du HTML
+                    const scriptMatch = htmlContent.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+                    const scriptContent = scriptMatch ? scriptMatch[1] : htmlContent;
+                    
+                    // Exécuter le script
+                    const scriptTag = document.createElement('script');
+                    scriptTag.textContent = scriptContent;
+                    document.head.appendChild(scriptTag);
+                    console.log('✅ Heartbeat chargé et exécuté');
+                })
+                .catch(error => {
+                    console.warn('⚠️ Erreur lors du chargement du heartbeat:', error);
+                });
+            } else {
+                console.log('ℹ️ Aucune session active - Heartbeat non chargé');
+            }
+        })();
+    </script>
 </head>
 <body>
     <!-- Header -->
@@ -832,6 +866,10 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadPosts();
             
+            // Rafraîchir les posts toutes les 2 minutes (120 secondes)
+            setInterval(loadPosts, 120000);
+            console.log('🔄 Rafraîchissement automatique des posts activé (chaque 2 minutes)');
+            
             // Show rating for avis category
             document.getElementById('postCategory').addEventListener('change', function() {
                 const ratingGroup = document.getElementById('ratingGroup');
@@ -847,110 +885,51 @@
         async function loadPosts() {
             showLoading(true);
             
-            // Simulation de données pour visualiser l'apparence
-            setTimeout(() => {
-                allPosts = [
-                    {
-                        id: 1,
-                        category: 'actualite',
-                        title: 'Nouvelle fonctionnalité : Suivi en temps réel',
-                        content: 'Nous sommes ravis d\'annoncer le lancement de notre nouvelle fonctionnalité de suivi en temps réel ! Vous pouvez maintenant suivre votre commande du début à la fin avec des notifications instantanées. Cette mise à jour améliore considérablement l\'expérience utilisateur et la transparence de nos services.',
-                        image: '',
-                        author_name: 'Admin kodPwomo',
-                        author_email: 'admin@kodpwomo.com',
-                        rating: 0,
-                        comments_count: 0,
-                        created_at: '2025-12-01T10:30:00'
-                    },
-                    {
-                        id: 2,
-                        category: 'guide',
-                        title: 'Comment passer votre première commande',
-                        content: 'Guide complet pour les nouveaux utilisateurs. Étape 1 : Créez votre compte avec votre email universitaire. Étape 2 : Parcourez les produits disponibles dans votre université. Étape 3 : Ajoutez vos articles au panier. Étape 4 : Choisissez votre lieu de livraison. Étape 5 : Confirmez et suivez votre commande !',
-                        image: '',
-                        author_name: 'Admin kodPwomo',
-                        author_email: 'admin@kodpwomo.com',
-                        rating: 0,
-                        comments_count: 0,
-                        created_at: '2025-11-28T14:15:00'
-                    },
-                    {
-                        id: 3,
-                        category: 'avis',
-                        title: 'Excellent service de livraison !',
-                        content: 'J\'ai commandé hier soir et j\'ai reçu ma commande ce matin. L\'agent était très professionnel et courtois. Les produits sont arrivés en parfait état. Je recommande vivement kodPwomo à tous les étudiants !',
-                        image: '',
-                        author_name: 'Marie Dubois',
-                        author_email: 'marie.d@student.com',
-                        rating: 5,
-                        comments_count: 0,
-                        created_at: '2025-12-02T16:45:00'
-                    },
-                    {
-                        id: 4,
-                        category: 'avis',
-                        title: 'Très satisfait du service',
-                        content: 'Première fois que j\'utilise kodPwomo et je suis agréablement surpris. La plateforme est intuitive, les prix sont corrects et la livraison est rapide. Quelques petites suggestions : ajouter plus de choix de produits et peut-être une option de livraison express.',
-                        image: '',
-                        author_name: 'Jean Martin',
-                        author_email: 'jean.m@student.com',
-                        rating: 4,
-                        comments_count: 0,
-                        created_at: '2025-12-01T09:20:00'
-                    },
-                    {
-                        id: 5,
-                        category: 'top',
-                        title: 'Top 5 Agents du Mois - Novembre 2025',
-                        content: 'Félicitations à nos meilleurs agents du mois de novembre ! 🏆\n\n1. Agent Patrick - 156 livraisons\n2. Agent Sophie - 142 livraisons\n3. Agent David - 138 livraisons\n4. Agent Lisa - 125 livraisons\n5. Agent Marc - 118 livraisons\n\nMerci pour votre excellent travail et votre dévouement !',
-                        image: '',
-                        author_name: 'Admin kodPwomo',
-                        author_email: 'admin@kodpwomo.com',
-                        rating: 0,
-                        comments_count: 0,
-                        created_at: '2025-12-01T08:00:00'
-                    },
-                    {
-                        id: 6,
-                        category: 'amelioration',
-                        title: 'Suggestion : Programme de fidélité',
-                        content: 'Bonjour, je suggère la création d\'un programme de fidélité pour les clients réguliers. Par exemple, après 10 commandes, offrir une réduction ou une livraison gratuite. Cela encouragerait les étudiants à utiliser plus souvent la plateforme.',
-                        image: '',
-                        author_name: 'Claire Laurent',
-                        author_email: 'claire.l@student.com',
-                        rating: 0,
-                        comments_count: 0,
-                        created_at: '2025-11-30T11:30:00'
-                    },
-                    {
-                        id: 7,
-                        category: 'amelioration',
-                        title: 'Ajouter un système de notation des produits',
-                        content: 'Ce serait génial de pouvoir noter et commenter les produits après achat. Ça aiderait les autres étudiants à faire de meilleurs choix et ça permettrait aussi aux vendeurs d\'améliorer leurs offres.',
-                        image: '',
-                        author_name: 'Thomas Petit',
-                        author_email: 'thomas.p@student.com',
-                        rating: 0,
-                        comments_count: 0,
-                        created_at: '2025-11-29T15:10:00'
-                    },
-                    {
-                        id: 8,
-                        category: 'avis',
-                        title: 'Bon service mais quelques améliorations nécessaires',
-                        content: 'Dans l\'ensemble, le service est bon. La livraison est généralement rapide et les agents sont sympas. Cependant, j\'ai remarqué que certains produits ne sont pas toujours disponibles alors qu\'ils apparaissent sur le site. Il faudrait améliorer la mise à jour du stock en temps réel.',
-                        image: '',
-                        author_name: 'Sarah Dupont',
-                        author_email: 'sarah.d@student.com',
-                        rating: 3,
-                        comments_count: 7,
-                        created_at: '2025-11-27T13:25:00'
-                    }
-                ];
+            try {
+                console.log('📡 Chargement des posts du blog...');
                 
+                const response = await fetch(`${window.location.origin}/kodPwomo/backend/blog/all`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('✅ Posts reçus:', data);
+                
+                if (!data.blogDatas || data.blogDatas.length === 0) {
+                    showEmptyState();
+                    showLoading(false);
+                    return;
+                }
+                
+                // Transformer les données du backend
+                allPosts = data.blogDatas.map(post => ({
+                    id: post.id,
+                    category: post.category,
+                    title: post.title,
+                    content: post.message,
+                    author_name: post.name || 'Anonyme',
+                    author_email: '',
+                    created_at: post.date,
+                    image: '',
+                    rating: post.rating || 0,
+                    comments_count: 0
+                }));
+                
+                console.log('✅ Posts transformés:', allPosts.length, 'posts');
                 displayPosts(allPosts);
                 showLoading(false);
-            }, 800); // Simule un délai de chargement
+                
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                showLoading(false);
+            }
         }
 
         // ===== DISPLAY POSTS =====
@@ -977,7 +956,7 @@
             item.className = 'post-item';
             
             const icon = getCategoryIcon(post.category);
-            const ratingHtml = post.rating > 0 ? `<span class="stat-item">⭐ ${post.rating}/5</span>` : '';
+            const ratingHtml = (post.category === 'avis' && post.rating > 0) ? `<span class="stat-item">⭐ ${post.rating}/5</span>` : '';
             
             item.innerHTML = `
                 <div class="post-icon ${post.category}">${icon}</div>
@@ -1067,35 +1046,58 @@
                 return;
             }
             
-            // Simulation de la soumission
-            showAlert('Envoi en cours...', 'success');
-            
-            setTimeout(() => {
-                // Simuler l'ajout du post
-                const newPost = {
-                    id: allPosts.length + 1,
+            try {
+                showAlert('Envoi en cours...', 'info');
+                
+                const payload = {
                     category: category,
                     title: title,
-                    content: content,
-                    image: '',
-                    author_name: 'Vous',
-                    author_email: 'user@student.com',
-                    rating: rating,
-                    comments_count: 0,
-                    created_at: new Date().toISOString()
+                    message: content
                 };
                 
-                allPosts.unshift(newPost); // Ajouter au début
-                displayPosts(currentFilter === 'tous' ? allPosts : allPosts.filter(p => p.category === currentFilter));
+                // Ajouter le rating seulement si c'est un avis
+                if (category === 'avis') {
+                    payload.rating = rating;
+                }
                 
-                showAlert('✅ Publication créée avec succès ! (Mode simulation)', 'success');
-                closeAddPostModal();
+                console.log('📤 Envoi du post:', payload);
                 
-                // Réinitialiser le formulaire
-                document.getElementById('addPostForm').reset();
-                selectedRating = 0;
-                setRating(0);
-            }, 1000);
+                const response = await fetch(`${window.location.origin}/kodPwomo/backend/blog/new`, {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                    },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erreur ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Réponse du serveur:', result);
+                
+                if (result.status === 'success') {
+                    showAlert('✅ Publication créée avec succès !', 'success');
+                    closeAddPostModal();
+                    
+                    // Réinitialiser le formulaire
+                    document.getElementById('addPostForm').reset();
+                    selectedRating = 0;
+                    setRating(0);
+                    
+                    // Recharger les posts
+                    await loadPosts();
+                } else {
+                    showAlert(`❌ ${result.message || 'Erreur lors de la publication'}`, 'error');
+                }
+                
+            } catch (error) {
+                console.error('❌ Erreur:', error);
+                showAlert(`❌ Erreur: ${error.message}`, 'error');
+            }
         }
 
         // ===== OPEN POST DETAIL =====
@@ -1108,7 +1110,7 @@
                 ? `<img src="${post.image}" alt="${post.title}" class="post-detail-image">`
                 : '';
             
-            const ratingHtml = post.rating > 0 
+            const ratingHtml = (post.category === 'avis' && post.rating > 0)
                 ? `<div style="margin: 15px 0; font-size: 24px;">⭐ ${post.rating}/5</div>`
                 : '';
             
@@ -1225,17 +1227,45 @@
         function formatDate(dateString) {
             const date = new Date(dateString);
             const now = new Date();
-            const diffTime = Math.abs(now - date);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const diffTime = now - date; // en millisecondes
             
-            if (diffDays === 0) return "Aujourd'hui";
-            if (diffDays === 1) return "Hier";
-            if (diffDays < 7) return `Il y a ${diffDays} jours`;
+            const diffMinutes = Math.floor(diffTime / (1000 * 60));
+            const diffHours = Math.floor(diffTime / (1000 * 60 * 60));
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             
+            // Moins d'une minute
+            if (diffMinutes < 1) {
+                return "À l'instant";
+            }
+            
+            // Moins d'une heure
+            if (diffMinutes < 60) {
+                return diffMinutes === 1 ? "Il y a 1 minute" : `Il y a ${diffMinutes} minutes`;
+            }
+            
+            // Moins d'un jour
+            if (diffHours < 24) {
+                return diffHours === 1 ? "Il y a 1 heure" : `Il y a ${diffHours} heures`;
+            }
+            
+            // Hier
+            if (diffDays === 1) {
+                return "Hier";
+            }
+            
+            // Moins d'une semaine
+            if (diffDays < 7) {
+                return diffDays === 2 ? "Avant-hier" : `Il y a ${diffDays} jours`;
+            }
+            
+            // Plus d'une semaine → afficher la date complète avec heure
             return date.toLocaleDateString('fr-FR', { 
                 day: 'numeric', 
                 month: 'short', 
-                year: 'numeric' 
+                year: 'numeric'
+            }) + ' à ' + date.toLocaleTimeString('fr-FR', {
+                hour: '2-digit',
+                minute: '2-digit'
             });
         }
     </script>

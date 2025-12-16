@@ -196,11 +196,11 @@ function getTotalPrice($order_id) {
 }
 
 //get access token from header
-function getBearerToken() { 
+function getBearerToken() {
     global $ACCESS_SECRET, $connection;
     $headers = getallheaders();
     if (!isset($headers['Authorization'])) {
-        response(['error' => 'Unauthorized A1'], 401);
+        response(['error' => 'Unauthorized A1 header'], 401);
     }
     $matches = [];
     $matches = explode(' ', $headers['Authorization']);

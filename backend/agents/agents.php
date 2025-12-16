@@ -30,7 +30,10 @@ function getAgentById($id) {
     return $agent;
 }
 //get agent availability
-function getAgentAvailability($id) {
+function getAgentAvailability() {
+    //get the user id
+    $user = getBearerToken();
+    $id = sanitizeInput($user->sub);
     $agent = getAgentById($id);
     if(isset($agent) && $agent['status'] == 'active'){
        response(['is_available' => true], 200);
@@ -45,12 +48,14 @@ function setAgentAvailability() {
         response(['error' => 'Unauthorized - Agents only'], 401);
     }
     //verify if data exist or empty
-    if(!isset($datas['agentId']) || !isset($datas['isAvailable'])){
+    if(!isset($datas['isAvailable'])){
         response(['donnees manquantes'], 404);
     }
-
+     //get the user id
+    $user = getBearerToken();
+    $agentId = sanitizeInput($user->sub);
     //clean id. id is an alpha num value
-    $agentId = sanitizeInput($datas['agentId']);
+    $agentId = sanitizeInput($agentId);
     $isAvailable = sanitizeInput($datas['isAvailable']);
     call_user_func_array('getAgentById', [$agentId]); // Check if agent exists
     $isAvailable = $isAvailable !== 'active' ? 'inactive' : 'active';

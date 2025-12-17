@@ -1,0 +1,50 @@
+<!-- 
+    SNIPPETS DE INTEGRACIÓN DEL SISTEMA DE NOTIFICACIONES
+    Copie y pegue estos fragmentos en sus páginas
+-->
+
+<!-- ========================================
+     PARA INCLUIR EN EL <head> DE CUALQUIER PÁGINA
+     ======================================== -->
+
+<!-- CSS del sistema de notificaciones global -->
+<link rel="stylesheet" href="assets/css/notifications-system.css">
+
+<!-- Font Awesome 6.4.0 (si no lo tiene) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+
+<!-- ========================================
+     PARA INCLUIR ANTES DEL CIERRE </body>
+     ======================================== -->
+
+<!-- Sistema de Notificaciones Global -->
+<script src="assets/js/notifications-system.js"></script>
+
+
+<!-- ========================================
+     ALTERNATIVA: PARA ARCHIVOS PHP CON VARIABLE DE SESIÓN
+     ======================================== -->
+
+<?php
+// Verificar si el usuario está autenticado
+if(isset($_SESSION['access_token']) || isset($_SESSION['id_user'])):
+?>
+    <!-- Sistema de Notificaciones Global -->
+    <link rel="stylesheet" href="assets/css/notifications-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <script src="assets/js/notifications-system.js"></script>
+<?php endif; ?>
+
+
+<!-- ========================================
+     VERIFICACIÓN EN JAVASCRIPT (ALTERNATIVA)
+     ======================================== -->
+
+<script>
+// Cargar el sistema de notificaciones solo si hay token
+if (localStorage.getItem('access_token')) {
+    // El script notifications-system.js se ejecutará automáticamente
+    console.log('Sistema de notificaciones disponible');
+}
+</script>

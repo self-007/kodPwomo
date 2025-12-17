@@ -10,6 +10,8 @@
     <meta name="keywords" content="blog kodpwomo, avis clients, top agents, guides, actualités livraison haiti">
     
     <link rel="stylesheet" href="assets/css/kodpwomo-colors.css">
+    <link rel="stylesheet" href="assets/css/notifications-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
     <style>
         * {
@@ -1269,5 +1271,8 @@
             });
         }
     </script>
+    
+    <!-- Sistema de Notificaciones Global -->
+    <script src="assets/js/notifications-system.js"></script>
 </body>
 </html>

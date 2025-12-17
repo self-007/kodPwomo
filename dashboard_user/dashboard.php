@@ -10,13 +10,9 @@
     <title>KodPwomo - Dashboard Utilisateur</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />Parfait ! Je vois ta structure. Laisse-moi analyser et discuter de la méthode de récupération.
-    
-    📊 Analyse de ta structure JSON
-    Points positifs :
-    
-    ✅ Une seule requête pour tout récupérer
-    ✅ Tu as les stats (totalAmounts, totalSpent)
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/css/notifications-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     
     <style>
         :root{
@@ -1662,5 +1658,8 @@
             setActiveSection(state.current);
         })();
     </script>
+    
+    <!-- Sistema de Notificaciones Global -->
+    <script src="../assets/js/notifications-system.js"></script>
 </body>
 </html>

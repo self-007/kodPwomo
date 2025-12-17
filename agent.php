@@ -12,6 +12,9 @@
     <meta name="robots" content="noindex, nofollow">
     
     <link rel="stylesheet" href="assets/css/kodpwomo-colors.css">
+    <link rel="stylesheet" href="assets/css/notifications-system.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/fontawesome.min.css" />
     
     <style>
         /* ===== CUSTOM COLOR PALETTE ===== */
@@ -407,8 +410,17 @@
         }
         
         .action-btn-icon {
-            font-size: 40px;
+            font-size: 48px;
             margin-bottom: 12px;
+            color: #234777;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover .action-btn-icon {
+            transform: scale(1.1);
         }
         
         .action-btn-title {
@@ -492,7 +504,9 @@
         }
         
         .modal-icon {
-            font-size: 28px;
+            font-size: 32px;
+            color: #234777;
+            min-height: 40px;
         }
         
         /* ===== STATS GRID ===== */
@@ -684,6 +698,10 @@
             width: 100%;
             transition: all 0.3s ease;
             margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .take-order-btn:hover {
@@ -759,6 +777,10 @@
             cursor: pointer;
             border: none;
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
         
         .done-btn {
@@ -907,6 +929,34 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* ===== FONT AWESOME ICONS ===== */
+        i {
+            display: inline-block;
+        }
+
+        i.fas,
+        i.far,
+        i.fal,
+        i.fad,
+        i.fab {
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        /* ===== ACTION BTN ICONS FIXES ===== */
+        .action-btn-icon i,
+        .modal-icon i {
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: inherit;
+        }
+
+        .action-btn-icon i::before,
+        .modal-icon i::before {
+            display: inline-block;
+            font-size: inherit;
+        }
         
         .alert {
             position: fixed;
@@ -925,6 +975,12 @@
             box-shadow: var(--neo-shadow-base);
             border: 1px solid rgba(255,255,255,0.4);
             color: var(--dark-gray);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
         
         .alert.show {
@@ -936,9 +992,21 @@
             color:#fff;
         }
         
+        .alert.success i {
+            color: #fff;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        
         .alert.error {
             background: linear-gradient(145deg,rgba(231,76,60,0.85),rgba(231,76,60,0.65));
             color:#fff;
+        }
+        
+        .alert.error i {
+            color: #fff;
+            font-size: 16px;
+            flex-shrink: 0;
         }
         
         .alert.warning,
@@ -946,6 +1014,14 @@
         .alert.taken {
             background: linear-gradient(145deg,rgba(243,156,18,0.88),rgba(230,126,34,0.65));
             color:#fff;
+        }
+
+        .alert.warning i,
+        .alert.info i,
+        .alert.taken i {
+            color: #fff;
+            font-size: 16px;
+            flex-shrink: 0;
         }
         
         /* ===== NOTIFICATIONS ===== */
@@ -1001,6 +1077,28 @@
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 10px;
+            gap: 10px;
+        }
+
+        .notification-header i {
+            color: #234777;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .notification-type {
+            font-weight: 700;
+            font-size: 13px;
+            color: #234777;
+            text-transform: capitalize;
+            flex: 1;
+        }
+
+        .notification-date {
+            font-size: 11px;
+            color: var(--medium-gray);
+            white-space: nowrap;
         }
         
         .notification-title {
@@ -1036,6 +1134,40 @@
             margin-bottom: 14px;
             line-height: 1.6;
             font-weight: 600;
+        }
+
+        .notification-content {
+            margin-bottom: 12px;
+        }
+
+        .notification-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .notification-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .close-btn {
+            background: #f5f5f5;
+            color: var(--medium-gray);
+        }
+
+        .close-btn:hover {
+            background: #e74c3c;
+            color: white;
         }
         
         .notification-time {
@@ -1397,19 +1529,19 @@
         <!-- Action Buttons -->
         <section class="action-buttons">
             <div class="action-btn box-3d" onclick="openTransactionsModal()">
-                <div class="action-btn-icon">📊</div>
+                <div class="action-btn-icon"><i class="fas fa-chart-bar"></i></div>
                 <div class="action-btn-title">Mes Transactions</div>
                 <div class="action-btn-desc">Consultez vos livraisons effectuées et votre historique de transactions</div>
             </div>
             
             <div class="action-btn box-3d" onclick="openOrdersModal()">
-                <div class="action-btn-icon">📦</div>
+                <div class="action-btn-icon"><i class="fas fa-box"></i></div>
                 <div class="action-btn-title">Commandes Disponibles</div>
                 <div class="action-btn-desc">Prenez de nouvelles commandes en attente de confirmation</div>
             </div>
             
             <div class="action-btn box-3d" onclick="openDeliveryModal()">
-                <div class="action-btn-icon">🚚</div>
+                <div class="action-btn-icon"><i class="fas fa-truck"></i></div>
                 <div class="action-btn-title">Livraison en Cours</div>
                 <div class="action-btn-desc">Gérez votre livraison actuelle et communiquez avec le client</div>
             </div>
@@ -1422,7 +1554,7 @@
             <button class="modal-close" onclick="closeTransactionsModal()">&times;</button>
             
             <div class="modal-header">
-                <div class="modal-icon">📊</div>
+                <div class="modal-icon"><i class="fas fa-chart-bar"></i></div>
                 <h2 class="modal-title">Mes Transactions</h2>
             </div>
             
@@ -1457,7 +1589,7 @@
             <button class="modal-close" onclick="closeOrdersModal()">&times;</button>
             
             <div class="modal-header">
-                <div class="modal-icon">📦</div>
+                <div class="modal-icon"><i class="fas fa-box"></i></div>
                 <h2 class="modal-title">Commandes Disponibles</h2>
             </div>
             
@@ -1473,7 +1605,7 @@
             <button class="modal-close" onclick="closeDeliveryModal()">&times;</button>
             
             <div class="modal-header">
-                <div class="modal-icon">🚚</div>
+                <div class="modal-icon"><i class="fas fa-truck"></i></div>
                 <h2 class="modal-title">Livraison en Cours</h2>
             </div>
             
@@ -1568,7 +1700,7 @@
                 if (currentAgent) {
                     
                     await checkAgentStatus();
-                    initNotificationSystem(); // Ajouter cette ligne
+                    // Sistema de notificaciones se inicializa automáticamente desde notifications-system.js
                 } else {
                     // Redirect to login if not authenticated
                    // window.location.href = 'login.php';
@@ -1703,7 +1835,7 @@
             if (transactions.length === 0) {
                 transactionsList.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
-                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"><i class="fas fa-box"></i></div>
                         <p>Aucune transaction pour le moment</p>
                     </div>
                 `;
@@ -1730,7 +1862,7 @@
                         <div>
                             <strong>Commande:</strong> ${transaction.id_commande}<br>
                             <strong>Prix:</strong> ${transaction.delivery_price} HTG<br>
-                            <strong>Note:</strong> ⭐ ${transaction.note}/5
+                            <strong>Note:</strong> <i class="fas fa-star" style="color: var(--primary);"></i> ${transaction.note}/5
                         </div>
                         <div style="text-align: right;">
                             <div class="transaction-status ${statusClass}">${statusText}</div>
@@ -1774,7 +1906,7 @@
             if (!Array.isArray(orders)) {
                 ordersList.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
-                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"><i class="fas fa-box"></i></div>
                         <p>Erreur : Format de données invalide</p>
                     </div>
                 `;
@@ -1784,7 +1916,7 @@
             if (orders.length === 0) {
                 ordersList.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
-                        <div style="font-size: 48px; margin-bottom: 15px;">📦</div>
+                        <div style="font-size: 48px; margin-bottom: 15px;"><i class="fas fa-box"></i></div>
                         <p>Aucune commande disponible pour le moment</p>
                     </div>
                 `;
@@ -1845,7 +1977,7 @@
                     </div>
                     
                     <button class="take-order-btn" onclick="takeOrder('${order.order_id}')">
-                        🚚 Prendre cette commande
+                        <i class="fas fa-truck"></i> Prendre cette commande
                     </button>
                 `;
                 
@@ -1864,23 +1996,23 @@
                 const result = await assignOrderToAgentAPI(orderId, AGENT_UNIQUE_ID);
                 
                 if (result.success === true) {
-                    showAlert('✅ Commande prise avec succès !', 'success');
+                    showAlert('Commande prise avec succès !', 'success');
                     closeOrdersModal();
                     // Refresh the orders list after a short delay
                     setTimeout(() => openOrdersModal(), 1500);
                 } else if (result.status === 'taken') {
-                    showAlert('⚠️ ' + result.message, 'taken');
+                    showAlert(result.message, 'taken');
                     // Refresh the orders list to show available orders
                     setTimeout(() => openOrdersModal(), 1500);
                 } else {
-                    showAlert(result.message || '❌ Erreur lors de la prise de commande', 'error');
+                    showAlert(result.message || 'Erreur lors de la prise de commande', 'error');
                     // Refresh the orders list to show available orders
                     setTimeout(() => openOrdersModal(), 1000);
                 }
                 
             } catch (error) {
                 console.error('Erreur lors de la prise de commande:', error);
-                showAlert('❌ Erreur lors de la prise de commande', 'error');
+                showAlert('Erreur lors de la prise de commande', 'error');
             } finally {
                 showLoading(false);
             }
@@ -1993,15 +2125,15 @@
                     
                     <div class="delivery-actions">
                         <button class="delivery-btn done-btn" onclick="markDeliveryDone('${delivery.order_id}', '${delivery.delivery_id}' )">
-                            ✅ Terminé
+                            <i class="fas fa-check-circle"></i> Terminé
                         </button>
                         <button class="delivery-btn feedback-btn" onclick="showFeedbackForm()">
-                            💬 Envoyer Feedback
+                            <i class="fas fa-comment"></i> Envoyer Feedback
                         </button>
                     </div>
                     
                     <div class="feedback-section">
-                        <h3 style="margin-bottom: 15px;">💬 Communication Client</h3>
+                        <h3 style="margin-bottom: 15px;"><i class="fas fa-comments"></i> Communication Client</h3>
                         
                         <div id="feedbackForm" style="display: none;">
                             <div class="feedback-form">
@@ -2047,15 +2179,15 @@
                     
                     <div class="delivery-actions">
                         <button class="delivery-btn done-btn" onclick="markDeliveryDone('${deliveryData.order_id}', '${deliveryData.delivery_id}')">
-                            ✅ Terminé
+                            <i class="fas fa-check-circle"></i> Terminé
                         </button>
                         <button class="delivery-btn feedback-btn" onclick="showFeedbackForm()">
-                            💬 Envoyer Feedback
+                            <i class="fas fa-comment"></i> Envoyer Feedback
                         </button>
                     </div>
                     
                     <div class="feedback-section">
-                        <h3 style="margin-bottom: 15px;">💬 Communication Client</h3>
+                        <h3 style="margin-bottom: 15px;"><i class="fas fa-comments"></i> Communication Client</h3>
                         
                         <div id="feedbackForm" style="display: none;">
                             <div class="feedback-form">
@@ -2223,19 +2355,19 @@
                     clearDeliveryFeedbacks(orderId);
                     
                     // Afficher le message renvoyé par le backend (ou message par défaut)
-                    showAlert('✅ ' + (result.message || 'Livraison terminée ! Messages nettoyés.'), 'success');
+                    showAlert(result.message || 'Livraison terminée ! Messages nettoyés.', 'success');
                     closeDeliveryModal();
                     currentDelivery = null;
                     
                     // Refresh des données si nécessaire
                 } else {
                     // Afficher message d'erreur fourni par le backend si présent
-                    showAlert('❌ ' + (result.message || 'Erreur lors de la finalisation de la livraison'), 'error');
+                    showAlert(result.message || 'Erreur lors de la finalisation de la livraison', 'error');
                 }
                 
             } catch (error) {
                 console.error('Erreur lors de la finalisation:', error);
-                showAlert('❌ Erreur lors de la finalisation de la livraison', 'error');
+                showAlert('Erreur lors de la finalisation de la livraison', 'error');
             } finally {
                 showLoading(false);
             }
@@ -2305,7 +2437,39 @@
 
         function showAlert(message, type = 'success') {
             const alert = document.getElementById('alert');
-            alert.textContent = message;
+            
+            // Vider l'alerte
+            alert.innerHTML = '';
+            
+            // Créer un map des icônes selon le type
+            const iconMap = {
+                'success': 'fa-check-circle',
+                'error': 'fa-times-circle',
+                'warning': 'fa-exclamation-triangle',
+                'info': 'fa-info-circle',
+                'taken': 'fa-exclamation-triangle'
+            };
+            
+            // Ajouter l'icône si le message contient une balise <i>
+            if (message.includes('<i class=')) {
+                // Extraire et créer l'icône
+                const iconMatch = message.match(/class="([^"]+)"/);
+                const messageText = message.replace(/<i class="[^"]*"><\/i>\s*/g, '');
+                
+                const icon = document.createElement('i');
+                icon.className = iconMatch ? iconMatch[1] : `fas ${iconMap[type] || 'fa-info'}`;
+                
+                alert.appendChild(icon);
+                alert.appendChild(document.createTextNode(' ' + messageText));
+            } else {
+                // Ajouter une icône par défaut selon le type
+                const icon = document.createElement('i');
+                icon.className = `fas ${iconMap[type] || 'fa-info'}`;
+                
+                alert.appendChild(icon);
+                alert.appendChild(document.createTextNode(' ' + message));
+            }
+            
             alert.className = `alert ${type}`;
             alert.classList.add('show');
             
@@ -2586,64 +2750,8 @@
         }
 
         // ===== NOTIFICATIONS =====
-        let notificationCheckInterval = null;
-        let activeNotifications = [];
-        
-        // Initialiser le système de notifications
-        function initNotificationSystem() {
-            // Charger les notifications immédiatement
-            loadNotifications();
-            
-            // Puis toutes les 30 secondes
-            notificationCheckInterval = setInterval(() => {
-                if (!document.hidden) {
-                    loadNotifications();
-                }
-            }, 30000);
-        }
-        
-        async function loadNotifications() {
-            try {
-                const response = await fetch(`backend/notifications/unread`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('access_token'),
-                    }
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
-                const data = await response.json();
-                
-                // Vérifier format backend: {nbrs: 1, notifications: {...}}
-                // Le backend retourne un objet unique, pas un array
-                if (!data.notifications || data.nbrs === 0) {
-                    console.log('Aucune notification');
-                    return;
-                }
-                
-                // Traiter la notification - peut être un objet ou un array
-                let notificationsArray = Array.isArray(data.notifications) ? data.notifications : [data.notifications];
-                
-                notificationsArray.forEach(notification => {
-                    // Vérifier si la notification n'est pas déjà affichée
-                    if (!activeNotifications.find(n => n.id === notification.id)) {
-                        displayNotification(notification);
-                        activeNotifications.push(notification);
-                    }
-                });
-                
-            } catch (error) {
-                console.error('Erreur lors du chargement des notifications:', error);
-            }
-        }
-        
-        function displayNotification(notification) {
-            // ...existing code...
-        }
+        // Sistema de notificaciones cargado desde assets/js/notifications-system.js
+        // Se inicializa automáticamente si hay access_token en localStorage
 
         function closeDeliveryModal() {
             document.getElementById('deliveryModal').style.display = 'none';
@@ -2710,6 +2818,10 @@
         }
         // Intégrer afterDataRender dans displayTransactions / displayAvailableOrders / displayCurrentDelivery
     </script>
+    
+    <!-- Sistema de Notificaciones Global -->
+    <script src="assets/js/notifications-system.js"></script>
+    
     <?php include 'heartbeat.php'; ?>
 </body>
 </html>

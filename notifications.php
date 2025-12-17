@@ -181,7 +181,7 @@
 					return;
 				}
 
-				const response = await fetch(`${window.location.origin}/kodPwomo/backend/notifications/all`, {
+				const response = await fetch(`backend/notifications/all`, {
 					method: 'GET',
 					headers: {
 						'Accept': 'application/json',
@@ -292,52 +292,7 @@
 					status: 'read'
 				};
 
-				const response = await fetch(`${window.location.origin}/kodPwomo/backend/notifications/status`, {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json',
-						'Accept': 'application/json',
-						'Authorization': 'Bearer ' + accessToken
-					},
-					body: JSON.stringify(payload)
-				});
-
-				const result = await response.json();
-				console.log('✅ Réponse du serveur:', result);
-
-				if (result.status === 'success') {
-					// Mettre à jour l'état local
-					state.items = state.items.map(n => ({...n, unread:false}));
-					console.log('✅ Toutes les notifications marquées comme lues');
-					render();
-				} else {
-					console.error('❌ Erreur serveur:', result.error);
-				}
-
-			} catch (error) {
-				console.error('❌ Erreur:', error);
-			} finally {
-				// Réactiver le bouton
-				const btn = document.getElementById('markAllRead');
-				btn.disabled = false;
-				btn.dataset.loading = 'false';
-				btn.style.opacity = '1';
-				btn.style.cursor = 'pointer';
-				btn.textContent = 'Tout marquer lu';
-			}
-		});
-
-		// ============ METTRE À JOUR LE STATUS D'UNE NOTIFICATION ============
-		async function updateNotificationStatus(notificationId, status, accessToken) {
-			try {
-				const payload = {
-					notification_id: notificationId,
-					status: status
-				};
-
-				console.log('📡 Mise à jour du status:', payload);
-
-				const response = await fetch(`${window.location.origin}/kodPwomo/backend/notifications/status`, {
+				const response = await fetch(`backend/notifications/status`, {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
@@ -495,7 +450,7 @@
 
 					console.log('🗑️ Suppression de la notification:', n.id);
 					
-					const response = await fetch(`${window.location.origin}/kodPwomo/backend/notifications/${n.id}`, {
+					const response = await fetch(`backend/notifications/${n.id}`, {
 						method: 'DELETE',
 						headers: {
 							'Content-Type': 'application/json',

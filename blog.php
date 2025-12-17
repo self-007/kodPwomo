@@ -892,7 +892,7 @@
             try {
                 console.log('📡 Chargement des posts du blog...');
                 
-                const response = await fetch(`${window.location.origin}/kodPwomo/backend/blog/all`, {
+                const response = await fetch(`backend/blog/all`, {
                     method: 'GET',
                     headers: {
                         'Accept': 'application/json'
@@ -1066,7 +1066,7 @@
                 
                 console.log('📤 Envoi du post:', payload);
                 
-                const response = await fetch(`${window.location.origin}/kodPwomo/backend/blog/new`, {
+                const response = await fetch(`backend/blog/new`, {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/json',

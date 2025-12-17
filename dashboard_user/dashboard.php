@@ -609,9 +609,9 @@
             const universitySelect = qs('#university');
 
             // ============ API CONFIGURATION ============
-            const API_BASE = `${window.location.origin}/kodPwomo/backend/deliveries/user`;
-            const UNIVERSITIES_API = `${window.location.origin}/kodPwomo/backend/universities`;
-            const USER_DATA_API = `${window.location.origin}/kodPwomo/backend/users/datas`;
+            const API_BASE = `../backend/deliveries/user`;
+            const UNIVERSITIES_API = `../backend/universities`;
+            const USER_DATA_API = `../backend/users/datas`;
             
             // ============ CHARGER LES DONNÉES UTILISATEUR ============
             async function loadUserData() {
@@ -1454,7 +1454,7 @@
                 // ============ ENVOI AU SERVEUR ============
                 try {
                     console.log('📡 Envoi des données au serveur...');
-                    const response = await fetch(`${window.location.origin}/kodPwomo/backend/users/update`, {
+                    const response = await fetch(`../backend/users/update`, {
                         method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1546,7 +1546,7 @@
                 // Envoi au serveur
                 try {
                     console.log('📡 Envoi du formulaire de support au serveur...');
-                    const response = await fetch(`${window.location.origin}/kodPwomo/backend/support/create`, {
+                    const response = await fetch(`../backend/support/create`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -1605,7 +1605,7 @@
                     if (confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
                         localStorage.removeItem('access_token');
                         localStorage.removeItem('refresh_token');
-                        window.location.href = `${window.location.origin}/kodPwomo/login.php`;
+                        window.location.href = `../login.php`;
                     }
                 });
             }

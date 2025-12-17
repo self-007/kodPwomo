@@ -83,7 +83,7 @@ async function logout() {
     } finally {
         // Clear localStorage et redirection après traitement
         localStorage.clear();
-       window.location.href = window.location.origin + '/kodPwomo/login.php';
+       window.location.href = 'login.php';
     }
 }
 

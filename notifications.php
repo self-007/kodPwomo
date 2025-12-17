@@ -107,10 +107,12 @@
 					<span></span><span></span><span></span>
 				</button>
 				<div class="nav-menu" id="navMenu" role="menu">
-					<a href="dashboard_user/dashboard.php" role="menuitem">Dashboard</a>
+					<a href="dashboard.php" role="menuitem">Dashboard</a>
 					<a href="boutique.php" role="menuitem">Boutique</a>
 					<a href="agent.php" role="menuitem">Restaurant</a>
 					<a href="index.php" role="menuitem">Home</a>
+					<a href="contact.php" role="menuitem">Contact</a>
+					<a href="connexion.php" role="menuitem" id="connexionLink">Connexion</a>
 				</div>
 			</nav>
 		</div>

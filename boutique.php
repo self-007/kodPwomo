@@ -968,7 +968,7 @@
                     <a href="dashboard.php" role="menuitem">Dashboard</a>
                     <a href="agent.php" role="menuitem">Restaurant</a>
                     <a href="contact.php" role="menuitem">Contact</a>
-                    <a href="connexion.php" role="menuitem" id="connexionLink">Connexion</a>
+                    <a href="login.php" role="menuitem" id="connexionLink">Connexion</a>
                 </div>
             </nav>
         </div>

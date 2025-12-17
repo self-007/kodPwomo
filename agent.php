@@ -1496,8 +1496,8 @@
                         <a href="boutique.php" role="menuitem">Boutique</a>
                         <a href="#restaurant" role="menuitem">Restaurant</a>
                         <a href="index.php" role="menuitem">Home</a>
-                        <a href="index.php" role="menuitem">Deconnexion</a>
-
+                        <a href="login.php" role="menuitem" id="logoutLink">Deconnexion</a>
+                        
                     </div>
                 </nav>
             </div>

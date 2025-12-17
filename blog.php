@@ -729,7 +729,7 @@
                     <a href="blog.php">Blog</a>
                     <a href="index.php">Accueil</a>
                     <a href="contact.php">Contact</a>
-                    <a href="connexion.php" id="connexionLink">Connexion</a>
+                    <a href="login.php" id="connexionLink">Connexion</a>
                 </div>
             </nav>
         </div>

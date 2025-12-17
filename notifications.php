@@ -109,7 +109,7 @@
 				<div class="nav-menu" id="navMenu" role="menu">
 					<a href="dashboard.php" role="menuitem">Dashboard</a>
 					<a href="boutique.php" role="menuitem">Boutique</a>
-					<a href="agent.php" role="menuitem">Restaurant</a>
+					<a href="blog.php" role="menuitem">blog</a>
 					<a href="index.php" role="menuitem">Home</a>
 					<a href="contact.php" role="menuitem">Contact</a>
 					<a href="login.php" role="menuitem" id="connexionLink">Connexion</a>
@@ -291,6 +291,53 @@
 					all: true,
 					status: 'read'
 				};
+
+				const response = await fetch(`backend/notifications/status`, {
+					method: 'PUT',
+					headers: {
+						'Content-Type': 'application/json',
+						'Accept': 'application/json',
+						'Authorization': 'Bearer ' + accessToken
+					},
+					body: JSON.stringify(payload)
+				});
+
+				const result = await response.json();
+				console.log('📥 Réponse du serveur:', result);
+
+				if (!response.ok) {
+					console.error('❌ Erreur HTTP:', response.status, result.error);
+					return;
+				}
+
+				if (result.status === 'success') {
+					console.log('✅ Status mis à jour');
+				} else {
+					console.error('❌ Erreur serveur:', result.error);
+				}
+
+			} catch (error) {
+				console.error('❌ Erreur reseau:', error);
+			} finally {
+				// Réactiver le bouton
+				const btn = document.getElementById('markAllRead');
+				btn.disabled = false;
+				btn.dataset.loading = 'false';
+				btn.style.opacity = '1';
+				btn.style.cursor = 'pointer';
+				btn.textContent = 'Tout marquer lu';
+			}
+		});
+
+		// ============ METTRE À JOUR LE STATUS D'UNE NOTIFICATION ============
+		async function updateNotificationStatus(notificationId, status, accessToken) {
+			try {
+				const payload = {
+					notification_id: notificationId,
+					status: status
+				};
+
+				console.log('📡 Mise à jour du status:', payload);
 
 				const response = await fetch(`backend/notifications/status`, {
 					method: 'PUT',

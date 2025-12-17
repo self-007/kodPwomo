@@ -366,6 +366,19 @@
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 4h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Déconnexion
                 </a>
+                <hr style="margin:12px 0; border:none; border-top:1px solid #e5e7eb">
+                <a href="../../index.php" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Accueil
+                </a>
+                <a href="../../blog.php" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 8h16M4 13h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    Blog
+                </a>
+                <a href="../../boutique.php" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 2L6.46 9H2l5.91 4.29L7.46 21 12 17.29 16.54 21l-1.45-7.71L21 9h-4.46L9 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Boutique
+                </a>
             </nav>
         </aside>
         <div class="overlay" id="overlay" aria-hidden="true"></div>
@@ -1191,9 +1204,13 @@
             nav.addEventListener('click', (e)=>{
                 const link = e.target.closest('.nav-link');
                 if(!link) return;
-                e.preventDefault();
                 const target = link.getAttribute('data-target');
-                if(target) setActiveSection(target);
+                // Solo prevenir el comportamiento por défault si c'est un lien interne (avec data-target)
+                if(target) {
+                    e.preventDefault();
+                    setActiveSection(target);
+                }
+                // Sinon laisser le lien fonctionner normalement (pour Accueil, Blog, Boutique)
             });
 
             // Keyboard access

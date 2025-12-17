@@ -126,6 +126,8 @@
             flex-direction: column;
             z-index: 1000;
             animation: slideDown 0.3s ease;
+            max-height: 500px;
+            overflow-y: auto;
         }
         
         @keyframes slideDown {
@@ -956,12 +958,13 @@
             <div class="dropdown-menu" id="dropdownMenu">
                 <a href="#accueil"><i class="fas fa-home" style="vertical-align: middle; margin-right: 8px;"></i>Accueil</a>
                 <a href="#services"><i class="fas fa-cubes" style="vertical-align: middle; margin-right: 8px;"></i>Services</a>
-                <a href="#products"><i class="fas fa-shopping-bag" style="vertical-align: middle; margin-right: 8px;"></i>Produits</a>
+                <a href="dashboard.php"><i class="fas fa-chart-line" style="vertical-align: middle; margin-right: 8px;"></i>Dashboard</a>
+                <a href="blog.php"><i class="fas fa-newspaper" style="vertical-align: middle; margin-right: 8px;"></i>Blog</a>
                 <a href="#campus"><i class="fas fa-comments" style="vertical-align: middle; margin-right: 8px;"></i>Avis</a>
                 <a href="#comment"><i class="fas fa-question-circle" style="vertical-align: middle; margin-right: 8px;"></i>Comment ça marche</a>
                 <hr>
                 <a href="boutique.php"><i class="fas fa-store" style="vertical-align: middle; margin-right: 8px;"></i>Boutique</a>
-                <a href="agent.php"><i class="fas fa-bicycle" style="vertical-align: middle; margin-right: 8px;"></i>Devenir agent</a>
+                
                 <hr>
                 <a href="login.php" style="color: var(--primary); font-weight: 700;"><i class="fas fa-sign-in-alt" style="vertical-align: middle; margin-right: 8px;"></i>Connexion</a>
                 <hr>

@@ -52,7 +52,7 @@ async function heartBeat() {
         } else if (data.action === 'out' || data.error === 'expired') {
             // Session expirée
             console.log('[Heartbeat] Session expirée, redirection...');
-            window.location.href = window.location.origin + '/kodPwomo/login.php';
+            window.location.href = 'login.php';
         }
     } catch (error) {
         console.error('[Heartbeat] Erreur:', error);

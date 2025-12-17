@@ -684,9 +684,9 @@
             }
 
             // ============ API CONFIGURATION ============
-            const API_BASE = `backend/deliveries/user`;
-            const UNIVERSITIES_API = `backend/universities`;
-            const USER_DATA_API = `backend/users/datas`;
+            const API_BASE = `backend/deliveries/user`;//chanded
+            const UNIVERSITIES_API = `backend/universities`;//chanded
+            const USER_DATA_API = `backend/users/datas`;//changed
             
             // ============ CHARGER LES DONNÉES UTILISATEUR ============
             async function loadUserData() {

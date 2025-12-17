@@ -1,6 +1,6 @@
 <?php
 $host = "localhost";
-$mode = 'local'; //local or production
+$mode = 'production'; //local or production
 if($mode == 'local'){
     // For local development, you can uncomment the following lines and comment the above ones
     $userName = "root";

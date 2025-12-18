@@ -45,7 +45,7 @@ function setAgentAvailability() {
     global $datas;
     global $user_role;
     if($user_role !== 'agent' && $user_role !== 'manager'){
-        response(['error' => 'Unauthorized - Agents only'], 401);
+        response(['error' => 'vous n\'êtes pas autorisé à effectuer cette action'], 401);
     }
     //verify if data exist or empty
     if(!isset($datas['isAvailable'])){
@@ -58,15 +58,15 @@ function setAgentAvailability() {
     $agentId = sanitizeInput($agentId);
     $isAvailable = sanitizeInput($datas['isAvailable']);
     call_user_func_array('getAgentById', [$agentId]); // Check if agent exists
-    $isAvailable = $isAvailable !== 'active' ? 'inactive' : 'active';
+    $isAvailable = $isAvailable == false ? 'inactive' : 'active';
     global $connection;
     $stmt = $connection->prepare("UPDATE users SET status = :is_available WHERE id_unique = :id AND role = 'agent'");
     $stmt->bindParam(':is_available', $isAvailable);
     $stmt->bindParam(':id', $agentId);
     if ($stmt->execute()) {
-        response(['message' => 'Agent availability updated successfully to ' . $isAvailable, 'success' => true], 200);
+        response(['message' => 'Statut mis à jour avec succès: ' . $isAvailable, 'success' => true], 200);
     } else {
-        response(['error' => 'Failed to update agent availability'], 500);
+        response(['error' => 'Échec de la mise à jour de la disponibilité de l\'agent'], 500);
     }
 }
 //get tops agents by university id

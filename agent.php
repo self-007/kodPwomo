@@ -1688,31 +1688,54 @@
             startAutoRefresh();
         });
 
+        // ===== API ERROR HANDLER =====
+        function handleAPIError(response, data) {
+            // Vérifier si status est 401 ou 403
+            if (response.status === 401 || response.status === 403) {
+                // Rediriger vers login après 5 secondes
+                showAlert('Session expirée. Redirection vers login...', 'warning');
+                setTimeout(() => {
+                    localStorage.removeItem('access_token');
+                    window.location.href = 'login.php';
+                }, 5000);
+                return null;
+            }
+            
+            // Vérifier si data contient un error
+            if (data && data.error) {
+                return {
+                    success: false,
+                    message: data.error,
+                    error: data.error
+                };
+            }
+            
+            return null;
+        }
+
         // ===== AGENT DATA FUNCTIONS =====
         async function loadAgentData() {
             showLoading(true);
             
             try {
-                // Simulate loading agent data from API
-                // Replace this with actual API call
                 currentAgent = await loadAgentFromAPI();
                 
                 if (currentAgent) {
-                    
                     await checkAgentStatus();
-                    // Sistema de notificaciones se inicializa automáticamente desde notifications-system.js
                 } else {
-                    // Redirect to login if not authenticated
-                   // window.location.href = 'login.php';
+                    // Si null, c'est probablement une redirection 401/403 en cours
+                    // Ne rien faire, handleAPIError s'en charge
                 }
                 
             } catch (error) {
+                // Si c'est une erreur de redirection 401/403, ne pas afficher d'alerte supplémentaire
+                if (error.message && error.message.includes('Session expirée')) {
+                    // Déjà géré par handleAPIError
+                    return;
+                }
+                
                 console.error('Erreur lors du chargement des données agent:', error);
                 showAlert('Erreur lors du chargement des données', 'error');
-                // Redirect to login on error
-                setTimeout(() => {
-                //    window.location.href = 'login.php';
-                }, 2000);
             } finally {
                 showLoading(false);
             }
@@ -2274,11 +2297,19 @@
                     })
                 });
                 
+                const data = await response.json();
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) throw new Error(errorResponse.message);
+                
+                // Si 401/403, handleAPIError redirige et retourne null
+                if (response.status === 401 || response.status === 403) return null;
+                
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(data.message || `Erreur serveur ${response.status}`);
                 }
                 
-                const data = await response.json();
                 return data;
             } catch (error) {
                 console.error('Erreur API feedback:', error);
@@ -2392,20 +2423,30 @@
                 try {
                     data = await response.json();
                 } catch (e) {
-                    // body vide ou non JSON
                     data = {};
                 }
-
-                if (!response.ok) {
-                    // retourner success=false et message backend si fourni
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) {
                     return {
                         success: false,
-                        message: data.message || `Erreur serveur (${response.status})`,
+                        message: errorResponse.message,
+                        error: errorResponse.error
+                    };
+                }
+                
+                // Si 401/403, handleAPIError redirige et retourne null
+                if (response.status === 401 || response.status === 403) return null;
+
+                if (!response.ok) {
+                    return {
+                        success: false,
+                        message: data.message || data.error || `Erreur serveur (${response.status})`,
                         _data: data
                     };
                 }
 
-                // Réponse OK
                 return {
                     success: (typeof data.success !== 'undefined') ? Boolean(data.success) : true,
                     message: data.message || 'Livraison terminée avec succès',
@@ -2415,7 +2456,8 @@
                 console.error('Erreur API completeDelivery:', error);
                 return {
                     success: false,
-                    message: 'Erreur lors de la communication avec le serveur'
+                    message: 'Erreur lors de la communication avec le serveur',
+                    error: error.message
                 };
             }
         }
@@ -2509,25 +2551,38 @@
 
         // ===== API FUNCTIONS - USING YOUR BACKEND =====
         async function loadAgentFromAPI() {
-            // Using your backend with the unique ID
-            const agentUniqueId = 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1';
-            
-            // For now simulate, but this will call your backend
-            return new Promise((resolve) => {
-                setTimeout(() => {
-                    resolve({
-                        id_unique: agentUniqueId,
-                        name: 'Jean Baptiste',
-                        email: 'jean@kodpwomo.com',
-                        phone: '+509 1234-5678',
-                        is_available: false
-                    });
-                }, 1000);
-            });
+            // Using your backend - obtener datos de disponibilité et stats de livraison
+            try {
+                const response = await fetch('backend/deliveries/agent', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('access_token')
+                    }
+                });
+                
+                const data = await response.json();
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) throw new Error(errorResponse.message);
+                
+                // Si 401/403, handleAPIError redirige et retourne null, donc on n'arrive pas ici
+                if (response.status === 401 || response.status === 403) return null;
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Erreur lors du chargement du profil');
+                }
+                
+                // Retourner les données du backend
+                return data;
+            } catch (error) {
+                console.error('Erreur lors du chargement du profil agent:', error);
+                throw error;
+            }
         }
 
         async function getAgentStatusFromAPI(agentUniqueId) {
-            // Utilise votre route GET via .htaccess rewrite
             try {
                 const response = await fetch(`backend/agents/availability`,
                 {
@@ -2537,26 +2592,29 @@
                         'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     }
                 });
-                if (!response.ok) {
-                    throw new Error('Failed to get agent status');
-                }
+                
                 const data = await response.json();
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) throw new Error(errorResponse.message);
+                
+                // Si 401/403, handleAPIError redirige et retourne null
+                if (response.status === 401 || response.status === 403) return null;
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Erreur lors de la récupération du statut');
+                }
+                
                 return {
-                    is_available: Boolean(data.success), // Convertit 1/0 en true/false
-                   
+                    is_available: Boolean(data.is_available)
                 };
             } catch (error) {
-                console.log('Backend call failed, using simulated data:', error);
-                // Fallback en cas d'erreur
-                return {
-                    is_available: false,
-                    last_activity: new Date().toISOString()
-                };
+                throw error;
             }
         }
 
         async function updateAgentStatusAPI(agentUniqueId, isAvailable) {
-            // PUT avec JSON data selon votre backend
             try {
                 const response = await fetch('backend/agents/availability', {
                     method: 'PUT',
@@ -2564,29 +2622,31 @@
                         'Content-Type': 'application/json',
                         'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     },
-                    body: JSON.stringify({      // Correspond à votre backend
-                        isAvailable: isAvailable     // Correspond à votre backend
+                    body: JSON.stringify({
+                        isAvailable: isAvailable
                     })
                 });
                 
+                const data = await response.json();
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) throw new Error(errorResponse.message);
+                
+                // Si 401/403, handleAPIError redirige et retourne null
+                if (response.status === 401 || response.status === 403) return null;
+                
                 if (!response.ok) {
-                    throw new Error('Failed to update agent status');
+                    throw new Error(data.message || 'Erreur lors de la mise à jour du statut');
                 }
                 
-                return await response.json();
+                return data;
             } catch (error) {
-
-                console.log('Backend call failed, using simulation');
-                // Fallback simulation
-                return {
-                    success: false,
-                    message: 'Status updated successfully (simulated)'
-                };
+                throw error;
             }
         }
 
         async function getAgentTransactionsAPI(agentId) {
-            // Utilise votre vraie route backend
             try {
                 const response = await fetch(`backend/deliveries/agent`,
                 {
@@ -2596,10 +2656,19 @@
                         'Authorization': 'Bearer ' + localStorage.getItem('access_token')
                     }
                 });
-                if (!response.ok) {
-                    throw new Error('Failed to get agent transactions');
-                }
+                
                 const data = await response.json();
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) throw new Error(errorResponse.message);
+                
+                // Si 401/403, handleAPIError redirige et retourne null
+                if (response.status === 401 || response.status === 403) return null;
+                
+                if (!response.ok) {
+                    throw new Error(data.message || 'Erreur lors de la récupération des transactions');
+                }
                 
                 // Adapter les données backend au format attendu par le frontend
                 return {
@@ -2611,27 +2680,7 @@
                     }
                 };
             } catch (error) {
-                console.log('Backend call failed, using simulated data:', error);
-                // Fallback simulation
-                return {
-                    deliveries: [
-                        {
-                            id: 'tx_001',
-                            order_id: '12345',
-                            client_name: 'Marie Dupont',
-                            university_name: 'UEH', 
-                            status: 'completed',
-                            total_amount: 850,
-                            commission: 85,
-                            date: '2024-01-15T10:30:00Z'
-                        }
-                    ],
-                    stats: {
-                        totalDeliveries: 1,
-                        totalAmount: 850,
-                        completedDeliveries: 1
-                    }
-                };
+                throw error;
             }
         }
 
@@ -2645,11 +2694,18 @@
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
                 const data = await response.json();
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) throw new Error(errorResponse.message);
+                
+                // Si 401/403, handleAPIError redirige et retourne null
+                if (response.status === 401 || response.status === 403) return null;
+                
+                if (!response.ok) {
+                    throw new Error(data.message || `Erreur serveur ${response.status}`);
+                }
                 
                 // Retourner un array, jamais undefined
                 if (Array.isArray(data.orders)) {
@@ -2657,12 +2713,12 @@
                 } else if (Array.isArray(data)) {
                     return data;
                 } else {
-                    return [];
+                    throw new Error('Format de données invalide du serveur');
                 }
             } catch (error) {
                 console.error('Erreur lors de la récupération des commandes disponibles:', error);
                 showAlert('Erreur lors du chargement des commandes', 'error');
-                return [];
+                throw error;
             }
         }
 
@@ -2671,7 +2727,7 @@
         async function assignOrderToAgentAPI(orderId, agentId) {
             try {
                 const controller = new AbortController();
-                const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 seconds timeout
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
 
                 const response = await fetch('backend/orders/assign', {
                     method: 'POST',
@@ -2686,15 +2742,35 @@
                 });
 
                 clearTimeout(timeoutId);
-
-                if (!response.ok) {
-                    const errorData = await response.json().catch(() => ({}));
-                    throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-                }
-
+                
                 const data = await response.json();
                 
-                // ...existing code...
+                // Vérifier les erreurs 401/403 (redirection)
+                if (response.status === 401 || response.status === 403) {
+                    handleAPIError(response, data);
+                    return null;
+                }
+                
+                // Si data.error existe, retourner l'erreur (pas de throw)
+                if (data.error) {
+                    return {
+                        success: false,
+                        status: data.status || 'error',
+                        message: data.error,
+                        error: data.error
+                    };
+                }
+
+                if (!response.ok) {
+                    return {
+                        success: false,
+                        status: 'error',
+                        message: data.message || `Erreur serveur ${response.status}`,
+                        error: data.message || `Erreur serveur ${response.status}`
+                    };
+                }
+
+                return data;
             } catch (error) {
                 console.error('Erreur API assignOrder:', error);
                 
@@ -2707,13 +2783,15 @@
                 } else if (error instanceof TypeError) {
                     errorMessage = 'Erreur de connexion au serveur. Vérifiez votre connexion internet.';
                     errorStatus = 'connection';
+                } else {
+                    errorMessage = error.message || errorMessage;
                 }
                 
                 return {
                     success: false,
                     status: errorStatus,
                     message: errorMessage,
-                    error: error.message
+                    error: errorMessage
                 };
             }
         }
@@ -2728,11 +2806,18 @@
                     }
                 });
                 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                
                 const data = await response.json();
+                
+                // Vérifier les erreurs 401/403 et data.error
+                const errorResponse = handleAPIError(response, data);
+                if (errorResponse !== null) throw new Error(errorResponse.message);
+                
+                // Si 401/403, handleAPIError redirige et retourne null
+                if (response.status === 401 || response.status === 403) return null;
+                
+                if (!response.ok) {
+                    throw new Error(data.message || `Erreur serveur ${response.status}`);
+                }
                 
                 // Retourner les données en toute sécurité
                 if (Array.isArray(data.deliveries) && data.deliveries.length > 0) {

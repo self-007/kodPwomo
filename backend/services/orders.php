@@ -226,7 +226,7 @@ function getPendingOrderData(){
     $stmt->execute();
     $nbrs = $stmt->rowCount();
     if($nbrs == 0){
-        return ['nbrs' => 0, 'orders' => []];
+        response(['nbrs' => 0, 'orders' => []], 200);
     }
     $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     response(['orders' => $orders, 'nbrs' => $nbrs], 200);

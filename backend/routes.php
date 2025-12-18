@@ -77,7 +77,7 @@ $routes =  [
         '/setAdm/(\w+)' => ['Adm/main_adm.php', 'setUserAdm'], //assign admin role to user for university by super admin
         '/setAgent/(\w+)' => ['Adm/adm.php', 'setUserAgent'], //assign agent role to user for university by super admin
         '/setUser/(\w+)' => ['Adm/adm.php', 'setUserClient'], //assign user role to user for university by super admin
-        '/delivery/status/(\d+)' => ['services/deliveries.php', 'updateDeliveryStatus'], //update delivery status
+        '/delivery/status/(\d+)' => ['services/deliveries.php', 'updateDeliveryStatus'], //update delivery status by agent set it done
         '/logout' => ['services/logout.php', 'logout'], //logout function for all users
         '/rate/agent' => ['services/deliveries.php', 'rateAgent'], //rate agent after delivery
     ],

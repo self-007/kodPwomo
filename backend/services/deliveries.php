@@ -4,26 +4,38 @@ require_once __DIR__.'/../agents/agents.php';
 function createDelivery( $status = 'processing') {
     global $datas;
     //verify datas
-    if (empty($datas['order_id']) || empty($datas['agent_id'])) {
-        response(['error' => 'Invalid order ID or agent ID'], 400);
+    if (empty($datas['order_id']) ) {
+        response(['error' => 'Invalid order ID '], 400);
         
     }
+    //get the agent id by token
+        $user = getBearerToken();
+        $role = $user->role;
+        $agentId = sanitizeInput($user->sub);
+        if($role !== 'manager' && $role !== 'SUPER-ADMIN' && $role !== 'agent'){
+            response(['error' => 'vous n\'êtes pas autorisé à effectuer cette action'], 403);
+        }
     $orderId = sanitizeInput($datas['order_id']);
-    $agentId = sanitizeInput($datas['agent_id']);
+    $agentId = sanitizeInput($agentId);
     // Verify if that order exists
     $order = getOrderById($orderId)['nbrs'];
     if ($order === 0) {
-        response(['error' => 'this order doesn\'t exist'], 400);
+        response(['error' => 'Cette commande n\'existe pas'], 400);
     }
     // Verify if that agent exists
     $agent = getAgentById($agentId);
     if (!isset($agent)) {
-        response(['error' => 'your agent ID is invalid'], 404);
+        response(['error' => 'Votre ID d\'agent est invalide'], 404);
     }
     //verify if deliveries for that order already exists
     $vrfDeliveries = getDeliveriesByOrderId($orderId);
     if ($vrfDeliveries !== null) {
-        response(['error' => 'Delivery for this order already exists', 'status' => 'taken'], 200);
+        response(['error' => 'Une livraison pour cette commande existe déjà', 'status' => 'taken'], 200);
+    }
+    //verify if that agent doesn't have a pending delivery
+    $pendingDeliveries = getPendingDeliveriesByAgent($agentId);
+    if($pendingDeliveries['nbrs'] > 0){
+        response(['error' => 'vous avez une livraison en attente. Veuillez la terminer avant d\'en prendre une nouvelle.'], 400);
     }
     //get the order total price
     $total_price = getOrderById($orderId)['total_price'];
@@ -51,14 +63,14 @@ function createDelivery( $status = 'processing') {
 
 // update delivery status
 function updateDeliveryStatus($deliveryId) {
-    global $datas;
+    global $datas, $connection;
     //verify datas
     if(!isset($datas['status']) || !isset($datas['order_id'])) {
         response(['error' => 'Invalid status'], 400); 
     }
     // verify int value or superior to 0
     if (intval($deliveryId) <= 0 || empty($datas['status']) || empty($datas['order_id'])) {
-        response(['error' => 'Invalid delivery ID or status'], 400);
+        response(['error' => ' il ya un probleme avec cette action'], 400);
     }
     $status = sanitizeInput($datas['status']);
     $orderId = sanitizeInput($datas['order_id']);
@@ -67,16 +79,30 @@ function updateDeliveryStatus($deliveryId) {
     //verify the role
     $role = $user->role;
     if($role !== 'agent' && $role !== 'manager' && $role !== 'SUPER-ADMIN'){
-        response(['error' => 'Unauthorized access'], 403);
+        response(['error' => 'vous n\'êtes pas autorisé à effectuer cette action'], 403);
     }
-    global $connection;
+    //make sure the user has confirmed first, by verifying note, feedback in deliveries table
+    $stmt = $connection->prepare("SELECT * FROM deliveries WHERE id = :id AND id_agent = :agent_id AND id_commande = :order_id");
+    $stmt->bindParam(':id', $deliveryId);
+    $stmt->bindParam(':agent_id', $agentId);
+    $stmt->bindParam(':order_id', $orderId);
+    $stmt->execute();
+    $delivery = $stmt->fetch(PDO::FETCH_ASSOC);
+    // get note and feedback
+    $note = $delivery['note'];
+    $feedback = $delivery['feedback'];
+    // verify if empty or null
+    if (empty($note) || is_null($note) || empty($feedback) || is_null($feedback)) {
+        response(['error' => 'le client n\'a pas encore confirmé la livraison'], 400);
+    }
+    //update delivery status
     $stmt = $connection->prepare("UPDATE deliveries SET status = :status WHERE id = :id AND id_agent = :agent_id AND id_commande = :order_id");
     $stmt->bindParam(':status', $status);
     $stmt->bindParam(':id', $deliveryId);
     $stmt->bindParam(':agent_id', $agentId);
     $stmt->bindParam(':order_id', $orderId);
     if ($stmt->execute()) {
-        response(['message' => 'Delivery status updated successfully']);
+        response(['message' => 'livraison mise à jour avec succès, Felicitations!!', 'status' => 'success'], 200);
     } else {
         response(['error' => 'Failed to update delivery status'], 500);
     }
@@ -93,7 +119,7 @@ function rateAgent() {
     $orderId = sanitizeInput($datas['order_id']);
     $comment = isset($datas['feedback']) ? sanitizeInput($datas['feedback']) : null;
     // verify int value or superior to 0
-    if (intval($agentId) <= 0 || intval($rating) < 1 || intval($rating) > 10) {
+    if (empty($agentId) || intval($rating) < 1 || intval($rating) > 5) {
         response(['error' => 'Invalid agent ID or rating'], 400);
     }
     $rating = intval($rating);
@@ -108,28 +134,32 @@ function rateAgent() {
     $stmt->bindParam(':user_id', $userId);
     $stmt->execute();
     if ($stmt->rowCount() === 0) {
-        response(['error' => 'You have no delivery with this order ID'], 400);
+        response(['error' => 'vous n\'avez pas de livraison avec cet ID de commande'], 400);
     }
     //verify if the agentCode belongs to that agent
     $stmt = $connection->prepare("SELECT * FROM deliveries d JOIN users u ON d.id_agent = u.id_unique WHERE code = :agent_code");
     $stmt->bindParam(':agent_code', $agentId);
     $stmt->execute();
     if ($stmt->rowCount() === 0) {
-        response(['error' => 'Invalid agent code'], 400);
+        response(['error' => 'code agent invalide'], 400);
     }
+    //set the order completed
+    $stmt = $connection->prepare("UPDATE orders SET status = 'completed' WHERE order_id = :order_id");
+    $stmt->bindParam(':order_id', $orderId);
+    $stmt->execute();
     //update the delivery, set it completed and rate the agent
-    $stmt = $connection->prepare("UPDATE deliveries SET note = :rating, feedback = :comment, status = 'completed' WHERE id_commande = :order_id");
+    $stmt = $connection->prepare("UPDATE deliveries SET note = :rating, feedback = :comment WHERE id_commande = :order_id");
      
     $stmt->bindParam(':rating', $rating);
     $stmt->bindParam(':comment', $comment);
     $stmt->bindParam(':order_id', $orderId);
     if ($stmt->execute()) {
-        return ['message' => 'Agent rated successfully'];
+        return ['message' => 'Agent noté avec succès'];
     } else {
         $message = 'their is an issues with the rate agent function inside deliveries page';
         $type = 'system alert';
         notificationsCenter($userId, $message, $type);
-        response(['error' => 'Failed to rate agent'], 500);
+        response(['error' => 'Échec de la notation de l\'agent'], 500);
     }
 }
 // get delivery by id_userique == agent_id
@@ -192,7 +222,7 @@ function getDeliveriesByAgentAndDay($agentId) {
     return ['deliveries' => $deliveries, 'count' => $nbrs, 'total_amount' => $totalAmount];
     //response(['deliveries' => $deliveries, 'count' => $nbrs, 'total_amount' => $totalAmount], 200);
 }   
-
+ 
 //get delieveries by agent id and last month
 function getDeliveriesByAgentAndLastMonth($agentId) {
     //id is alphaNumeric , clean id
@@ -322,14 +352,14 @@ function getPendingDeliveriesByAgent($agentId) {
     //id is alphaNumeric , clean id
     $agentId = sanitizeInput($agentId);
     global $connection;
-    $stmt = $connection->prepare("SELECT * FROM deliveries WHERE status = 'pending' AND id_agent = :agent_id");
+    $stmt = $connection->prepare("SELECT * FROM deliveries WHERE status = 'processing' AND id_agent = :agent_id");
     $stmt->execute([':agent_id' => $agentId]);
     $nbrs = $stmt->rowCount();
     if($nbrs === 0){
-        response(['orders' => [], 'nbrs' => 0], 200);
+        return['orders' => [], 'nbrs' => 0];
     }
     $deliveries = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    response(['nbrs' => $nbrs, 'deliveries' => $deliveries]);
+    return ['nbrs' => $nbrs, 'deliveries' => $deliveries];
 }
 // get pending deliveries being processed
 function getProcessingDeliveriesByAgent(){
@@ -507,9 +537,9 @@ function getUserDeliDatas(){
     }
     $userId = sanitizeInput($userId);
     global $connection;
-    $stmt = "SELECT d.id_commande, d.note, d.status, d.feedback, p.name as product_name, o.qnt, p.prices, s.salle_name as room_name, u.name as university_name
+    $stmt = "SELECT o.order_id as id_commande, d.note, o.status, d.feedback, p.name as product_name, o.qnt, p.prices, s.salle_name as room_name, u.name as university_name
     FROM deliveries d
-    JOIN orders o ON d.id_commande = o.order_id JOIN products p ON o.id_product = p.id JOIN salle s ON o.adresse_id = s.id JOIN university u ON s.id_university = u.id
+    RIGHT JOIN orders o ON d.id_commande = o.order_id JOIN products p ON o.id_product = p.id JOIN salle s ON o.adresse_id = s.id JOIN university u ON s.id_university = u.id
     WHERE o.id_user = :user_id ";
     $stmt = $connection->prepare($stmt);
     $stmt->bindParam(':user_id', $userId);

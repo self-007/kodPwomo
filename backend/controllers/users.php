@@ -454,7 +454,7 @@ function getUserDatas(){
     }
     $id_unique = sanitizeInput($id_unique);
     $stmt = $connection->prepare('SELECT u.name, u.email, u.firstname, u.phone,
-     un.name as university_name FROM users u JOIN university un ON u.id_university = un.id 
+     un.name as university_name FROM users u LEFT JOIN university un ON u.id_university = un.id 
      WHERE id_unique =:id_unique');
     $stmt->bindParam(':id_unique', $id_unique);
     $stmt->execute();

@@ -1492,8 +1492,10 @@
                         <span></span>
                     </button>
                     <div class="nav-menu" id="navMenu" role="menu">
-                        <a href="dashboard_user/dashboard.php" role="menuitem">Dashboard</a>
+                        <a href="dashboard.php" role="menuitem">Dashboard</a>
                         <a href="boutique.php" role="menuitem">Boutique</a>
+                        <a href="blog.php" role="menuitem">Blog</a>
+                        <a href="notifications.php" role="menuitem">Notifications</a>
                         <a href="#restaurant" role="menuitem">Restaurant</a>
                         <a href="index.php" role="menuitem">Home</a>
                         <a href="login.php" role="menuitem" id="logoutLink">Deconnexion</a>
@@ -1680,7 +1682,6 @@
         let agentStatus = false; // false = unavailable, true = available
         let currentDelivery = null;
         let refreshInterval = null;
-        const AGENT_UNIQUE_ID = 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1'; // Your unique ID
 
         // ===== INITIALIZATION =====
         document.addEventListener('DOMContentLoaded', function() {
@@ -1745,8 +1746,8 @@
 
         async function checkAgentStatus() {
             try {
-                // Get agent status from API using unique ID
-                const status = await getAgentStatusFromAPI(AGENT_UNIQUE_ID);
+                // Get agent status from API using authentication token
+                const status = await getAgentStatusFromAPI();
                 agentStatus = status.is_available;
                 updateStatusDisplay();
                 
@@ -1781,9 +1782,9 @@
             showLoading(true);
             
             try {
-                // Toggle agent status via API using your backend logic
+                // Toggle agent status via API using authentication token
                 const newStatus = !agentStatus; // Simple boolean toggle
-                const result = await updateAgentStatusAPI(AGENT_UNIQUE_ID, newStatus);
+                const result = await updateAgentStatusAPI(newStatus);
                 
                 if (result.success) {
                     agentStatus = newStatus;
@@ -1810,7 +1811,7 @@
             showLoading(true);
             
             try {
-                const transactions = await getAgentTransactionsAPI(AGENT_UNIQUE_ID);
+                const transactions = await getAgentTransactionsAPI();
                 displayTransactions(transactions);
                 document.getElementById('transactionsModal').style.display = 'block';
                 
@@ -1819,6 +1820,25 @@
                 showAlert('Erreur lors du chargement des transactions', 'error');
             } finally {
                 showLoading(false);
+            }
+        }
+        // Fonction pour calculer le temps d'attente
+        function calculateWaitTime(dateTimeString) {
+            const createdTime = new Date(dateTimeString);
+            const currentTime = new Date();
+            const diffMs = currentTime - createdTime;
+            const diffSeconds = Math.floor(diffMs / 1000);
+            const diffMinutes = Math.floor(diffSeconds / 60);
+            const diffHours = Math.floor(diffMinutes / 60);
+            
+            if (diffHours > 0) {
+                const remainingMinutes = diffMinutes % 60;
+                return `${diffHours}h ${remainingMinutes}m`;
+            } else if (diffMinutes > 0) {
+                const remainingSeconds = diffSeconds % 60;
+                return `${diffMinutes}m ${remainingSeconds}s`;
+            } else {
+                return `${diffSeconds}s`;
             }
         }
 
@@ -1830,67 +1850,92 @@
             }
 
             // Extraire les données du backend avec sécurité
-            const transactions = Array.isArray(data.deliveries) ? data.deliveries : [];
-            const stats = (typeof data.stats === 'object' && data.stats) ? data.stats : {};
+            // La structure est: {nbrsTotalDeliveries, totalAmount, totalEarnedThisMonth, currentMonthDeliveries}
+            const transactions = Array.isArray(data.currentMonthDeliveries) ? data.currentMonthDeliveries : 
+                                 Array.isArray(data.deliveries) ? data.deliveries : [];
             
-            // Update stats depuis le backend
-            const totalDeliveries = stats.totalDeliveries || transactions.length;
-            const completedDeliveries = stats.completedDeliveries || transactions.filter(t => t.status === 'completed' || t.status === 1).length;
-            const totalEarnings = stats.totalAmount || transactions.reduce((sum, t) => sum + (t.amount || t.commission || 0), 0);
+            // Récupérer nbrsTotalDeliveries directement du root
+            const nbrsTotalDeliveries = data.nbrsTotalDeliveries || 0;
             
-            // Calculate monthly earnings (current month)
-            const currentMonth = new Date().getMonth();
-            const currentYear = new Date().getFullYear();
-            const monthlyEarnings = transactions.filter(t => {
-                const date = new Date(t.date);
-                return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
-            }).reduce((sum, t) => sum + (t.delivery_price || 0), 0);
+            // Vérifier s'il y a une commande en cours (processing)
+            const hasProcessingOrder = transactions.some(t => t.status === 'processing');
             
-            document.getElementById('totalDeliveries').textContent = totalDeliveries;
-            document.getElementById('completedDeliveries').textContent = completedDeliveries;
-            document.getElementById('totalEarnings').textContent = totalEarnings + ' HTG';
-            document.getElementById('monthlyEarnings').textContent = monthlyEarnings + ' HTG';
+            // Calculer le total complété UNIQUEMENT au front: total - 1 si commande en cours
+            const totalCompleted = nbrsTotalDeliveries - (hasProcessingOrder ? 1 : 0);
             
-            // Display transactions list
+            // Autres stats du backend
+            const totalEarnings = data.totalAmount || 0;
+            const monthlyEarnings = data.totalEarnedThisMonth || 0;
+            
+            // Mettre à jour les affichages stats
+            const totalDelElem = document.getElementById('totalDeliveries');
+            const completedDelElem = document.getElementById('completedDeliveries');
+            const totalEarnElem = document.getElementById('totalEarnings');
+            const monthlyEarnElem = document.getElementById('monthlyEarnings');
+            
+            if (totalDelElem) totalDelElem.textContent = nbrsTotalDeliveries;
+            if (completedDelElem) completedDelElem.textContent = totalCompleted;
+            if (totalEarnElem) totalEarnElem.textContent = (totalEarnings || 0) + ' HTG';
+            if (monthlyEarnElem) monthlyEarnElem.textContent = (monthlyEarnings || 0) + ' HTG';
+            
+            // Afficher la liste des transactions
             const transactionsList = document.getElementById('transactionsList');
             transactionsList.innerHTML = '';
             
+            // Cas 1: Aucune transaction
             if (transactions.length === 0) {
                 transactionsList.innerHTML = `
                     <div style="text-align: center; padding: 40px; color: var(--medium-gray);">
-                        <div style="font-size: 48px; margin-bottom: 15px;"><i class="fas fa-box"></i></div>
-                        <p>Aucune transaction pour le moment</p>
+                        <div style="font-size: 48px; margin-bottom: 15px;"><i class="fas fa-inbox"></i></div>
+                        <p>Aucune livraison ce mois-ci</p>
                     </div>
                 `;
                 return;
             }
             
+            // Cas 2: Afficher les transactions
             transactions.forEach(transaction => {
                 const item = document.createElement('div');
                 item.className = 'transaction-item';
                 
-                // Adapter status selon votre backend (1=completed, 2=pending, etc.)
-                const statusClass = (transaction.status === 'completed' || transaction.status === 1) ? 'status-completed' :
-                                   (transaction.status === 'pending' || transaction.status === 2) ? 'status-pending' : 'status-in-progress';
+                // Déterminer le status et son style
+                const statusValue = transaction.status || 'pending';
+                const statusClass = (statusValue === 'completed' || statusValue === 1) ? 'status-completed' :
+                                   (statusValue === 'pending' || statusValue === 2) ? 'status-pending' : 'status-in-progress';
                 
-                const statusText = (transaction.status === 'completed' || transaction.status === 1) ? 'Terminée' :
-                                  (transaction.status === 'pending' || transaction.status === 2) ? 'En attente' : 'En cours';
+                const statusText = (statusValue === 'completed' || statusValue === 1) ? 'Terminée' :
+                                  (statusValue === 'pending' || statusValue === 2) ? 'En attente' : 'En cours';
+                
+                // Formater la date
+                const deliveryDate = transaction.created_at || transaction.date || new Date().toISOString();
+                const formattedDate = formatDate(deliveryDate);
+                
+                // AFFICHER LE TEMPS D'ATTENTE UNIQUEMENT SI STATUS = 'processing'
+                let waitTimeHtml = '';
+                if (statusValue === 'processing') {
+                    const waitTime = calculateWaitTime(deliveryDate);
+                    const diffSeconds = Math.floor((new Date() - new Date(deliveryDate)) / 1000);
+                    const isOvertime = diffSeconds > 600; // 600s = 10min
+                    const overtimeClass = isOvertime ? 'style="color: #ef4444; font-weight: 600;"' : '';
+                    waitTimeHtml = `<br><strong>En attente depuis:</strong> <span ${overtimeClass}>${waitTime}</span>`;
+                }
                 
                 item.innerHTML = `
                     <div class="transaction-header">
-                        <div class="transaction-id">Livraison #${transaction.id}</div>
-                        <div class="transaction-date">${formatDate(transaction.date || new Date().toISOString())}</div>
+                        <div class="transaction-id">Livraison #${transaction.id || 'N/A'}</div>
+                        <div class="transaction-date">${formattedDate}</div>
                     </div>
                     <div class="transaction-details">
                         <div>
-                            <strong>Commande:</strong> ${transaction.id_commande}<br>
-                            <strong>Prix:</strong> ${transaction.delivery_price} HTG<br>
-                            <strong>Note:</strong> <i class="fas fa-star" style="color: var(--primary);"></i> ${transaction.note}/5
+                            <strong>Commande:</strong> ${transaction.id_commande || 'N/A'}<br>
+                            <strong>Montant:</strong> ${(transaction.order_price || 0).toFixed(2)} HTG<br>
+                            <strong>Commission:</strong> ${(transaction.delivery_price || 0).toFixed(2)} HTG
+                            ${waitTimeHtml}
                         </div>
                         <div style="text-align: right;">
                             <div class="transaction-status ${statusClass}">${statusText}</div>
                             <div style="margin-top: 10px; font-weight: 600;">
-                                Total: ${transaction.delivery_price} HTG
+                                Total: ${((transaction.order_price || 0) + (transaction.delivery_price || 0)).toFixed(2)} HTG
                             </div>
                         </div>
                     </div>
@@ -1957,6 +2002,7 @@
                         order_id: orderId,
                         university_name: item.university_name,
                         salle_name: item.salle_name,
+                        date: item.date,  // Stocker la date
                         items: [],
                         total_amount: 0,
                         total_quantity: 0
@@ -1978,6 +2024,12 @@
                 const item = document.createElement('div');
                 item.className = 'order-item';
                 
+                // Calculer le temps d'attente
+                const waitTime = order.date ? calculateWaitTime(order.date) : 'N/A';
+                const diffSeconds = order.date ? Math.floor((new Date() - new Date(order.date)) / 1000) : 0;
+                const isOvertime = diffSeconds > 600; // 600s = 10min
+                const overtimeClass = isOvertime ? 'style="color: #ef4444; font-weight: 600;"' : '';
+                
                 item.innerHTML = `
                     <div class="order-header">
                         <div class="order-info">
@@ -1986,6 +2038,9 @@
                         </div>
                         <div class="order-total">
                             <div class="order-amount">${order.total_amount} HTG</div>
+                            <div style="font-size: 12px; color: var(--medium-gray); margin-top: 5px;">
+                                En attente depuis: <span ${overtimeClass}>${waitTime}</span>
+                            </div>
                         </div>
                     </div>
                     
@@ -2016,7 +2071,7 @@
             showLoading(true);
             
             try {
-                const result = await assignOrderToAgentAPI(orderId, AGENT_UNIQUE_ID);
+                const result = await assignOrderToAgentAPI(orderId);
                 
                 if (result.success === true) {
                     showAlert('Commande prise avec succès !', 'success');
@@ -2050,7 +2105,7 @@
             showLoading(true);
             
             try {
-                const delivery = await getCurrentDeliveryAPI(AGENT_UNIQUE_ID);
+                const delivery = await getCurrentDeliveryAPI();
                 
                 if (delivery) {
                     currentDelivery = delivery;
@@ -2086,6 +2141,7 @@
                             salle_name: item.salle_name,
                             id_user: item.id_user,
                             delivery_id: item.delivery_id,
+                            delivery_date: item.created_at || item.date || new Date().toISOString(),
                             items: [],
                             total_order_amount: 0,
                             total_delivery_amount: 0,
@@ -2116,6 +2172,10 @@
                         <div class="detail-row">
                             <span class="detail-label">Commande:</span>
                             <span class="detail-value">#${delivery.order_id}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">En cours depuis:</span>
+                            <span class="detail-value" style="color: #ef4444; font-weight: 600;">${calculateWaitTime(delivery.delivery_date)}</span>
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Client:</span>
@@ -2379,7 +2439,7 @@
             showLoading(true);
             
             try {
-                const result = await completeDeliveryAPI(orderId, AGENT_UNIQUE_ID, deliveryId);
+                const result = await completeDeliveryAPI(orderId, deliveryId);
                 
                 if (result.success) {
                     // Nettoyer automatiquement les feedbacks localStorage
@@ -2404,9 +2464,9 @@
             }
         }
 
-        async function completeDeliveryAPI(deliveryId, agentId, id) {
+        async function completeDeliveryAPI(deliveryId, deliveryRecordId) {
             try {
-                const response = await fetch(`backend/delivery/status/${id}`, {
+                const response = await fetch(`backend/delivery/status/${deliveryRecordId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2582,7 +2642,7 @@
             }
         }
 
-        async function getAgentStatusFromAPI(agentUniqueId) {
+        async function getAgentStatusFromAPI() {
             try {
                 const response = await fetch(`backend/agents/availability`,
                 {
@@ -2614,7 +2674,7 @@
             }
         }
 
-        async function updateAgentStatusAPI(agentUniqueId, isAvailable) {
+        async function updateAgentStatusAPI(isAvailable) {
             try {
                 const response = await fetch('backend/agents/availability', {
                     method: 'PUT',
@@ -2646,7 +2706,7 @@
             }
         }
 
-        async function getAgentTransactionsAPI(agentId) {
+        async function getAgentTransactionsAPI() {
             try {
                 const response = await fetch(`backend/deliveries/agent`,
                 {
@@ -2670,15 +2730,9 @@
                     throw new Error(data.message || 'Erreur lors de la récupération des transactions');
                 }
                 
-                // Adapter les données backend au format attendu par le frontend
-                return {
-                    deliveries: Array.isArray(data.lastMonthDeliveries) ? data.lastMonthDeliveries : [],
-                    stats: {
-                        totalDeliveries: data.nbrsTotalDeliveries || 0,
-                        totalAmount: data.totalAmount || 0,
-                        completedDeliveries: Array.isArray(data.lastMonthDeliveries) ? data.lastMonthDeliveries.filter(d => d.status === 'completed' || d.status === 1).length : 0
-                    }
-                };
+                // Retourner les données brutes du backend directement
+                // Structure: {nbrsTotalDeliveries, totalAmount, totalEarnedThisMonth, currentMonthDeliveries}
+                return data;
             } catch (error) {
                 throw error;
             }
@@ -2724,7 +2778,7 @@
 
 
 
-        async function assignOrderToAgentAPI(orderId, agentId) {
+        async function assignOrderToAgentAPI(orderId) {
             try {
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
@@ -2796,7 +2850,7 @@
             }
         }
 
-        async function getCurrentDeliveryAPI(agentId) {
+        async function getCurrentDeliveryAPI() {
             try {
                 const response = await fetch(`backend/deliveries/agent/orderProcess`, {
                     method: 'GET',

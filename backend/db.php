@@ -1,7 +1,7 @@
 <?php
 $host = "localhost";
-$mode = 'local'; //local or production
-if($mode == 'local'){
+$mode = 1; //local = 1 or production = 0
+if($mode == 1){
     // For local development, you can uncomment the following lines and comment the above ones
     $userName = "root";
     $passsword = "";

@@ -80,18 +80,22 @@ function getOrderById($id) {
 function updateOrderStatus($orderId, $status) {
     // verify parameters
     if (empty($orderId) || empty($status)) {
-        response(['error' => 'Invalid order ID or status'], 400);
+        response(['error' => 'ID de commande ou statut invalide'], 400);
     }
+    //get the user id by token
+    $user = getBearerToken();
+    $id_unique = sanitizeInput($user->sub);
     $status = sanitizeInput($status);
     $orderId = sanitizeInput($orderId);
     global $connection;
-    $stmt = $connection->prepare("UPDATE orders SET status = :status WHERE order_id = :id");
+    $stmt = $connection->prepare("UPDATE orders SET status = :status WHERE order_id = :id AND id_user = :id_user");
     $stmt->bindParam(':status', $status);
     $stmt->bindParam(':id', $orderId);
+    $stmt->bindParam(':id_user', $id_unique);
     if ($stmt->execute()) {
-        return ['message' => 'Order status updated successfully'];
+        response(['message' => 'commande mise à jour avec succès', 'status' => 'success'], 200);
     } else {
-        response(['error' => 'Failed to update order status'], 500);
+        response(['error' => 'echec de la mise à jour du statut de la commande'], 500);
     }
 }
 // create idTransactions

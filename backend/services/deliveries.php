@@ -154,7 +154,7 @@ function rateAgent() {
     $stmt->bindParam(':comment', $comment);
     $stmt->bindParam(':order_id', $orderId);
     if ($stmt->execute()) {
-        return ['message' => 'Agent noté avec succès'];
+        response(['message' => 'Agent noté avec succès', 'status' => 'success'], 200);
     } else {
         $message = 'their is an issues with the rate agent function inside deliveries page';
         $type = 'system alert';
@@ -256,10 +256,10 @@ function getDeliveriesByAgentAndThisMonth($agentId) {
     // Single query to get deliveries, count and total amount
     $stmt = $connection->prepare("
         SELECT *, 
-        (SELECT COUNT(*) FROM deliveries WHERE id_agent = :agent_id AND DATE_FORMAT(date, '%Y-%m') = :month) as total_count,
-        (SELECT COALESCE(SUM(delivery_price), 0) FROM deliveries WHERE id_agent = :agent_id AND DATE_FORMAT(date, '%Y-%m') = :month) as total_amount
+        (SELECT COUNT(*) FROM deliveries WHERE id_agent = :agent_id AND DATE_FORMAT(date, '%Y-%m') = :month AND status = 'completed') as total_count,
+        (SELECT COALESCE(SUM(delivery_price), 0) FROM deliveries WHERE id_agent = :agent_id AND DATE_FORMAT(date, '%Y-%m') = :month AND status = 'completed') as total_amount
         FROM deliveries 
-        WHERE id_agent = :agent_id AND DATE_FORMAT(date, '%Y-%m') = :month
+        WHERE id_agent = :agent_id AND DATE_FORMAT(date, '%Y-%m') = :month ORDER BY date DESC
     ");
     $stmt->bindParam(':agent_id', $agentId);
     $stmt->bindParam(':month', $month);
@@ -321,13 +321,17 @@ function getCompletedDeliveriesByAgent($agentId) {
 // 3- total money earned by agent id
 // 4- total money by month by agent id
 function getAgentStats() {
-
+    global $user_role;
+    //verify the role
+    if($user_role !== 'agent' && $user_role !== 'manager' && $user_role !== 'SUPER-ADMIN'){
+        response(['error' => 'vous n\'êtes pas autorisé à effectuer cette action'], 403);
+    }
     //id is alphaNumeric , clean id
     //$agentId = sanitizeInput($agentId); // Sanitize input
     $user = getBearerToken();
     $agentId = sanitizeInput($user->sub);
     getAgentById($agentId); // Check if agent exists
-    $totalDeliveries = getDeliveryById($agentId);
+    //$totalDeliveries = getDeliveryById($agentId);
     $completedDeliveries = getCompletedDeliveriesByAgent($agentId);
     if(!$completedDeliveries || $completedDeliveries['count'] == 0) {
         // send blanck table
@@ -342,10 +346,10 @@ function getAgentStats() {
     $nbrsTotalDeliveries = $completedDeliveries['count'];
     $totalAmount = $completedDeliveries['total_amount'];
 
-    $lastMonthDeliveries = getDeliveriesByAgentAndLastMonth($agentId);
-    $totalEarnedLastMonth = $lastMonthDeliveries['total_amount'];
+    $currentMonthDeliveries = getDeliveriesByAgentAndThisMonth($agentId);
+    $totalEarnedMonth = $currentMonthDeliveries['total_amount'];
 
-    response(['nbrsTotalDeliveries' => $nbrsTotalDeliveries, 'totalAmount' => $totalAmount, 'lastMonthDeliveries' => $lastMonthDeliveries['deliveries'], 'totalEarnedLastMonth' => $totalEarnedLastMonth], 200);
+    response(['nbrsTotalDeliveries' => $nbrsTotalDeliveries, 'totalAmount' => $totalAmount, 'currentMonthDeliveries' => $currentMonthDeliveries['deliveries'], 'totalEarnedThisMonth' => $totalEarnedMonth], 200);
 }
 // get pending deliveries
 function getPendingDeliveriesByAgent($agentId) {
@@ -374,7 +378,7 @@ function getProcessingDeliveriesByAgent(){
    
     $agentId = sanitizeInput($user->sub);
     global $connection;
-    $stmt = 'SELECT deliveries.id as delivery_id, products.name as product_name, delivery_price, orders.price as order_price, orders.qnt, orders.order_id, university.name, salle_name FROM deliveries JOIN orders ON id_commande = orders.order_id
+    $stmt = 'SELECT deliveries.id as delivery_id, products.name as product_name, delivery_price, orders.price as order_price, orders.qnt, orders.order_id, university.name, salle_name, orders.date as date FROM deliveries JOIN orders ON id_commande = orders.order_id
      JOIN  products ON products.id = orders.id_product JOIN salle ON salle.id = adresse_id JOIN university ON salle.id_university = university.id WHERE deliveries.status = "processing" AND 
     deliveries.id_agent = ?';
     $stmt = $connection->prepare($stmt);
@@ -551,7 +555,7 @@ function getUserDeliDatas(){
     }
     // calcul total spent
     $stmt = "SELECT SUM(o.qnt * o.price) as total_order_amount, SUM(d.delivery_price) as total_amount FROM deliveries d
-    JOIN orders o ON d.id_commande = o.order_id
+    RIGHT JOIN orders o ON d.id_commande = o.order_id
     WHERE o.id_user = :user_id ";
     $stmt = $connection->prepare($stmt);
     $stmt->bindParam(':user_id', $userId);

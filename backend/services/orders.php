@@ -221,7 +221,7 @@ function getTotalOrdersByYear() {
 //get productname, qnt , get orderid, university, room, 
 function getPendingOrderData(){
     global $connection;
-    $stmt = 'SELECT products.name as product_name, orders.order_id, orders.qnt, orders.price, university.name as university_name, salle_name FROM products JOIN orders ON orders.id_product = products.id JOIN salle ON salle.id = adresse_id JOIN university ON university.id = salle.id_university WHERE status = "pending"';
+    $stmt = 'SELECT products.name as product_name, orders.order_id, orders.qnt, orders.price, orders.date, university.name as university_name, salle.salle_name FROM products JOIN orders ON orders.id_product = products.id JOIN salle ON salle.id = orders.adresse_id JOIN university ON university.id = salle.id_university WHERE orders.status = "pending"';
     $stmt = $connection->prepare($stmt);
     $stmt->execute();
     $nbrs = $stmt->rowCount();
@@ -262,4 +262,84 @@ function getAllOrdersByUniversityId($universityId) {
     }
     $processingOrders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return ['nbrs' => $nbrs, 'orders' => $processingOrders];
+}
+//================PUT=================
+//cancel order by user
+function cancelOrder() {
+    global $datas;
+    //verify datas for order
+    if(!isset($datas['order_id'])){
+        response(['error' => 'Champs requis manquants pour annuler la commande', $datas], 400);
+    }
+    $orderId = sanitizeInput($datas['order_id']);
+    // update order status to cancelled
+    updateOrderStatus($orderId, 'cancelled');
+}
+
+/**
+ * Request refund for a cancelled order
+ * Endpoint: POST /backend/orders/refund
+ */
+function requestRefund() {
+    global $datas, $connection;
+    
+    // Verify required data
+    if(!isset($datas['order_id'])){
+        response(['error' => 'Order ID manquant', 'status' => 'error'], 400);
+    }
+    
+    $orderId = sanitizeInput($datas['order_id']);
+    
+    // Check if order exists and is cancelled
+    $stmt = $connection->prepare("SELECT o.*, s.id_university as university_id FROM orders o JOIN salle s ON o.adresse_id = s.id WHERE o.order_id = :order_id");
+    $stmt->bindParam(':order_id', $orderId);
+    $stmt->execute();
+    if($stmt->rowCount() === 0){ 
+        response(['error' => 'Commande non trouvée', 'status' => 'error'], 404);
+    }
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($order['status'] !== 'cancelled') {
+        response(['error' => 'Cette commande ne peut pas être remboursée', 'status' => 'error'], 400);
+    }
+    // Get user ID and price from the order
+    $userId = $order['id_user'];
+    $price = $order['price'];
+    $universityId = $order['university_id'];
+    //add datas to refund table
+    $stmt = $connection->prepare("INSERT INTO refund (order_id, user_id, price, university_id, status) VALUES (:order_id, :user_id, :price, :university_id, 'pending')");
+    $stmt->bindParam(':order_id', $orderId);
+    $stmt->bindParam(':user_id', $userId);
+    $stmt->bindParam(':price', $price);
+    $stmt->bindParam(':university_id', $universityId);
+    $stmt->execute();
+    // update order status to refund_requested
+    updateOrderStatus($orderId, 'refund_requested');
+
+}
+
+/**
+ * Reactivate a cancelled order
+ * Endpoint: POST /backend/orders/reactivate
+ */
+function reactivateOrder() {
+    global $datas, $connection;
+    
+    // Verify required data
+    if(!isset($datas['order_id'])){
+        response(['error' => 'Order ID manquant', 'status' => 'error'], 400);
+    }
+    
+    $orderId = sanitizeInput($datas['order_id']);
+    
+    // Check if order exists and is cancelled
+    $stmt = $connection->prepare("SELECT order_id, status FROM orders WHERE order_id = :order_id");
+    $stmt->bindParam(':order_id', $orderId);
+    $stmt->execute();
+    if($stmt->rowCount() === 0){ 
+        response(['error' => 'Commande non trouvée', 'status' => 'error'], 404);
+    }
+    $order = $stmt->fetch(PDO::FETCH_ASSOC);
+    // update order status to pending
+    updateOrderStatus($orderId, 'pending');
+
 }

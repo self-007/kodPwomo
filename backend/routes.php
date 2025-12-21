@@ -59,6 +59,7 @@ $routes =  [
         '/university/image-update/(\w+)' => ['Adm/main_adm.php', 'update_image_uvs'], //update university image from admin
         '/support/create' => ['controllers/users.php', 'askForSupport'], //create support ticket for adm managers froms users
         '/blog/new' => ['services/blog.php', 'newBlogData'], //create new blog data
+        '/orders/refund' => ['services/orders.php', 'requestRefund'], //request refund for cancelled order
     ],
     'PUT' => [
         '/agents/availability' => ['agents/agents.php', 'setAgentAvailability'], //update agent availability
@@ -80,6 +81,8 @@ $routes =  [
         '/delivery/status/(\d+)' => ['services/deliveries.php', 'updateDeliveryStatus'], //update delivery status by agent set it done
         '/logout' => ['services/logout.php', 'logout'], //logout function for all users
         '/rate/agent' => ['services/deliveries.php', 'rateAgent'], //rate agent after delivery
+        '/orders/cancel' => ['services/orders.php', 'cancelOrder'], //cancel order by user 
+        '/orders/reactivate' => ['services/orders.php', 'reactivateOrder'], //reactivate cancelled order
     ],
     'DELETE' => [
         '/category/super/(\d+)' => ['Adm/main_adm.php', 'deleteCategory'], // delete category from super admin

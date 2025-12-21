@@ -358,10 +358,6 @@
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M18 10V7a6 6 0 1 0-12 0v3m-2 0h16v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-7Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Support
                 </a>
-                <a href="notifications.php" class="nav-link" data-target="notifications">
-                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3c-3.314 0-6 2.686-6 6v3.382l-1.447 2.894A1 1 0 0 0 5.447 17h13.106a1 1 0 0 0 .894-1.447L18 12.382V9c0-3.314-2.686-6-6-6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-                    Notifications
-                </a>
                 <a href="#" class="nav-link" data-target="logout">
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M16 17l5-5-5-5M21 12H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3 4h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Déconnexion
@@ -370,6 +366,10 @@
                 <a href="index.php" class="nav-link">
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5V21a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-10.5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                     Accueil
+                </a>
+                <a href="notifications.php" class="nav-link">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3c-3.314 0-6 2.686-6 6v3.382l-1.447 2.894A1 1 0 0 0 5.447 17h13.106a1 1 0 0 0 .894-1.447L18 12.382V9c0-3.314-2.686-6-6-6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    Notifications
                 </a>
                 <a href="blog.php" class="nav-link">
                     <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M4 8h16M4 13h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -613,7 +613,6 @@
             const burger = qs('#burger');
             const nav = qs('#nav');
             const sections = qsa('section[data-section]');
-            const btnNotifications = qs('a.nav-link[data-target="notifications"]');
             const btnLogout = qs('a.nav-link[data-target="logout"]');
             const modalOverlay = qs('#modalOverlay');
             const modalContent = qs('#modalContent');
@@ -899,10 +898,14 @@
             
             // Traduction des statuts
             const statusTranslations = {
+                'pending': 'En attente',
                 'processing': 'En préparation',
                 'in-route': 'En route',
                 'completed': 'Livrée',
-                'canceled': 'Annulée'
+                'canceled': 'Annulée',
+                'cancelled': 'Annulée',
+                'refund_requested': 'Remboursement en attente',
+                'refunded': 'Remboursée'
             };
 
             // ============ SESSION MANAGEMENT ============
@@ -1136,17 +1139,26 @@
                 ordersGrid.innerHTML = commandes.map(cmd => {
                     const statusLabel = statusTranslations[cmd.status] || cmd.status;
                     let badgeClass = 'attente';
-                    let badgeText = '⏳ En préparation';
+                    let badgeText = '⏳ En attente';
 
                     if (cmd.status === 'completed') {
                         badgeClass = 'livree';
-                        badgeText = '✓ Livrée';
+                        badgeText = 'Livrée';
                     } else if (cmd.status === 'processing') {
                         badgeClass = 'attente';
-                        badgeText = '⏳ En préparation';
-                    } else if (cmd.status === 'canceled') {
+                        badgeText = 'En préparation';
+                    } else if (cmd.status === 'pending') {
+                        badgeClass = 'attente';
+                        badgeText = 'En attente';
+                    } else if (cmd.status === 'canceled' || cmd.status === 'cancelled') {
                         badgeClass = 'annulee';
-                        badgeText = '✕ Annulée';
+                        badgeText = 'Annulée';
+                    } else if (cmd.status === 'refund_requested') {
+                        badgeClass = 'attente';
+                        badgeText = 'Remboursement en attente';
+                    } else if (cmd.status === 'refunded') {
+                        badgeClass = 'livree';
+                        badgeText = 'Remboursée';
                     }
 
                     return `
@@ -1317,13 +1329,7 @@
                 }
             });
 
-            // Notifications and Logout actions
-            if(btnNotifications){
-                btnNotifications.addEventListener('click', (e)=>{
-                    e.preventDefault();
-                    window.location.href = 'notifications.php';
-                });
-            }
+            // Logout action
             if(btnLogout){
                 btnLogout.addEventListener('click', (e)=>{
                     e.preventDefault();
@@ -1625,9 +1631,12 @@
                 
                 // Déterminer le badge de statut
                 let statusBadge = '';
-                if(status === 'completed') statusBadge = '<span class="badge livree">✓ Livrée</span>';
-                else if(status === 'processing') statusBadge = '<span class="badge attente">⏳ En préparation</span>';
-                else if(status === 'canceled') statusBadge = '<span class="badge annulee">✕ Annulée</span>';
+                if(status === 'completed') statusBadge = '<span class="badge livree">Livrée</span>';
+                else if(status === 'processing') statusBadge = '<span class="badge attente">En préparation</span>';
+                else if(status === 'pending') statusBadge = '<span class="badge attente">En attente</span>';
+                else if(status === 'canceled' || status === 'cancelled') statusBadge = '<span class="badge annulee">Annulée</span>';
+                else if(status === 'refund_requested') statusBadge = '<span class="badge attente">Remboursement en attente</span>';
+                else if(status === 'refunded') statusBadge = '<span class="badge livree">Remboursée</span>';
                 
                 let html = `
                     <div style="margin-bottom:16px">
@@ -1662,16 +1671,66 @@
                     </div>
                 `;
                 
+                // SI COMMANDE EN ATTENTE DE REMBOURSEMENT: Afficher le message permanent
+                if (status === 'refund_requested') {
+                    html += `
+                    <div style="margin-top:20px; padding:16px; background-color:#fef3c7; border:2px solid #fbbf24; border-radius:8px">
+                        <div style="display:flex; align-items:flex-start; gap:12px">
+                            <i class="fas fa-exclamation-circle" style="font-size:20px; color:#d97706; margin-top:2px; flex-shrink:0"></i>
+                            <div>
+                                <h4 style="margin:0 0 8px 0; font-size:14px; font-weight:700; color:#92400e">Demande en cours de vérification</h4>
+                                <p style="margin:0; font-size:13px; color:#b45309">Nous vérifions actuellement votre demande de remboursement. Nous vous répondrons dans les plus brefs délais. Merci de votre patience.</p>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }
+                
+                // SI COMMANDE REMBOURSÉE: Afficher le message de confirmation
+                if (status === 'refunded') {
+                    html += `
+                    <div style="margin-top:20px; padding:16px; background-color:#d1fae5; border:2px solid #6ee7b7; border-radius:8px">
+                        <div style="display:flex; align-items:flex-start; gap:12px">
+                            <i class="fas fa-check-circle" style="font-size:20px; color:#059669; margin-top:2px; flex-shrink:0"></i>
+                            <div>
+                                <h4 style="margin:0 0 8px 0; font-size:14px; font-weight:700; color:#065f46">Remboursement effectué</h4>
+                                <p style="margin:0; font-size:13px; color:#047857">Votre remboursement a été traité avec succès. Le montant a été reversé sur votre compte initial.</p>
+                            </div>
+                        </div>
+                    </div>
+                    `;
+                }
+                
                 // Stocker le status et l'ID pour le bouton télécharger la facture
                 window.currentOrderStatus = status;
                 window.currentOrderId = orderId;
+                
+                // SI COMMANDE EN ATTENTE: Afficher le bouton annuler
+                if (status === 'pending') {
+                    html += `
+                    <div style="margin-top:20px; padding-top:20px; border-top:2px solid #e5e7eb">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px">
+                            <i class="fas fa-times-circle" style="font-size:20px; color:#ef4444"></i>
+                            <h4 style="margin:0; font-size:16px; font-weight:700">Annuler cette commande</h4>
+                        </div>
+                        
+                        <p style="margin:0 0 16px; font-size:13px; color:#666">Votre commande n'a pas encore été prise en charge. Vous pouvez l'annuler avant qu'un agent la confirme.</p>
+                        
+                        <!-- Bouton d'annulation -->
+                        <button class="btn btn-danger cancel-order-btn" style="width:100%; background-color:#ef4444; color:white; padding:12px; border-radius:8px; border:none; cursor:pointer; font-weight:600; font-size:14px">
+                            <i class="fas fa-times" style="display:inline; margin-right:8px"></i>
+                            ANNULER LA COMMANDE
+                        </button>
+                    </div>
+                    `;
+                }
                 
                 // SI COMMANDE EN COURS: Ajouter le formulaire de note + feedback + code agent
                 if (status === 'processing') {
                     html += `
                     <div style="margin-top:20px; padding-top:20px; border-top:2px solid #e5e7eb">
                         <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px">
-                            <svg viewBox="0 0 24 24" width="20" height="20" fill="#f59e0b"><path d="m12 2 2.7 5.47 6.05.88-4.38 4.27 1.03 6.01L12 16.9l-5.39 2.83 1.03-6.01L3.26 8.35l6.05-.88L12 2Z"/></svg>
+                            <i class="fas fa-star" style="font-size:20px; color:#f59e0b"></i>
                             <h4 style="margin:0; font-size:16px; font-weight:700">Confirmer la livraison</h4>
                         </div>
                         
@@ -1709,10 +1768,86 @@
                     `;
                 }
                 
+                // SI COMMANDE ANNULÉE: Afficher les options de remboursement et réactivation
+                if (status === 'canceled' || status === 'cancelled') {
+                    html += `
+                    <div style="margin-top:20px; padding-top:20px; border-top:2px solid #e5e7eb">
+                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px">
+                            <i class="fas fa-sad-tear" style="font-size:20px; color:#ef4444"></i>
+                            <h4 style="margin:0; font-size:16px; font-weight:700">Commande annulée</h4>
+                        </div>
+                        
+                        <p style="margin:0 0 20px; font-size:13px; color:#666">Que souhaitez-vous faire avec cette commande ?</p>
+                        
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px">
+                            <!-- Option Remboursement -->
+                            <button class="btn refund-order-btn" style="background-color:#f3f4f6; color:#374151; padding:12px; border-radius:8px; border:2px solid #d1d5db; cursor:pointer; font-weight:600; font-size:13px; transition:all 0.3s">
+                                <i class="fas fa-undo" style="display:block; font-size:18px; margin:0 auto 8px"></i>
+                                DEMANDER<br/>REMBOURSEMENT
+                            </button>
+                            
+                            <!-- Option Réactivation -->
+                            <button class="btn reactivate-order-btn" style="background-color:#10b981; color:white; padding:12px; border-radius:8px; border:none; cursor:pointer; font-weight:600; font-size:13px; transition:all 0.3s">
+                                <i class="fas fa-sync" style="display:block; font-size:18px; margin:0 auto 8px"></i>
+                                RÉACTIVER<br/>COMMANDE
+                            </button>
+                        </div>
+                    </div>
+                    `;
+                }
+                
                 openModal(orderId, html);
                 
-                // Si c'est une commande en cours, ajouter les event listeners
-                if (status === 'processing') {
+                // Si c'est une commande en attente, gérer l'annulation
+                if (status === 'pending') {
+                    setTimeout(() => {
+                        const cancelBtn = qs('.cancel-order-btn');
+                        if (cancelBtn) {
+                            cancelBtn.addEventListener('click', async () => {
+                                if (!confirm('Êtes-vous sûr de vouloir annuler cette commande ?')) return;
+                                
+                                const accessToken = localStorage.getItem('access_token');
+                                if (!accessToken) {
+                                    showNotification('Erreur: Token d\'accès manquant', 'error', 'Erreur d\'authentification');
+                                    return;
+                                }
+                                
+                                try {
+                                    const response = await fetch(`backend/orders/cancel`, {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json',
+                                            'Authorization': 'Bearer ' + accessToken
+                                        },
+                                        body: JSON.stringify({ order_id: orderId })
+                                    });
+                                    
+                                    const result = await response.json();
+                                    console.log('📥 Réponse du serveur:', result);
+                                    
+                                    if (!response.ok) {
+                                        showNotification(result.error || 'Erreur serveur', 'error', 'Erreur');
+                                        return;
+                                    }
+                                    
+                                    if (result.status === 'success') {
+                                        showNotification('Votre commande a été annulée avec succès.', 'success', 'Commande annulée');
+                                        setTimeout(() => {
+                                            closeModal();
+                                            location.reload();
+                                        }, 1500);
+                                    } else {
+                                        showNotification(result.error || 'Erreur inconnue', 'error', 'Erreur');
+                                    }
+                                } catch (error) {
+                                    console.error('❌ Erreur lors de l\'annulation:', error);
+                                    showNotification('Erreur réseau: ' + error.message, 'error', 'Erreur');
+                                }
+                            });
+                        }
+                    }, 0);
+                } else if (status === 'processing') {
                     setTimeout(() => {
                         const starsContainer = qs('.delivery-rating-stars');
                         const feedbackInput = qs('.delivery-feedback');
@@ -1805,6 +1940,106 @@
                                     
                                 } catch (error) {
                                     console.error('❌ Erreur lors de l\'envoi de la notation:', error);
+                                    showNotification('Erreur réseau: ' + error.message, 'error', 'Erreur');
+                                }
+                            });
+                        }
+                    }, 0);
+                }
+                
+                // Si c'est une commande annulée, gérer les options de remboursement et réactivation
+                if (status === 'canceled' || status === 'cancelled') {
+                    setTimeout(() => {
+                        const refundBtn = qs('.refund-order-btn');
+                        const reactivateBtn = qs('.reactivate-order-btn');
+                        
+                        // Bouton Remboursement
+                        if (refundBtn) {
+                            refundBtn.addEventListener('click', async () => {
+                                if (!confirm('Êtes-vous sûr de vouloir demander un remboursement ? Ce processus peut prendre quelques jours.')) return;
+                                
+                                const accessToken = localStorage.getItem('access_token');
+                                if (!accessToken) {
+                                    showNotification('Erreur: Token d\'accès manquant', 'error', 'Erreur d\'authentification');
+                                    return;
+                                }
+                                
+                                try {
+                                    const response = await fetch(`backend/orders/refund`, {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json',
+                                            'Authorization': 'Bearer ' + accessToken
+                                        },
+                                        body: JSON.stringify({ order_id: orderId })
+                                    });
+                                    
+                                    const result = await response.json();
+                                    console.log('📥 Réponse du serveur:', result);
+                                    
+                                    if (!response.ok) {
+                                        showNotification(result.error || 'Erreur serveur', 'error', 'Erreur');
+                                        return;
+                                    }
+                                    
+                                    if (result.status === 'success') {
+                                        showNotification(result.message, 'success', 'Demande reçue');
+                                        setTimeout(() => {
+                                            closeModal();
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        showNotification(result.error || 'Erreur inconnue', 'error', 'Erreur');
+                                    }
+                                } catch (error) {
+                                    console.error('❌ Erreur lors de la demande de remboursement:', error);
+                                    showNotification('Erreur réseau: ' + error.message, 'error', 'Erreur');
+                                }
+                            });
+                        }
+                        
+                        // Bouton Réactivation
+                        if (reactivateBtn) {
+                            reactivateBtn.addEventListener('click', async () => {
+                                if (!confirm('Êtes-vous sûr de vouloir réactiver cette commande ? Vous pourrez la soumettre à nouveau pour livraison.')) return;
+                                
+                                const accessToken = localStorage.getItem('access_token');
+                                if (!accessToken) {
+                                    showNotification('Erreur: Token d\'accès manquant', 'error', 'Erreur d\'authentification');
+                                    return;
+                                }
+                                
+                                try {
+                                    const response = await fetch(`backend/orders/reactivate`, {
+                                        method: 'PUT',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json',
+                                            'Authorization': 'Bearer ' + accessToken
+                                        },
+                                        body: JSON.stringify({ order_id: orderId })
+                                    });
+                                    
+                                    const result = await response.json();
+                                    console.log('📥 Réponse du serveur:', result);
+                                    
+                                    if (!response.ok) {
+                                        showNotification(result.error || 'Erreur serveur', 'error', 'Erreur');
+                                        return;
+                                    }
+                                    
+                                    if (result.status === 'success') {
+                                        showNotification('Votre commande a été réactivée. Elle est maintenant en attente de prise en charge.', 'success', 'Commande réactivée');
+                                        setTimeout(() => {
+                                            closeModal();
+                                            location.reload();
+                                        }, 2000);
+                                    } else {
+                                        showNotification(result.error || 'Erreur inconnue', 'error', 'Erreur');
+                                    }
+                                } catch (error) {
+                                    console.error('❌ Erreur lors de la réactivation:', error);
                                     showNotification('Erreur réseau: ' + error.message, 'error', 'Erreur');
                                 }
                             });
@@ -2156,6 +2391,6 @@
     <!-- Sistema de Notificaciones Global -->
     <script src="assets/js/notifications-system.js"></script>
     
-     <?php include 'heartbeat.php'; ?>
+    <?php include 'heartbeat.php'; ?>
 </body>
 </html>

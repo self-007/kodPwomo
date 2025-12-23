@@ -770,9 +770,24 @@
                         }
                         // Succès direct (Google)
                         showAlert('success', result.message);
-                        setTimeout(() => {
-                            window.location.href = 'dashboard.php';
-                        }, 2000);
+                        if(result.role == 'agent'){
+                            setTimeout(() => {
+                                window.location.href = 'agent.php';
+                            }, 2000);
+                        }else if(result.role == 'manager'){
+                            setTimeout(() => {
+                                window.location.href = 'admin-manager/index.php';
+                            }, 2000);
+                        }else if(result.role == 'ADM'){
+                            setTimeout(() => {
+                                window.location.href = 'admin-main/index.php';
+                            }, 2000);
+                        }else {
+                            setTimeout(() => {
+                                window.location.href = 'dashboard.php';
+                            }, 2000);
+                        }
+                       
                     }
                 } else {
                     showAlert('error', result.error || 'Erreur lors de la création du compte');

@@ -125,7 +125,7 @@ function authenticateUser() {
 
             //get the user id and the user name, and the user role
             $userId = $user['id_unique'];
-            $role = isset($user['role']) ? $user['role'] : 'user';
+            $role = isset($user['role']) ? $user['role'] : 'client';
             $username = $user['name'];
             // set refresh token into coockies and set access token into response to trhe client
             $refreshToken = createRefreshToken($userId, $role);
@@ -136,7 +136,7 @@ function authenticateUser() {
             $stmt->execute();
             $accessToken = createAccessToken($username,$userId, $role, $fingerprint);
             setRefreshTokenCookie($refreshToken);
-            response(['status' => 'success', 'accessToken' => $accessToken, 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo'], 200);
+            response(['status' => 'success', 'accessToken' => $accessToken, 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo', 'role' => $role], 200);
         } else {
             response(['error' => 'Utilisateur non trouvé'], 404);
         }
@@ -164,7 +164,7 @@ function authenticateUser() {
     if (password_verify($password, $user['password'])) {
         //get the user id and the user name, and the user role
         $userId = $user['id_unique'];
-        $role = isset($user['role']) ? $user['role'] : 'user';
+        $role = isset($user['role']) ? $user['role'] : 'client';
         $username = $user['name'];
         $refreshToken = createRefreshToken($userId, $role);
         // create access token
@@ -178,7 +178,7 @@ function authenticateUser() {
         
         //send refresh into cookies, and send access token to server
         setRefreshTokenCookie($refreshToken);
-        response(['status' => 'success', 'accessToken' => $accessToken, 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo'], 200);
+        response(['status' => 'success', 'accessToken' => $accessToken, 'message' => 'Bon retour a vous ' . $user['name'] . ' sur kodPwomo', 'role' => $role], 200);
             
     } else {
         response(['error' => 'email ou mot de passe incorrect'], 401);

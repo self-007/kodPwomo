@@ -1171,9 +1171,60 @@
         });
 
         // ===== UTILITY FUNCTIONS =====
+        // ===== LOADING STATE MANAGEMENT =====
+        let loadingStartTime = 0;
+        const MINIMUM_LOADING_TIME = 5000; // 5 secondes minimum
+        
         function showLoading(show) {
-            document.getElementById('loadingState').style.display = show ? 'block' : 'none';
-            document.getElementById('postsList').style.display = show ? 'none' : 'flex';
+            const loadingElem = document.getElementById('loadingState');
+            const postsListElem = document.getElementById('postsList');
+            
+            if (show) {
+                // Afficher le loader et masquer la liste
+                if (loadingElem) loadingElem.style.display = 'block';
+                if (postsListElem) postsListElem.style.display = 'none';
+                loadingStartTime = Date.now();
+                
+                // Désactiver les boutons qui font des requêtes
+                const buttons = document.querySelectorAll('button[onclick*="fetch"], button[onclick*="load"], a[onclick*="fetch"]');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                    btn.dataset.wasDisabled = 'true';
+                });
+            } else {
+                // Vérifier si 5 secondes se sont écoulées
+                const elapsedTime = Date.now() - loadingStartTime;
+                const remainingTime = MINIMUM_LOADING_TIME - elapsedTime;
+                
+                if (remainingTime > 0) {
+                    // Attendre le temps restant
+                    setTimeout(() => {
+                        if (loadingElem) loadingElem.style.display = 'none';
+                        if (postsListElem) postsListElem.style.display = 'flex';
+                        // Réactiver les boutons
+                        const buttons = document.querySelectorAll('button[data-was-disabled="true"]');
+                        buttons.forEach(btn => {
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                            btn.style.cursor = 'pointer';
+                            delete btn.dataset.wasDisabled;
+                        });
+                    }, remainingTime);
+                } else {
+                    // 5 secondes déjà écoulées
+                    if (loadingElem) loadingElem.style.display = 'none';
+                    if (postsListElem) postsListElem.style.display = 'flex';
+                    const buttons = document.querySelectorAll('button[data-was-disabled="true"]');
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                        delete btn.dataset.wasDisabled;
+                    });
+                }
+            }
         }
 
         function showEmptyState() {

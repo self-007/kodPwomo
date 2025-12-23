@@ -155,6 +155,7 @@
 		</div>
 	</div>
 
+	<script src="assets/js/notifications-system.js"></script>
 	<script>
 		let state = { filter:'all', search:'', items:[] };
 
@@ -170,7 +171,7 @@
 		const activeFilterLabel = document.getElementById('activeFilterLabel');
 
 		// ============ CHARGER LES NOTIFICATIONS DU BACKEND ============
-		async function loadNotifications() {
+		async function loadNotificationsPage() {
 			try {
 				console.log('📡 Chargement des notifications...');
 				const accessToken = localStorage.getItem('access_token');
@@ -181,6 +182,7 @@
 					return;
 				}
 
+				await enforceThrottleDelay();
 				const response = await fetch(`backend/notifications/all`, {
 					method: 'GET',
 					headers: {
@@ -292,6 +294,7 @@
 					status: 'read'
 				};
 
+				await enforceThrottleDelay();
 				const response = await fetch(`backend/notifications/status`, {
 					method: 'PUT',
 					headers: {
@@ -339,6 +342,7 @@
 
 				console.log('📡 Mise à jour du status:', payload);
 
+				await enforceThrottleDelay();
 				const response = await fetch(`backend/notifications/status`, {
 					method: 'PUT',
 					headers: {
@@ -369,7 +373,7 @@
 		}
 
 		document.getElementById('refreshBtn').addEventListener('click', () => {
-			loadNotifications();
+			loadNotificationsPage();
 		});
 
 		searchInput.addEventListener('input', e => { state.search = e.target.value.trim().toLowerCase(); render(); });
@@ -497,6 +501,7 @@
 
 					console.log('🗑️ Suppression de la notification:', n.id);
 					
+					await enforceThrottleDelay();
 					const response = await fetch(`backend/notifications/${n.id}`, {
 						method: 'DELETE',
 						headers: {
@@ -579,8 +584,15 @@
 			}
 		})();
 
-		// Charger les notifications au démarrage
-		loadNotifications();
+		// Charger les notifications au démarrage une fois que notifications-system.js est chargé
+		window.addEventListener('load', function() {
+			// Attendre que notifications-system.js soit complètement chargé
+			setTimeout(function() {
+				if (typeof enforceThrottleDelay === 'function') {
+					loadNotificationsPage();
+				}
+			}, 100);
+		});
 	</script>
 	 <?php include 'heartbeat.php'; ?>
 </body>

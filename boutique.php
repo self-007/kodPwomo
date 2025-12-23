@@ -1744,8 +1744,52 @@
         }
 
         // ===== UTILITY FUNCTIONS =====
+        // ===== LOADING STATE MANAGEMENT =====
+        let loadingStartTime = 0;
+        const MINIMUM_LOADING_TIME = 5000; // 5 secondes minimum
+        
         function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            const loadingElem = document.getElementById('loading');
+            if (!loadingElem) return;
+            
+            if (show) {
+                loadingElem.style.display = 'block';
+                loadingStartTime = Date.now();
+                
+                // Désactiver les boutons
+                const buttons = document.querySelectorAll('button[onclick*="fetch"], button[onclick*="load"], button[onclick*="search"], a[onclick*="fetch"]');
+                buttons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                    btn.dataset.wasDisabled = 'true';
+                });
+            } else {
+                const elapsedTime = Date.now() - loadingStartTime;
+                const remainingTime = MINIMUM_LOADING_TIME - elapsedTime;
+                
+                if (remainingTime > 0) {
+                    setTimeout(() => {
+                        loadingElem.style.display = 'none';
+                        const buttons = document.querySelectorAll('button[data-was-disabled="true"]');
+                        buttons.forEach(btn => {
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                            btn.style.cursor = 'pointer';
+                            delete btn.dataset.wasDisabled;
+                        });
+                    }, remainingTime);
+                } else {
+                    loadingElem.style.display = 'none';
+                    const buttons = document.querySelectorAll('button[data-was-disabled="true"]');
+                    buttons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                        delete btn.dataset.wasDisabled;
+                    });
+                }
+            }
         }
 
         function showAlert(message, type = 'success') {

@@ -4,6 +4,34 @@
  * Se debe incluir en cualquier página que tenga access_token en localStorage
  */
 
+// ===== THROTTLING GLOBAL (Protection contre les requêtes trop rapides) =====
+const REQUEST_THROTTLE_MS = 5000; // 5 secondes
+let lastRequestTime = 0;
+let isThrottled = false;
+
+/**
+ * Attend avant de faire une requête API
+ * Retourne une Promise qui se résout après le délai d'attente
+ */
+async function enforceThrottleDelay() {
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastRequestTime;
+
+    if (timeSinceLastRequest < REQUEST_THROTTLE_MS) {
+        const delayNeeded = REQUEST_THROTTLE_MS - timeSinceLastRequest;
+        isThrottled = true;
+        
+        console.log(`Attente throttle: ${Math.ceil(delayNeeded / 1000)}s`);
+
+        // Attendre le délai
+        await new Promise(resolve => setTimeout(resolve, delayNeeded));
+        
+        isThrottled = false;
+    }
+
+    lastRequestTime = Date.now();
+}
+
 // ===== VARIABLES GLOBALES =====
 let notificationCheckInterval = null;
 let activeNotifications = [];

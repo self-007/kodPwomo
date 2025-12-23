@@ -1631,6 +1631,7 @@
         <!-- Items .notification recevront la classe via JS -->
     </div>
 
+    <script src="assets/js/notifications-system.js"></script>
     <script>
         // ===== NAV MENU TOGGLE =====
         (function(){
@@ -2466,6 +2467,7 @@
 
         async function completeDeliveryAPI(deliveryId, deliveryRecordId) {
             try {
+                await enforceThrottleDelay();
                 const response = await fetch(`backend/delivery/status/${deliveryRecordId}`, {
                     method: 'PUT',
                     headers: {
@@ -2533,8 +2535,61 @@
         }
 
         // ===== UTILITY FUNCTIONS =====
+        // ===== THROTTLING SYSTÈME is loaded from notifications-system.js =====
+        // REQUEST_THROTTLE_MS, lastRequestTime, isThrottled, and enforceThrottleDelay() 
+        // are defined in assets/js/notifications-system.js
+
+        // ===== LOADING STATE MANAGEMENT =====
+        let loadingStartTime = 0;
+        const MINIMUM_LOADING_TIME = 5000; // 5 secondes minimum
+        
         function showLoading(show) {
-            document.getElementById('loading').style.display = show ? 'block' : 'none';
+            const loadingElement = document.getElementById('loading');
+            if (!loadingElement) return;
+            
+            if (show) {
+                // Afficher le loader et enregistrer l'heure
+                loadingElement.style.display = 'block';
+                loadingStartTime = Date.now();
+                
+                // Désactiver tous les boutons qui font des requêtes
+                const requestButtons = document.querySelectorAll('button[onclick*="Agent"], button[onclick*="toggle"], button[onclick*="open"], button[onclick*="assign"], button[onclick*="mark"], .available-btn, .order-btn, [data-action], .modal-btn, [role="menuitem"]');
+                requestButtons.forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                    btn.style.cursor = 'not-allowed';
+                    btn.dataset.wasDisabled = 'true'; // Marquer comme désactivé par le throttle
+                });
+            } else {
+                // Vérifier si 5 secondes se sont écoulées
+                const elapsedTime = Date.now() - loadingStartTime;
+                const remainingTime = MINIMUM_LOADING_TIME - elapsedTime;
+                
+                if (remainingTime > 0) {
+                    // Attendre le temps restant avant de fermer le loader
+                    setTimeout(() => {
+                        loadingElement.style.display = 'none';
+                        // Réactiver les boutons
+                        const requestButtons = document.querySelectorAll('button[data-was-disabled="true"]');
+                        requestButtons.forEach(btn => {
+                            btn.disabled = false;
+                            btn.style.opacity = '1';
+                            btn.style.cursor = 'pointer';
+                            delete btn.dataset.wasDisabled;
+                        });
+                    }, remainingTime);
+                } else {
+                    // 5 secondes déjà écoulées, fermer immédiatement
+                    loadingElement.style.display = 'none';
+                    const requestButtons = document.querySelectorAll('button[data-was-disabled="true"]');
+                    requestButtons.forEach(btn => {
+                        btn.disabled = false;
+                        btn.style.opacity = '1';
+                        btn.style.cursor = 'pointer';
+                        delete btn.dataset.wasDisabled;
+                    });
+                }
+            }
         }
 
         function showAlert(message, type = 'success') {
@@ -2644,6 +2699,7 @@
 
         async function getAgentStatusFromAPI() {
             try {
+                await enforceThrottleDelay();
                 const response = await fetch(`backend/agents/availability`,
                 {
                     method: 'GET',
@@ -2676,6 +2732,7 @@
 
         async function updateAgentStatusAPI(isAvailable) {
             try {
+                await enforceThrottleDelay();
                 const response = await fetch('backend/agents/availability', {
                     method: 'PUT',
                     headers: {
@@ -2708,6 +2765,7 @@
 
         async function getAgentTransactionsAPI() {
             try {
+                await enforceThrottleDelay();
                 const response = await fetch(`backend/deliveries/agent`,
                 {
                     method: 'GET',
@@ -2740,6 +2798,7 @@
 
         async function getAvailableOrdersAPI() {
             try {
+                await enforceThrottleDelay();
                 const response = await fetch('backend/orders/available', {
                     method: 'GET',
                     headers: {
@@ -2780,6 +2839,7 @@
 
         async function assignOrderToAgentAPI(orderId) {
             try {
+                await enforceThrottleDelay();
                 const controller = new AbortController();
                 const timeoutId = setTimeout(() => controller.abort(), 10000);
 
@@ -2852,6 +2912,7 @@
 
         async function getCurrentDeliveryAPI() {
             try {
+                await enforceThrottleDelay();
                 const response = await fetch(`backend/deliveries/agent/orderProcess`, {
                     method: 'GET',
                     headers: {
@@ -2957,9 +3018,6 @@
         }
         // Intégrer afterDataRender dans displayTransactions / displayAvailableOrders / displayCurrentDelivery
     </script>
-    
-    <!-- Sistema de Notificaciones Global -->
-    <script src="assets/js/notifications-system.js"></script>
     
     <?php include 'heartbeat.php'; ?>
 </body>

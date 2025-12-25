@@ -1854,9 +1854,30 @@
         }
         // Fonction pour calculer le temps d'attente
         function calculateWaitTime(dateTimeString) {
+            // Validation : vérifier que la date est fournie
+            if (!dateTimeString) {
+                console.warn('calculateWaitTime: dateTimeString est vide', dateTimeString);
+                return 'N/A';
+            }
+            
+            // Parser la date au format MySQL "YYYY-MM-DD HH:MM:SS"
             const createdTime = new Date(dateTimeString);
+            
+            // Validation : vérifier que la date est valide
+            if (isNaN(createdTime.getTime())) {
+                console.error('calculateWaitTime: date invalide -', dateTimeString);
+                return 'Erreur date';
+            }
+            
             const currentTime = new Date();
             const diffMs = currentTime - createdTime;
+            
+            // Gérer les cas où la date est dans le futur (erreur de données)
+            if (diffMs < 0) {
+                console.warn('calculateWaitTime: date dans le futur -', dateTimeString);
+                return 'Erreur (futur)';
+            }
+            
             const diffSeconds = Math.floor(diffMs / 1000);
             const diffMinutes = Math.floor(diffSeconds / 60);
             const diffHours = Math.floor(diffMinutes / 60);

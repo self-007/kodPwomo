@@ -1515,6 +1515,15 @@
                 Chargement de votre statut...
             </p>
             
+            <!-- Agent Code Display -->
+            <div id="agentCodeDisplay" style="background: rgba(247, 182, 66, 0.1); padding: 16px; border-radius: 8px; margin: 16px 0; border-left: 4px solid var(--primary); display: none;">
+                <div style="font-size: 12px; color: var(--medium-gray); margin-bottom: 8px;">Votre Code Agent:</div>
+                <div style="font-size: 24px; font-weight: 800; color: var(--primary); font-family: 'Courier New', monospace; letter-spacing: 2px; word-break: break-all;">
+                    <span id="agentCodeValue"></span>
+                </div>
+                <div style="font-size: 11px; color: var(--medium-gray); margin-top: 8px;">Partagez ce code avec vos clients pour identification</div>
+            </div>
+            
             <!-- Status Section -->
             <div class="status-section">
                 <div id="statusIndicator" class="status-indicator">
@@ -1632,6 +1641,7 @@
     </div>
 
     <script src="assets/js/notifications-system.js"></script>
+    <script src="assets/js/agent-code-manager.js"></script>
     <script>
         // ===== NAV MENU TOGGLE =====
         (function(){
@@ -1688,6 +1698,25 @@
         document.addEventListener('DOMContentLoaded', function() {
             loadAgentData();
             startAutoRefresh();
+            
+            // Initialize Agent Code Manager
+            const agentCodeManager = new AgentCodeManager({
+                displaySelector: '#agentCodeDisplay',
+                apiEndpoint: 'backend/agent/code'
+            });
+            
+            agentCodeManager.initialize().then(code => {
+                // Afficher le code dans le span
+                const codeValue = document.getElementById('agentCodeValue');
+                if (codeValue) {
+                    codeValue.textContent = code;
+                    console.log('Code agent chargé:', code);
+                } else {
+                    console.warn('Élément agentCodeValue non trouvé dans le DOM');
+                }
+            }).catch(error => {
+                console.error('Erreur lors du chargement du code agent:', error);
+            });
         });
 
         // ===== API ERROR HANDLER =====

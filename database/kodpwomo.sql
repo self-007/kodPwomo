@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3306
--- Généré le : mer. 17 déc. 2025 à 16:03
+-- Généré le : jeu. 25 déc. 2025 à 22:28
 -- Version du serveur : 8.3.0
 -- Version de PHP : 8.2.18
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `black_list` (
   `access_token` varchar(300) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `black_list`
@@ -46,7 +46,9 @@ INSERT INTO `black_list` (`id`, `id_user`, `access_token`, `date`) VALUES
 (3, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU2NTU5MTgsImV4cCI6MTc2NTY1NjIxOCwidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwiZmluZ2VyUHJpbnQiOiJaR0YwWVRwcGJXRm5aUzl3Ym1jN1ltRnpaVFkwTEdsVyJ9.giJVAgJ7XzPhLNmeRzQDfomssPIv-jgl2WbYUhVcB8', '2025-12-13 19:59:06'),
 (4, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU2NTc4MjgsImV4cCI6MTc2NTY1ODEyOCwidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiMWNjMjAwYjVhY2IzNDc2OWIxYjU2YjY0OWJkNjQ2M2MiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', '2025-12-13 20:32:57'),
 (5, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU2NzI0MjYsImV4cCI6MTc2NTY3MjcyNiwidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiOTFmZDFiOWFmYWVlMDJiNWY4OGIzMzEyYWJiY2JkMGEiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', '2025-12-14 00:34:01'),
-(6, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU4Mjc3NjMsImV4cCI6MTc2NTgyODA2MywidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiYWNhZDVhMmYyNmMxYzJmMWZiNTI0MjVmMjU1ZjYzODAiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', '2025-12-15 19:43:58');
+(6, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU4Mjc3NjMsImV4cCI6MTc2NTgyODA2MywidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiYWNhZDVhMmYyNmMxYzJmMWZiNTI0MjVmMjU1ZjYzODAiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', '2025-12-15 19:43:58'),
+(7, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjYxODkzNTYsImV4cCI6MTc2NjE4OTY1NiwidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiMWQ0YWYyYmYxOThjZTM4YWI5MmRlNDc1ZTk5NTgwYTAiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', '2025-12-20 00:12:22'),
+(8, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjYzNjgzMjAsImV4cCI6MTc2NjM2ODYyMCwidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiYmJlYzRlNDkwMjkyYjQyYzYxNDFiMDg0NGY5YTJkODEiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', '2025-12-22 01:52:13');
 
 -- --------------------------------------------------------
 
@@ -10148,21 +10150,20 @@ CREATE TABLE IF NOT EXISTS `deliveries` (
   `status` varchar(45) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `deliveries`
 --
 
 INSERT INTO `deliveries` (`id`, `id_commande`, `id_agent`, `delivery_price`, `note`, `feedback`, `status`, `date`) VALUES
-(1, 'ORD_0303', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 50, 5, 'Livraison rapide et produit de qualité!', 'processing', '2025-10-16 12:30:00'),
-(2, 'ORD_2001', 'USR002GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 70, 4, 'Bon service, quelques minutes de retard', 'completed', '2025-10-16 12:45:00'),
-(3, 'ORD_0030', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 60, 5, 'Parfait! Agent très professionnel', 'completed', '2025-09-17 14:20:00'),
+(1, 'ORD_0303', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 50, 5, 'Livraison rapide et produit de qualité!', 'completed', '2025-10-16 12:30:00'),
+(2, 'ORD_2001', 'USR002GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 70, 4, 'Bon service, quelques minutes de retard', 'processing', '2025-10-16 12:45:00'),
+(3, 'ORD_0030', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 60, 5, 'Parfait! Agent très professionnel', 'processign', '2025-09-17 14:20:00'),
 (4, 'ORD_4032', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 100, 3, 'Pizza un peu froide à l\'arrivée', 'completed', '2025-09-18 19:15:00'),
-(12, 'ORD878164', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 1150, 0, '', 'processing', '2025-11-06 18:46:55'),
-(11, 'ORD886322', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 400, 0, '', 'processing', '2025-11-06 18:39:42'),
-(13, 'ORD616418', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 400, 0, '', 'processing', '2025-11-06 18:59:14'),
-(14, 'ORD512891', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 750, 0, '', 'processing', '2025-11-06 19:06:30');
+(15, 'ORD903668', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 50, 5, 'perfect', 'completed', '2025-12-20 21:20:01'),
+(13, 'ORD616418', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 400, 5, 'je l&amp;#039;ai belle et bien recu, livre a temps et en bon etat donc je donne 4', 'completed', '2025-11-06 18:59:14'),
+(16, 'ORD138406', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 400, 0, '', 'processing', '2025-12-20 23:24:05');
 
 -- --------------------------------------------------------
 
@@ -10181,7 +10182,7 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   `calls` int NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `notifications`
@@ -10192,15 +10193,17 @@ INSERT INTO `notifications` (`id`, `id_user`, `type`, `message`, `status`, `link
 (2, 'USR001', 'livraison', 'Votre commande #1 est en route', 'read', '', 0, '2025-09-16 12:00:00'),
 (3, 'USR001', 'livraison', 'Commande #1 livrée avec succès', 'read', '', 0, '2025-09-16 12:30:00'),
 (4, 'USR003', 'commande', 'Votre commande #3 a été confirmée', '', '', 0, '2025-09-17 13:30:00'),
-(5, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'agent', 'Nouvelle livraison assignée: Commande #6', 'unread', '', -181, '2025-09-19 10:00:00'),
+(5, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'agent', 'Nouvelle livraison assignée: Commande #6', 'read', '', 2, '2025-09-19 10:00:00'),
 (6, 'USR001', 'promo', 'Offre spéciale: -20% sur tous les sandwichs!', '', '', 0, '2025-09-19 08:00:00'),
-(7, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'commande', 'Votre commande #5 a été confirmée', 'unread', '', -81, '2025-09-18 18:30:00'),
+(7, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'commande', 'Votre commande #5 a été confirmée', 'read', '', 2, '2025-09-18 18:30:00'),
 (8, 'Array', 'delivery_feedback', 'yoo cliennt', '', '', 0, '2025-11-04 22:13:36'),
-(9, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'yoo', 'deleted', 'kodpwomo/agent.php', 2, '2025-11-04 22:14:28'),
-(10, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'yoo', 'unread', '', -81, '2025-11-04 22:53:17'),
-(11, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'enfin', 'unread', '', -81, '2025-11-04 22:55:54'),
-(12, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'done', 'deleted', '', 2, '2025-11-08 19:20:34'),
-(13, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'hello', 'unread', '', -81, '2025-12-16 23:22:49');
+(9, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'yoo', 'read', 'kodpwomo/agent.php', 2, '2025-11-04 22:14:28'),
+(10, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'yoo', 'read', '', 2, '2025-11-04 22:53:17'),
+(11, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'enfin', 'read', '', 2, '2025-11-04 22:55:54'),
+(12, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'done', 'read', '', 2, '2025-11-08 19:20:34'),
+(13, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'hello', 'read', '', 2, '2025-12-16 23:22:49'),
+(14, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'ok now  m', 'read', '', 2, '2025-12-17 22:41:10'),
+(15, 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 'delivery_feedback', 'jsuis la', 'read', '', 2, '2025-12-17 22:41:34');
 
 -- --------------------------------------------------------
 
@@ -10220,7 +10223,7 @@ CREATE TABLE IF NOT EXISTS `orders` (
   `adresse_id` int NOT NULL,
   `date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `orders`
@@ -10234,15 +10237,21 @@ INSERT INTO `orders` (`id`, `order_id`, `id_user`, `id_product`, `price`, `qnt`,
 (5, 'ORD_2001', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 7, 6000, 1, 'completed', 1, '2025-10-02 20:25:00'),
 (6, 'ORD_2001', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 4, 500, 2, 'completed', 1, '2025-10-02 20:25:00'),
 (7, 'ORD_0030', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 6, 300, 5, 'completed', 1, '2025-10-02 20:25:00'),
-(8, 'ORD_4032', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 10, 3500, 1, 'pending', 1, '2025-10-02 20:25:00'),
+(8, 'ORD_4032', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 10, 3500, 1, 'completed', 1, '2025-10-02 20:25:00'),
 (9, 'ORD512891', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 2, 4000, 1, 'processing', 1, '2025-11-04 15:51:20'),
 (10, 'ORD512891', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 10, 3500, 1, 'processing', 1, '2025-11-04 15:51:20'),
-(11, 'ORD616418', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 2, 4000, 1, 'processing', 1, '2025-11-04 17:40:40'),
+(11, 'ORD616418', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 2, 4000, 1, 'completed', 1, '2025-11-04 17:40:40'),
 (12, 'ORD878164', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 10, 3500, 1, 'processing', 7, '2025-11-04 20:25:56'),
 (13, 'ORD878164', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 2, 4000, 2, 'processing', 7, '2025-11-04 20:25:56'),
 (14, 'ORD886322', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 2, 4000, 1, 'processing', 7, '2025-11-04 22:30:24'),
-(15, 'ORD903668', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 1, 25000, 2, 'pending', 1, '2025-12-09 15:23:04'),
-(16, 'ORD115807', 'USR6938AD08BE66F2.29163100', 10, 3500, 2, 'pending', 2, '2025-12-09 18:14:58');
+(15, 'ORD903668', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy12', 1, 25000, 2, 'completed', 1, '2025-12-09 15:23:04'),
+(16, 'ORD115807', 'USR6938AD08BE66F2.29163100', 10, 3500, 2, 'pending', 2, '2025-12-09 18:14:58'),
+(17, 'ORD669781', 'USR6944438499ED35.21284014', 2, 4000, 1, 'refund_requested', 5, '2025-12-18 13:14:10'),
+(18, 'ORD669781', 'USR6944438499ED35.21284014', 3, 1000, 1, 'refund_requested', 5, '2025-12-18 13:14:10'),
+(19, 'ORD638842', 'USR6944438499ED35.21284014', 2, 4000, 1, 'refund_requested', 2, '2025-12-18 17:35:20'),
+(20, 'ORD967013', 'USR6944438499ED35.21284014', 10, 3500, 1, 'refunded', 1, '2025-12-18 17:46:57'),
+(21, 'ORD138406', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 2, 4000, 1, 'processing', 6, '2025-12-20 18:19:31'),
+(22, 'ORD207172', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 6, 300, 1, 'pending', 3, '2025-12-21 08:49:15');
 
 -- --------------------------------------------------------
 
@@ -10279,6 +10288,33 @@ INSERT INTO `products` (`id`, `id_category`, `name`, `picture`, `prices`, `descr
 (9, 5, 'Chargeur USB-C', 'chargeur.jpg', 3000, 'Chargeur rapide compatible Android', 2, 0),
 (10, 1, 'Salade César', 'image\\salade.jpeg', 3500, 'Salade fraîche avec croûtons et parmesan', 1, 1),
 (11, 3, 'jhon jok', 'prod_68fe5b2340e6b7.43409770.jpg', 78, 'geopahm[hm0irtminm 9n kn9j tnrooooo', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `refund`
+--
+
+DROP TABLE IF EXISTS `refund`;
+CREATE TABLE IF NOT EXISTS `refund` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `user_id` varchar(70) NOT NULL,
+  `order_id` varchar(70) NOT NULL,
+  `price` double NOT NULL,
+  `university_id` int NOT NULL,
+  `status` varchar(70) NOT NULL,
+  `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+
+--
+-- Déchargement des données de la table `refund`
+--
+
+INSERT INTO `refund` (`id`, `user_id`, `order_id`, `price`, `university_id`, `status`, `date`) VALUES
+(1, 'USR6944438499ED35.21284014', 'ORD669781', 4000, 1, 'pending', '2025-12-18 22:24:40'),
+(2, 'USR6944438499ED35.21284014', 'ORD638842', 4000, 1, 'pending', '2025-12-18 22:37:20'),
+(3, 'USR6944438499ED35.21284014', 'ORD967013', 3500, 1, 'pending', '2025-12-18 22:47:47');
 
 -- --------------------------------------------------------
 
@@ -10384,7 +10420,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `refresh_token` varchar(700) CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci NOT NULL,
   `is_verified` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb3;
+) ENGINE=MyISAM AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb3;
 
 --
 -- Déchargement des données de la table `users`
@@ -10396,10 +10432,11 @@ INSERT INTO `users` (`id`, `name`, `firstname`, `email`, `phone`, `password`, `i
 (3, 'Tshilobo', 'Paul', 'paul.tshilobo@unilu.ac.cd', '', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'USR003', 0, 0, 'fp_paul_789', 3, 'client', 'active', '', '2025-09-13 14:15:00', 'refresh_token_paul', 0),
 (4, 'Kamanda', 'Grace', 'admin@kodpwomo.com', '', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'ADM001', 0, 0, 'fp_admin_000', 1, 'adm', 'active', '', '2025-09-10 09:00:00', 'refresh_token_admin', 0),
 (5, 'Mbuyi', 'David', 'david.mbuyi@ndk.ac.cd', '', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'USR004', 0, 0, 'fp_david_111', 4, 'agent', 'active', '', '2025-09-12 16:45:00', 'refresh_token_david', 0),
-(6, 'Voltaire', 'Bill James-sky', 'voltairebilljamesky@gmail.com', '+50947537548', '$2y$10$p34PsB3FtOcQba0DP2GEp.sJQwtDP/8z/XG9Mo9htSuuTvug8EySK', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 0, 0, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU5NDE4NjAsImV4cCI6MTc2NTk0MjE2MCwidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiZmUzYmJkZjM0OWFlMjFkMjY0NjNlZDc4ZjQ0OTc0ZjIiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', 1, 'agent', 'inactive', '', '2025-09-29 19:36:03', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU5NDE4NjAsImV4cCI6MTc2NzE1MTQ2MCwic3ViIjoiR09PR0xFX2h3b2lQOW56Q2hiV2k3VENsUW5MV2xobEtxeTEiLCJyb2xlIjoiYWdlbnQiLCJqdGkiOiIwMGUzOTc3MzQ1ZTA0NTZlNzM1NWNiYjUxYmZkNmM4NDAyMzg4MGNhMDI3YmRlNzIyZDUxNTFkZDQyYTgwYWUwIn0.WbOPh9ePjve_jiXr_E2gQkSwzQOfDW4P0BtidrU4Uqs', 0),
+(6, 'Voltaire', 'Bill James-sky', 'voltairebilljamesky@gmail.com', '+50947537548', '$2y$10$p34PsB3FtOcQba0DP2GEp.sJQwtDP/8z/XG9Mo9htSuuTvug8EySK', 'GOOGLE_hwoiP9nzChbWi7TClQnLWlhlKqy1', 0, 0, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjY1MjU2NzQsImV4cCI6MTc2NjUyNTk3NCwidXNlcm5hbWUiOiJWb2x0YWlyZSIsInJvbGUiOiJhZ2VudCIsInN1YiI6IkdPT0dMRV9od29pUDluekNoYldpN1RDbFFuTFdsaGxLcXkxIiwianRpIjoiOGEzMTAwMzMwYTM0NzNkYjFiYTU4Mzk5ODQzY2I0M2QiLCJmaW5nZXJQcmludCI6IlpHRjBZVHBwYldGblpTOXdibWM3WW1Gelp', 1, 'agent', 'active', 'AGT1868', '2025-09-29 19:36:03', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjY1MjU2NzQsImV4cCI6MTc2NzczNTI3NCwic3ViIjoiR09PR0xFX2h3b2lQOW56Q2hiV2k3VENsUW5MV2xobEtxeTEiLCJyb2xlIjoiYWdlbnQiLCJqdGkiOiJkMDc0YWQyNmI1ZTBjYjAxZGEzNGE3Y2E2NDJiZmJkNjhlNmZlNzAwZWZjZTFkOTE3ZDUwNjhhZDQ1YmZmZmJhIn0.em-O1PPWYLuZ-2I2yvu4g5S5JCCPJdG_hutjW_cMJts', 0),
 (9, 'sky_Billy', 'exineauoo', 'billjamesskyv@gmail.com', '', '$2y$10$/9smStUcx2MK81SBKg4CduIrncqq18SXKNFeB8fqbNYFdjlux/sbG', 'USR68DAEF548DB8A5.07116066', 409126, 1759179630, '', 1, '', 'active', '', '2025-09-29 20:43:00', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NTkxNzg1ODAsImV4cCI6MTc2MDM4ODE4MCwic3ViIjoiVVNSNjhEQUVGNTQ4REI4QTUuMDcxMTYwNjYiLCJyb2xlIjoidXNlciJ9.jYBCDS9MKKP0GvjRfhsKNdoHu3jHVJDizJjkda0u4mo', 1),
 (17, 'nol', 'dAME', 'madamearnold84@gmail.com', '', '$2y$10$TZM40uw29o3FmusuoRFUbuEU7..LvUII1U.vabGL4iXSbAIVkVi4W', 'USR690B9943BF6998.10471352', 177012, 1762368119, '', 0, '', '', '', '2025-11-05 18:36:51', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjIzNjc4MTEsImV4cCI6MTc2MzU3NzQxMSwic3ViIjoiVVNSNjkwQjk5NDNCRjY5OTguMTA0NzEzNTIiLCJyb2xlIjoidXNlciJ9.kWhoIY_Np9397Fr2yVXDIrKp1BEqg0mcnk1C3IP2wDE', 1),
-(23, 'billy', 'sky', 'skyvoltaire2@gmail.com', '', '$2y$10$9eTdOXcufZNWIxzd4LktMedfitVTinc.aKHauvTPp7CJgR6cPfP0i', 'USR6938AD08BE66F2.29163100', 230997, 1765322292, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU0MDI5NzIsImV4cCI6MTc2NTQwMzI3MiwidXNlcm5hbWUiOiJiaWxseSIsInJvbGUiOiIiLCJzdWIiOiJVU1I2OTM4QUQwOEJFNjZGMi4yOTE2MzEwMCIsImZpbmdlclByaW50IjoiWkdGMFlUcHBiV0ZuWlM5d2JtYzdZbUZ6WlRZMExHbFcifQ.-k7p4Kya0SW0dcDaW-w0ZgbJFhndT9PAAtMoobn5u_0', 0, '', '', '', '2025-12-09 23:13:12', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU0MDI5NzIsImV4cCI6MTc2NjYxMjU3Miwic3ViIjoiVVNSNjkzOEFEMDhCRTY2RjIuMjkxNjMxMDAiLCJyb2xlIjoiIn0.6LEdhF3V9eHvWhn1gKk35LRS9hl4Huj10Yxp8wjAHhY', 1);
+(23, 'billy', 'sky', 'skyvoltaire2@gmail.com', '', '$2y$10$9eTdOXcufZNWIxzd4LktMedfitVTinc.aKHauvTPp7CJgR6cPfP0i', 'USR6938AD08BE66F2.29163100', 230997, 1765322292, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU0MDI5NzIsImV4cCI6MTc2NTQwMzI3MiwidXNlcm5hbWUiOiJiaWxseSIsInJvbGUiOiIiLCJzdWIiOiJVU1I2OTM4QUQwOEJFNjZGMi4yOTE2MzEwMCIsImZpbmdlclByaW50IjoiWkdGMFlUcHBiV0ZuWlM5d2JtYzdZbUZ6WlRZMExHbFcifQ.-k7p4Kya0SW0dcDaW-w0ZgbJFhndT9PAAtMoobn5u_0', 0, '', '', '', '2025-12-09 23:13:12', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjU0MDI5NzIsImV4cCI6MTc2NjYxMjU3Miwic3ViIjoiVVNSNjkzOEFEMDhCRTY2RjIuMjkxNjMxMDAiLCJyb2xlIjoiIn0.6LEdhF3V9eHvWhn1gKk35LRS9hl4Huj10Yxp8wjAHhY', 1),
+(24, 'pierre', 'Evans', 'pierreevans606@gmail.com', '', '$2y$10$w7.mrQhxq8qz4vlyzBvW0ubtbNXrWXAVUaJPM/cSN9rabtQ6iHacW', 'USR6944438499ED35.21284014', 516595, 1766081712, 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjYyNjE4OTUsImV4cCI6MTc2NjI2MjE5NSwidXNlcm5hbWUiOiJwaWVycmUiLCJyb2xlIjoiIiwic3ViIjoiVVNSNjk0NDQzODQ5OUVEMzUuMjEyODQwMTQiLCJqdGkiOiIwNjEwODViZjg3OTM5ZjEwMjEzNzAwOWI2NDM1ZTJhNCIsImZpbmdlclByaW50IjoiWkdGMFlUcHBiV0ZuWlM5d2JtYzdZbUZ6WlRZMExHbFcifQ.trBoKgQ1', 0, '', '', '', '2025-12-18 18:10:12', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE3NjYyNjE4OTUsImV4cCI6MTc2NzQ3MTQ5NSwic3ViIjoiVVNSNjk0NDQzODQ5OUVEMzUuMjEyODQwMTQiLCJyb2xlIjoiIiwianRpIjoiNDUwOWZiZDY2MDkxMDFhNThlYThlMjM3NzhhZTc5Yjg1MGYzNzEzOWQ5NGIxNjgyZTEzYjZlMmI4Nzc2YzUwMSJ9.k2uUVOW2YKOuBVEaMDGq5j9NeXwNN6MWm8rJiI4OYqw', 1);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

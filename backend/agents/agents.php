@@ -119,3 +119,28 @@ function getTopGlobalAgents($limit = 5) {
     $agents = $stmt->fetchAll(PDO::FETCH_ASSOC);
     return ['nbrs' => $nbrs, 'agents' => $agents];
 }
+//get the agent code
+function getAgentCode() {
+    global $connection;
+    //get the user id
+    $user = getBearerToken();
+    $id_unique = sanitizeInput($user->sub);
+    //get the user role
+    $user_role = sanitizeInput($user->role);
+    //only agent, adm, manager can access this function
+    if($user_role !== 'agent' && $user_role !== 'adm' && $user_role !== 'manager'){
+        response(['error' => 'vous n\'êtes pas autorisé à effectuer cette action'], 401);
+    }
+    //create the new agent code
+    $agentCode = agentCode();
+    //update the agent code in the database
+    $stmt = $connection->prepare("UPDATE users SET code = :agent_code WHERE id_unique = :id_unique AND role = 'agent'");
+    $stmt->bindParam(':agent_code', $agentCode);
+    $stmt->bindParam(':id_unique', $id_unique);
+    $stmt->execute();
+    
+    if ($stmt->rowCount() === 0) {
+        response(['error' => 'Agent not found: ' . $id_unique], 404);
+    }
+    response(['agentCode' => $agentCode, 'success' => true], 200);
+}

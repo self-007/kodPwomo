@@ -15,6 +15,7 @@ $routes =  [
         '/universities/(\d+)' => ['services/universities.php', 'getUniversityById'], //get university by id
         '/places/adm/(\d+)' => ['services/places.php', 'getPlacesByUniversityId'],
         '/places/(\d+)' => ['services/places.php', 'getPlacesByUniversityId'], //get places by university id
+        '/agent/code' => ['agents/agents.php', 'getAgentCode'], //get agent code
         '/agents/availability' => ['agents/agents.php', 'getAgentAvailability'], //get agentAvailability status
         '/deliveries/agent' => ['services/deliveries.php', 'getAgentStats'], //get deliveries by agent id
         '/orders/available' => ['services/orders.php', 'getPendingOrderData'], //get datas from availables orders

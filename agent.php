@@ -1872,13 +1872,16 @@
             const currentTime = new Date();
             const diffMs = currentTime - createdTime;
             
-            // Gérer les cas où la date est dans le futur (erreur de données)
-            if (diffMs < 0) {
-                console.warn('calculateWaitTime: date dans le futur -', dateTimeString);
-                return 'Erreur (futur)';
+            // Gérer les cas où la date est légèrement dans le futur (décalage horaire/timezone)
+            if (diffMs < -30000) { // -30s de buffer pour les décalages horaires
+                console.warn('calculateWaitTime: date dans le futur de', Math.abs(diffMs/1000), 's -', dateTimeString, '| Heure client:', currentTime.toLocaleString(), '| Heure serveur:', createdTime.toLocaleString());
+                return '0s';
             }
             
-            const diffSeconds = Math.floor(diffMs / 1000);
+            // Si légèrement négatif mais dans le buffer, considérer comme 0
+            let adjustedDiffMs = Math.max(diffMs, 0);
+            
+            const diffSeconds = Math.floor(adjustedDiffMs / 1000);
             const diffMinutes = Math.floor(diffSeconds / 60);
             const diffHours = Math.floor(diffMinutes / 60);
             
